@@ -81,5 +81,15 @@ Apple Braille, then Segoe UI Symbol, then monospace; see `web/fonts/README.md`.
 
 ## Licence
 
-CC BY-NC-SA 4.0 for Sensory App House Ltd's own work. Bundled third-party
-components keep their own licences — see `LICENSE`.
+`SPDX-License-Identifier: CC-BY-NC-SA-4.0`
+
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International**,
+for Sensory App House Ltd's own work. The full legal code is in `LICENSE`.
+
+Bundled third-party components are not relicensed and keep their own terms —
+`NOTICE.md` lists them.
+
+> GitHub's sidebar will say *Other*. That is not a defect in `LICENSE`: GitHub
+> can identify thirteen licences and the only Creative Commons one among them
+> is CC0. CC BY-NC-SA is a NonCommercial licence, so it is not open source and
+> not in that set. `LICENSE` is the binding text either way.
