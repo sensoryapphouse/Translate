@@ -48,9 +48,9 @@ the first time it was tried and the app deployed looking fine and doing nothing.
 ## The tests
 
 ```
-node Translate/tools/check.mjs      # every suite must pass, no score may fall
-node Translate/tools/decisions.test.mjs        # precedence decisions
-V2=1 node Translate/tools/decisions.test.mjs   # ... for the readers the app ships
+node Translate/tools/decisions.test.mjs         # precedence decisions
+V2=1 node Translate/tools/decisions.test.mjs    # ... for the readers the app ships
+node Translate/tools/check.mjs                  # every suite; needs the corpora below
 ```
 
 Two things worth knowing before you trust a number:
@@ -65,14 +65,19 @@ Two things worth knowing before you trust a number:
   WebAssembly — so any speech figure they print is the app's own fallback
   speaker, not what a child hears.
 
-## What is deliberately not here
+## What is not here
 
-Some of what this app is tested against belongs to other people. The tools that
-use those corpora fetch them on demand and never redistribute them, so a fresh
-clone will find the harvested benchmarks missing — that is intended, and each
-tool's header carries the recipe for fetching its own.
+**This repository is the program.** No corpora, no datasets, no generated
+files — not other people's, and not our own. `NOTICE.md` lists every one, why
+it is absent and where to get it.
 
-`LICENSE` lists these, and the one typeface that is missing for the same reason.
+The consequence: the benchmark runners are all here as code, and none of them
+will produce a number from a fresh clone until you supply the corpus it names.
+`decisions.test.mjs` is the exception — its cases are written into the file, so
+it runs as soon as you clone.
+
+One typeface is missing for the same reason. The braille pane falls back to
+Apple Braille, then Segoe UI Symbol, then monospace; see `web/fonts/README.md`.
 
 ## Licence
 
