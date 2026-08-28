@@ -1,0 +1,5287 @@
+[
+ {
+  "name": "test_000",
+  "suite": "AataNemeth",
+  "braille": "⠗⠀⠸⠇⠀⠎⠷⠍⠕⠙⠀⠝⠾",
+  "mathml": "<math><mi>r</mi><mo>≡<!-- ≡ --></mo><mi>s</mi><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mi>n</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_001",
+  "suite": "AataNemeth",
+  "braille": "⠽⠀⠨⠅⠀⠭⠘⠠⠑⠐⠍⠕⠙⠀⠝",
+  "mathml": "<math><mi>y</mi><mo>=</mo> <msup><mi>x</mi><mi>E</mi></msup><mspace width=\"0.667em\"></mspace><mi>mod</mi><mspace width=\"thinmathspace\"></mspace><mspace width=\"thinmathspace\"></mspace><mi>n</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_002",
+  "suite": "AataNemeth",
+  "braille": "⠳⠐⠠⠭⠣⠈⠱⠻⠳⠀⠨⠅⠀⠼⠆⠘⠲⠀⠨⠅⠀⠼⠂⠖",
+  "mathml": "<math> <mrow><mo stretchy=\"false\">|</mo></mrow> <mrow><mover><mi>X</mi><mo>~<!-- ~ --></mo></mover></mrow> <mrow><mo stretchy=\"false\">|</mo></mrow><mo>=</mo> <msup><mn>2</mn><mn>4</mn></msup><mo>=</mo><mtext></mtext><mn>16</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_003",
+  "suite": "AataNemeth",
+  "braille": "⠈⠰⠠⠎",
+  "mathml": "<math><mrow><mi mathvariant=\"script\">S</mi></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_004",
+  "suite": "AataNemeth",
+  "braille": "⠁⠭⠘⠆⠐⠬⠃⠭⠬⠉⠀⠨⠅⠀⠼⠴",
+  "mathml": "<math><mi>a</mi> <msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi><mo>=</mo><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_005",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠐⠫⠒⠒⠕⠣⠋⠻⠀⠠⠃",
+  "mathml": "<math><mi>A</mi> <mrow><mover> <mrow><mo stretchy=\"false\">→<!-- → --></mo></mrow> <mrow><mi>f</mi></mrow></mover></mrow><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_006",
+  "suite": "AataNemeth",
+  "braille": "⠛⠷⠭⠾⠀⠨⠅⠀⠣⠒⠜⠭⠻",
+  "mathml": "<math><mi>g</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo> <mroot><mi>x</mi><mn>3</mn></mroot></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_007",
+  "suite": "AataNemeth",
+  "braille": "⠠⠞⠰⠠⠁⠘⠤⠂⠀⠨⠅⠀⠠⠞⠰⠠⠁⠰⠘⠤⠂",
+  "mathml": "<math><msubsup><mi>T</mi><mi>A</mi> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msubsup><mo>=</mo><msub><mi>T</mi> <mrow> <msup><mi>A</mi> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_008",
+  "suite": "AataNemeth",
+  "braille": "⠐⠨⠬⠩⠅⠻⠠⠭⠰⠅⠀⠨⠅⠀⠠⠭",
+  "mathml": "<math><munder><mo>⋃<!-- ⋃ --></mo><mi>k</mi></munder><msub><mi>X</mi><mi>k</mi></msub><mo>=</mo><mi>X</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_009",
+  "suite": "AataNemeth",
+  "braille": "⠋⠷⠏⠸⠌⠟⠾⠀⠨⠅⠀⠹⠏⠬⠂⠌⠏⠤⠆⠼",
+  "mathml": "<math><mstyle displaystyle=\"true\" scriptlevel=\"0\"><mi>f</mi><mo stretchy=\"false\">(</mo><mi>p</mi> <mrow><mo>/</mo></mrow><mi>q</mi><mo stretchy=\"false\">)</mo><mo>=</mo> <mfrac> <mrow><mi>p</mi><mo>+</mo><mn>1</mn></mrow> <mrow><mi>p</mi><mo>−<!-- − --></mo><mn>2</mn></mrow></mfrac></mstyle></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_010",
+  "suite": "AataNemeth",
+  "braille": "⠠⠭⠀⠨⠅⠀⠨⠰⠠⠝⠨⠬⠨⠷⠜⠆⠻⠨⠾",
+  "mathml": "<math><mi>X</mi><mo>=</mo> <mrow> <mrow><mi mathvariant=\"double-struck\">N</mi></mrow></mrow><mo>∪<!-- ∪ --></mo><mo fence=\"false\" stretchy=\"false\">{</mo> <msqrt><mn>2</mn></msqrt><mspace width=\"thinmathspace\"></mspace><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_011",
+  "suite": "AataNemeth",
+  "braille": "⠵⠱⠀⠨⠅⠀⠁⠤⠃⠊",
+  "mathml": "<math><mover><mi>z</mi><mo accent=\"false\">¯<!-- ¯ --></mo></mover><mo>=</mo><mi>a</mi><mo>−<!-- − --></mo><mi>b</mi><mi>i</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_012",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠵⠦",
+  "mathml": "<math> <mrow><msub> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow><mn>8</mn></msub></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_013",
+  "suite": "AataNemeth",
+  "braille": "⠠⠉⠀⠨⠅⠀⠨⠷⠸⠰⠽⠸⠒⠀⠠⠛⠸⠰⠭⠀⠨⠅⠀⠸⠰⠽⠋⠕⠗⠸⠰⠭⠀⠈⠑⠀⠨⠰⠠⠵⠆⠘⠅⠐⠨⠾",
+  "mathml": "<math><mi>C</mi><mo>=</mo> <mrow><mo>{</mo> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>:</mo><mi>G</mi> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mtext>for</mtext> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>∈<!-- ∈ --></mo><msubsup> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow><mn>2</mn><mi>k</mi></msubsup><mo>}</mo></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_014",
+  "suite": "AataNemeth",
+  "braille": "⠜⠆⠬⠨⠜⠒⠨⠻⠻",
+  "mathml": "<math><msqrt><mn>2</mn><mo>+</mo><msqrt><mn>3</mn></msqrt></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_015",
+  "suite": "AataNemeth",
+  "braille": "⠜⠨⠣⠒⠜⠆⠨⠻⠤⠊⠻",
+  "mathml": "<math> <msqrt> <mroot><mn>2</mn><mn>3</mn></mroot><mo>−<!-- − --></mo><mi>i</mi></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_016",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠗⠘⠒",
+  "mathml": "<math> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mn>3</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_017",
+  "suite": "AataNemeth",
+  "braille": "⠐⠠⠭⠣⠈⠱⠻⠰⠷⠂⠾⠀⠨⠅⠀⠐⠠⠭⠣⠈⠱⠻",
+  "mathml": "<math><msub> <mrow><mover><mi>X</mi><mo>~<!-- ~ --></mo></mover></mrow> <mrow><mo stretchy=\"false\">(</mo><mn>1</mn><mo stretchy=\"false\">)</mo></mrow></msub><mo>=</mo> <mrow><mover><mi>X</mi><mo>~<!-- ~ --></mo></mover></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_018",
+  "suite": "AataNemeth",
+  "braille": "⠠⠛⠴⠀⠨⠅⠀⠨⠷⠠⠁⠸⠒⠀⠷⠠⠁⠠⠀⠃⠾⠀⠈⠑⠀⠠⠛⠋⠕⠗⠀⠎⠕⠍⠑⠃⠨⠾",
+  "mathml": "<math><msub><mi>G</mi><mn>0</mn></msub><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>A</mi><mo>:</mo><mo stretchy=\"false\">(</mo><mi>A</mi><mo>,</mo><mi>b</mi><mo stretchy=\"false\">)</mo><mo>∈<!-- ∈ --></mo><mi>G</mi><mtext>for some</mtext><mi>b</mi><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_019",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠴⠴⠯",
+  "mathml": "<math><mn>300</mn><mo>!</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_020",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠨⠬⠷⠠⠃⠨⠬⠠⠉⠾⠀⠨⠅⠀⠷⠠⠁⠨⠬⠠⠃⠾⠨⠬⠠⠉",
+  "mathml": "<math><mi>A</mi><mo>∪<!-- ∪ --></mo><mo stretchy=\"false\">(</mo><mi>B</mi><mo>∪<!-- ∪ --></mo><mi>C</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mo stretchy=\"false\">(</mo><mi>A</mi><mo>∪<!-- ∪ --></mo><mi>B</mi><mo stretchy=\"false\">)</mo><mo>∪<!-- ∪ --></mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_021",
+  "suite": "AataNemeth",
+  "braille": "⠷⠝⠩⠅⠾",
+  "mathml": "<math> <mrow><mstyle scriptlevel=\"0\"> <mrow><mo maxsize=\"1.2em\" minsize=\"1.2em\">(</mo></mrow></mstyle><mfrac linethickness=\"0\"><mi>n</mi><mi>k</mi></mfrac><mstyle scriptlevel=\"0\"> <mrow><mo maxsize=\"1.2em\" minsize=\"1.2em\">)</mo></mrow></mstyle></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_022",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠬⠢⠖⠤⠂⠒⠬⠦⠸⠌⠆",
+  "mathml": "<math><mn>3</mn><mo>+</mo><mn>56</mn><mo>−<!-- − --></mo><mn>13</mn><mo>+</mo><mn>8</mn> <mrow><mo>/</mo></mrow><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_023",
+  "suite": "AataNemeth",
+  "braille": "⠺⠷⠸⠰⠭⠾⠀⠨⠅⠀⠙⠷⠸⠰⠭⠠⠀⠸⠼⠴⠾",
+  "mathml": "<math><mi>w</mi><mo stretchy=\"false\">(</mo> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo stretchy=\"false\">)</mo><mo>=</mo><mi>d</mi><mo stretchy=\"false\">(</mo> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>,</mo> <mrow> <mrow><mn mathvariant=\"bold\">0</mn></mrow></mrow><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_024",
+  "suite": "AataNemeth",
+  "braille": "⠼⠖⠨⠴⠴⠴⠴⠴⠬⠴⠨⠴⠴⠴⠴⠴⠊",
+  "mathml": "<math><mn>6.00000</mn><mo>+</mo><mn>0.00000</mn><mi>i</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_025",
+  "suite": "AataNemeth",
+  "braille": "⠏⠀⠨⠅⠀⠼⠴⠨⠴⠴⠴⠂",
+  "mathml": "<math><mi>p</mi><mo>=</mo><mn>0.0001</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_026",
+  "suite": "AataNemeth",
+  "braille": "⠏⠀⠨⠅⠀⠼⠴⠨⠴⠂",
+  "mathml": "<math><mi>p</mi><mo>=</mo><mn>0.01</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_027",
+  "suite": "AataNemeth",
+  "braille": "⠏⠀⠨⠅⠀⠼⠴⠨⠔⠔⠢",
+  "mathml": "<math><mi>p</mi><mo>=</mo><mn>0.995</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_028",
+  "suite": "AataNemeth",
+  "braille": "⠏⠀⠨⠅⠀⠼⠴⠨⠔⠔⠔",
+  "mathml": "<math><mi>p</mi><mo>=</mo><mn>0.999</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_029",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠨⠅⠀⠼⠴⠴⠠⠀⠠⠃⠀⠨⠅⠀⠼⠴⠂⠠⠀⠄⠄⠄⠠⠀⠠⠵⠀⠨⠅⠀⠼⠆⠢",
+  "mathml": "<math><mtext>A</mtext><mo>=</mo><mn>00</mn><mo>,</mo><mtext>B</mtext><mo>=</mo><mn>01</mn><mo>,</mo><mo>…<!-- … --></mo><mo>,</mo><mtext>Z</mtext><mo>=</mo><mn>25</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_030",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_031",
+  "suite": "AataNemeth",
+  "braille": "⠼⠴⠴⠴⠴",
+  "mathml": "<math><mn>0000</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_032",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠉⠂⠀⠨⠅⠀⠷⠴⠴⠴⠴⠴⠾",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"bold\">c</mi></mrow></mrow><mn>1</mn></msub><mo>=</mo><mo stretchy=\"false\">(</mo><mn>00000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_033",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠴⠂⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00001</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_034",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠴⠂⠴⠂⠂⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0000101100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_035",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠂⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00010</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_036",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠵⠀⠨⠅⠀⠷⠴⠴⠴⠂⠂⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">z</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>00011</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_037",
+  "suite": "AataNemeth",
+  "braille": "⠼⠴⠴⠂",
+  "mathml": "<math><mn>001</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_038",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠴⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00100</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_039",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠴⠴⠴⠴⠂⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0010000101</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_040",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠴⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>001001</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_041",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠴⠴⠴⠾⠷⠴⠴⠂⠴⠂⠾⠷⠂⠂⠴⠂⠂⠾⠷⠂⠴⠂⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>01000</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>00101</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11011</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10110</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_042",
+  "suite": "AataNemeth",
+  "braille": "⠼⠴⠴⠂⠂",
+  "mathml": "<math><mn>0011</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_043",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠂⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00110</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_044",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠉⠆⠀⠨⠅⠀⠷⠴⠴⠂⠂⠂⠾",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"bold\">c</mi></mrow></mrow><mn>2</mn></msub><mo>=</mo><mo stretchy=\"false\">(</mo><mn>00111</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_045",
+  "suite": "AataNemeth",
+  "braille": "⠼⠴⠂⠴",
+  "mathml": "<math><mn>010</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_046",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠴⠴⠀⠴⠂⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0100</mn><mspace width=\"thickmathspace\"></mspace><mn>0101</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_047",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠴⠴⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>01000</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_048",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠴⠴⠾⠷⠴⠂⠴⠴⠂⠾⠷⠂⠴⠂⠂⠂⠾⠷⠂⠂⠴⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00100</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01001</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10111</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11010</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_049",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠴⠂⠴⠴⠂⠂⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>010011</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_050",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠂⠂⠾⠷⠴⠂⠴⠂⠴⠾⠷⠂⠴⠂⠴⠴⠾⠷⠂⠂⠴⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00111</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01010</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10100</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11001</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_051",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠂⠴⠴⠾⠷⠴⠂⠂⠴⠂⠂⠾⠷⠂⠂⠂⠴⠂⠂⠾⠷⠂⠴⠴⠴⠂⠂⠾⠷⠴⠴⠴⠴⠴⠴⠾⠷⠴⠂⠴⠂⠴⠂⠾⠷⠂⠂⠴⠂⠴⠴⠾⠷⠂⠂⠴⠴⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>011100</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>011011</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>111011</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>100011</mn><mo stretchy=\"false\">)</mo><mspace linebreak=\"newline\"></mspace><mo stretchy=\"false\">(</mo><mn>000000</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>010101</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110100</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110011</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_052",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠂⠂⠂⠴⠂⠴⠂⠾⠠⠀⠷⠴⠂⠴⠂⠴⠂⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>11110101</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>01010100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_053",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠵⠀⠨⠅⠀⠷⠴⠂⠴⠂⠂⠂⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">z</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>010111</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_054",
+  "suite": "AataNemeth",
+  "braille": "⠼⠴⠂⠂",
+  "mathml": "<math><mn>011</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_055",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0110</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_056",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠴⠂⠾⠷⠴⠂⠂⠴⠴⠾⠷⠂⠴⠴⠂⠴⠾⠷⠂⠂⠂⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00001</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01100</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10010</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11111</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_057",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠴⠂⠂⠴⠴⠂⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>011001</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_058",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠴⠂⠴⠾⠠⠀⠷⠴⠂⠂⠂⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>011010</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>011100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_059",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠴⠂⠂⠴⠾⠷⠴⠂⠂⠂⠂⠴⠴⠾⠷⠂⠂⠂⠴⠴⠴⠴⠾⠷⠂⠂⠂⠂⠂⠂⠂⠾⠷⠂⠴⠴⠂⠴⠴⠂⠾⠷⠂⠴⠴⠴⠴⠂⠂⠾⠷⠴⠴⠴⠂⠂⠂⠂⠾⠷⠴⠴⠴⠴⠴⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0110110</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>0111100</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>1110000</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>1111111</mn><mo stretchy=\"false\">)</mo><mspace linebreak=\"newline\"></mspace><mo stretchy=\"false\">(</mo><mn>1001001</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>1000011</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>0001111</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>0000000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_060",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠴⠂⠾⠠⠀⠷⠴⠂⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1001</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>0111</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_061",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠴⠴⠴⠾⠷⠂⠂⠂⠴⠂⠾⠷⠴⠴⠴⠂⠂⠾⠷⠴⠂⠂⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>10000</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11101</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>00011</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01110</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_062",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠂⠴⠾⠷⠴⠂⠂⠂⠂⠾⠷⠂⠴⠴⠴⠂⠾⠷⠂⠂⠂⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00010</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01111</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10001</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_063",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠨⠅⠀⠼⠴⠴⠠⠀⠠⠃⠀⠨⠅⠀⠼⠴⠆⠠⠀⠄⠄⠄⠠⠀⠠⠵⠀⠨⠅⠀⠼⠆⠢",
+  "mathml": "<math><mtext>A</mtext><mo>=</mo><mn>00</mn><mo>,</mo><mtext>B</mtext><mo>=</mo><mn>02</mn><mo>,</mo><mo>…<!-- … --></mo><mo>,</mo><mtext>Z</mtext><mo>=</mo><mn>25</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_064",
+  "suite": "AataNemeth",
+  "braille": "⠉⠀⠨⠅⠀⠼⠲⠀⠢⠔⠦⠀⠴⠒⠶⠀⠆⠒⠲",
+  "mathml": "<math><mi>c</mi><mo>=</mo><mn>4</mn><mspace width=\"thinmathspace\"></mspace><mn>598</mn><mspace width=\"thinmathspace\"></mspace><mn>037</mn><mspace width=\"thinmathspace\"></mspace><mn>234</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_065",
+  "suite": "AataNemeth",
+  "braille": "⠠⠑⠀⠨⠅⠀⠼⠴⠲",
+  "mathml": "<math><mtext>E</mtext><mo>=</mo><mn>04</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_066",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠴⠸⠌⠢⠀⠨⠅⠀⠼⠆",
+  "mathml": "<math><mn>10</mn><mrow><mo>/</mo></mrow><mn>5</mn><mo>=</mo><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_067",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠢⠲⠾⠘⠂⠴⠴",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1254</mn> <msup><mo stretchy=\"false\">)</mo> <mrow><mn>100</mn></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_068",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠴⠴⠴",
+  "mathml": "<math><mn>1000</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_069",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠴⠴⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>10000</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_070",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠴⠂⠀⠂⠴⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1001</mn><mspace width=\"thickmathspace\"></mspace><mn>1000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_071",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>101</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_072",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠂⠴⠂⠴⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>1010</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_073",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠂⠴⠴⠾⠬⠠⠉",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>10100</mn><mo stretchy=\"false\">)</mo><mo>+</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_074",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠂⠴⠂⠴⠂⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>10101</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_075",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠂⠴⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>101011</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_076",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠴⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1011</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_077",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠴⠴⠴⠾⠠⠀⠷⠴⠂⠴⠂⠂⠂⠾⠠⠀⠷⠂⠴⠂⠂⠴⠂⠾⠠⠀⠷⠂⠂⠂⠴⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>000000</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>010111</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>101101</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>111010</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_078",
+  "suite": "AataNemeth",
+  "braille": "⠛⠉⠙⠀⠷⠂⠆⠴⠠⠀⠂⠴⠆⠾⠀⠨⠅⠀⠼⠖",
+  "mathml": "<math><mo form=\"prefix\" movablelimits=\"true\">gcd</mo><mo stretchy=\"false\">(</mo><mn>120</mn><mo>,</mo><mn>102</mn><mo stretchy=\"false\">)</mo><mo>=</mo><mn>6</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_079",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠴⠦",
+  "mathml": "<math><mn>108</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_080",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠂⠴",
+  "mathml": "<math><mn>110</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_081",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠂⠂⠴⠴⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>1100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_082",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠂⠂⠴⠾⠷⠴⠂⠴⠂⠂⠾⠷⠂⠴⠂⠴⠂⠾⠷⠂⠂⠴⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>00110</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>01011</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>10101</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>11000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_083",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠴⠂⠴⠾⠷⠴⠂⠂⠂⠴⠴⠾⠷⠂⠂⠴⠂⠂⠂⠾⠷⠂⠂⠴⠴⠴⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>011010</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>011100</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110111</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110000</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_084",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠴⠴⠴⠴⠴⠾⠷⠴⠂⠂⠂⠴⠴⠾⠷⠂⠂⠴⠂⠴⠂⠾⠷⠂⠂⠴⠴⠴⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>000000</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>011100</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110101</mn><mo stretchy=\"false\">)</mo><mspace width=\"thickmathspace\"></mspace><mo stretchy=\"false\">(</mo><mn>110001</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_085",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠂⠂⠴⠂⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>1101</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_086",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠂⠂⠴⠂⠴⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>11010</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_087",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠂⠂⠴⠂⠴⠂⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>110101</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_088",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠉⠲⠀⠨⠅⠀⠷⠂⠂⠴⠂⠂⠾",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"bold\">c</mi></mrow></mrow><mn>4</mn></msub><mo>=</mo><mo stretchy=\"false\">(</mo><mn>11011</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_089",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠂⠴⠂⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>110110</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_090",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>111</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_091",
+  "suite": "AataNemeth",
+  "braille": "⠷⠴⠂⠂⠴⠀⠂⠂⠂⠴⠀⠴⠂⠂⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>0110</mn><mspace width=\"thickmathspace\"></mspace><mn>1110</mn><mspace width=\"thickmathspace\"></mspace><mn>0110</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_092",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠉⠒⠀⠨⠅⠀⠷⠂⠂⠂⠴⠴⠾",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"bold\">c</mi></mrow></mrow><mn>3</mn></msub><mo>=</mo><mo stretchy=\"false\">(</mo><mn>11100</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_093",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠂⠂⠂",
+  "mathml": "<math><mn>1111</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_094",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠂⠂⠂⠂⠂⠴⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>111110</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_095",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠂⠂⠂⠂⠂⠂⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>111111</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_096",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠂⠆⠂⠒⠢⠆⠢⠴⠒⠆⠲⠲⠆",
+  "mathml": "<math><mn>112135</mn><mn>25032</mn><mn>442</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_097",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠘⠖⠀⠨⠅⠀⠼⠂⠂⠶⠀⠖⠲⠔",
+  "mathml": "<math> <msup><mn>7</mn><mn>6</mn></msup><mo>=</mo><mn>117</mn><mspace width=\"thinmathspace\"></mspace><mn>649</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_098",
+  "suite": "AataNemeth",
+  "braille": "⠛⠉⠙⠀⠷⠆⠲⠠⠀⠒⠖⠾⠀⠨⠅⠀⠼⠂⠆",
+  "mathml": "<math><mo form=\"prefix\" movablelimits=\"true\">gcd</mo><mo stretchy=\"false\">(</mo><mn>24</mn><mo>,</mo><mn>36</mn><mo stretchy=\"false\">)</mo><mo>=</mo><mn>12</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_099",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠂⠆⠴⠔⠶⠔⠠⠀⠠⠑⠀⠨⠅⠀⠼⠂⠒⠆⠢⠂⠠⠀⠭⠀⠨⠅⠀⠼⠂⠲⠆⠒⠶⠂",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>120979</mn><mo>,</mo><mi>E</mi><mo>=</mo><mn>13251</mn><mo>,</mo><mi>x</mi><mo>=</mo><mn>142371</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_100",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠒⠲⠢⠾⠷⠖⠶⠦⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>12345</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>678</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_101",
+  "suite": "AataNemeth",
+  "braille": "⠈⠷⠷⠂⠆⠒⠢⠾⠷⠲⠖⠶⠾⠈⠾⠘⠤⠂",
+  "mathml": "<math><mo stretchy=\"false\">[</mo><mo stretchy=\"false\">(</mo><mn>1235</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>467</mn><mo stretchy=\"false\">)</mo> <msup><mo stretchy=\"false\">]</mo> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_102",
+  "suite": "AataNemeth",
+  "braille": "⠷⠝⠠⠀⠠⠑⠾⠀⠨⠅⠀⠷⠒⠶⠔⠦⠖⠶⠒⠒⠠⠀⠂⠆⠒⠶⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>n</mi><mo>,</mo><mi>E</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mo stretchy=\"false\">(</mo><mn>37986733</mn><mo>,</mo><mn>12371</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_103",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠲⠢⠒⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>12453</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_104",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠾⠷⠂⠆⠢⠒⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>12</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>1253</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_105",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠢⠒⠶⠾⠘⠤⠂",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>12537</mn> <msup><mo stretchy=\"false\">)</mo> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_106",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠆⠢⠲⠾⠷⠂⠒⠾⠷⠆⠢⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1254</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>13</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>25</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_107",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠆⠖⠴",
+  "mathml": "<math><mn>1260</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_108",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠆⠦⠘⠲⠀⠨⠅⠀⠼⠆⠖⠦⠠⠲⠒⠢⠠⠲⠢⠖",
+  "mathml": "<math> <msup><mn>128</mn><mn>4</mn></msup><mo>=</mo><mn>268</mn><mo>,</mo><mn>435</mn><mo>,</mo><mn>456</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_109",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠶⠔⠲⠴⠒⠠⠀⠠⠙⠀⠨⠅⠀⠼⠖⠶⠂⠠⠀⠽⠀⠨⠅⠀⠼⠂⠆⠔⠒⠦⠂",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>79403</mn><mo>,</mo><mi>D</mi><mo>=</mo><mn>671</mn><mo>,</mo><mi>y</mi><mo>=</mo><mn>129381</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_110",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠲⠆⠒⠾⠷⠒⠲⠾⠷⠢⠖⠾⠷⠂⠒⠆⠲⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1423</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>34</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>56</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>1324</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_111",
+  "suite": "AataNemeth",
+  "braille": "⠨⠷⠷⠂⠒⠾⠠⠀⠷⠂⠒⠾⠷⠆⠲⠾⠠⠀⠷⠂⠒⠆⠾⠠⠀⠷⠂⠒⠲⠾⠠⠀⠷⠂⠒⠆⠲⠾⠠⠀⠷⠂⠒⠲⠆⠾⠨⠾",
+  "mathml": "<math><mo fence=\"false\" stretchy=\"false\">{</mo><mo stretchy=\"false\">(</mo><mn>13</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>13</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>24</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>132</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>134</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>1324</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>1342</mn><mo stretchy=\"false\">)</mo><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_112",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠒⠲⠢⠾⠷⠆⠒⠲⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1345</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>234</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_113",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠲",
+  "mathml": "<math><mn>14</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_114",
+  "suite": "AataNemeth",
+  "braille": "⠭⠀⠨⠅⠀⠼⠂⠲⠆⠢⠆⠦",
+  "mathml": "<math><mi>x</mi><mo>=</mo><mn>142528</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_115",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠲⠆⠖⠾⠷⠂⠲⠆⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1426</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>142</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_116",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠲⠆⠖⠒⠶⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>142637</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_117",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠲⠒⠢⠖⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>14356</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_118",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠔⠂⠠⠑⠀⠨⠅⠀⠼⠂⠬⠂⠢⠂⠍",
+  "mathml": "<math><mn>191</mn><mi>E</mi><mo>=</mo><mn>1</mn><mo>+</mo><mn>151</mn><mi>m</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_119",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠢⠆⠒",
+  "mathml": "<math><mn>1523</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_120",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠢⠒⠂",
+  "mathml": "<math><mn>1531</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_121",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠶⠆⠢⠲⠾⠷⠂⠲⠆⠒⠾⠷⠂⠢⠲⠖⠒⠆⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>17254</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>1423</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>154632</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_122",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠢⠖⠾⠷⠆⠒⠲⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>156</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>234</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_123",
+  "suite": "AataNemeth",
+  "braille": "⠎⠀⠨⠅⠀⠤⠼⠂⠖",
+  "mathml": "<math><mi>s</mi><mo>=</mo><mo>−<!-- − --></mo><mn>16</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_124",
+  "suite": "AataNemeth",
+  "braille": "⠸⠼⠂⠖",
+  "mathml": "<math><mrow><mn mathvariant=\"bold\">16</mn></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_125",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠖⠴",
+  "mathml": "<math><mn>160</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_126",
+  "suite": "AataNemeth",
+  "braille": "⠨⠍⠀⠨⠅⠀⠷⠂⠖⠒⠲⠾",
+  "mathml": "<math><mi>μ<!-- μ --></mi><mo>=</mo><mo stretchy=\"false\">(</mo><mn>1634</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_127",
+  "suite": "AataNemeth",
+  "braille": "⠷⠝⠠⠀⠠⠑⠾⠀⠨⠅⠀⠷⠂⠖⠒⠔⠲⠦⠢⠲⠒⠂⠒⠠⠀⠒⠲⠢⠶⠦⠲⠢⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>n</mi><mo>,</mo><mi>E</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mo stretchy=\"false\">(</mo><mn>16394854313</mn><mo>,</mo><mn>34578451</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_128",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠡⠶⠡⠲⠶⠀⠨⠅⠀⠼⠂⠖⠲⠢",
+  "mathml": "<math><mn>5</mn><mo>⋅<!-- ⋅ --></mo><mn>7</mn><mo>⋅<!-- ⋅ --></mo><mn>47</mn><mo>=</mo><mn>1645</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_129",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠖⠢",
+  "mathml": "<math><mn>165</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_130",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠖⠦",
+  "mathml": "<math><mn>168</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_131",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠂⠀⠸⠇⠀⠼⠂⠶⠷⠍⠕⠙⠀⠼⠦⠾",
+  "mathml": "<math><mn>41</mn><mo>≡<!-- ≡ --></mo><mn>17</mn><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>8</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_132",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠶⠒⠢⠆⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>17352</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_133",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠶⠒⠔",
+  "mathml": "<math><mn>1739</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_134",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠶⠢",
+  "mathml": "<math><mn>175</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_135",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠦⠴⠘⠨⠡",
+  "mathml": "<math><msup><mn>180</mn><mrow><mo>∘<!-- ∘ --></mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_136",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠔",
+  "mathml": "<math><mn>19</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_137",
+  "suite": "AataNemeth",
+  "braille": "⠷⠝⠠⠀⠠⠑⠾⠀⠨⠅⠀⠷⠒⠴⠢⠒⠠⠀⠂⠔⠆⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>n</mi><mo>,</mo><mi>E</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mo stretchy=\"false\">(</mo><mn>3053</mn><mo>,</mo><mn>1921</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_138",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠔⠖⠠⠦⠒⠒⠈⠡⠂⠔⠖⠠⠦⠒⠒",
+  "mathml": "<math><mn>196,833</mn><mo>×<!-- × --></mo><mn>196,833</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_139",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠔⠔⠲⠢",
+  "mathml": "<math><mn>19945</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_140",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠒⠢⠢⠂⠠⠀⠠⠙⠀⠨⠅⠀⠼⠂⠔⠔⠶⠠⠀⠽⠀⠨⠅⠀⠼⠆⠶⠔⠂",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>3551</mn><mo>,</mo><mi>D</mi><mo>=</mo><mn>1997</mn><mo>,</mo><mi>y</mi><mo>=</mo><mn>2791</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_141",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠴⠴",
+  "mathml": "<math><mn>200</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_142",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠴⠴⠴",
+  "mathml": "<math><mn>2000</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_143",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠴⠶⠂⠘⠔⠢⠆⠂⠐⠷⠍⠕⠙⠀⠼⠲⠶⠆⠲⠾",
+  "mathml": "<math> <msup><mn>2071</mn> <mrow><mn>9521</mn></mrow></msup><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>4724</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_144",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠂⠒⠲",
+  "mathml": "<math><mn>2134</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_145",
+  "suite": "AataNemeth",
+  "braille": "⠭⠀⠸⠇⠀⠼⠆⠂⠲⠷⠍⠕⠙⠀⠼⠆⠶⠶⠆⠾",
+  "mathml": "<math><mi>x</mi><mo>≡<!-- ≡ --></mo><mn>214</mn><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>2772</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_146",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠆⠒⠲⠬⠲⠂⠆⠂",
+  "mathml": "<math><mn>2234</mn><mo>+</mo><mn>4121</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_147",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠆⠆⠢⠶⠠⠀⠠⠑⠀⠨⠅⠀⠼⠲⠶⠠⠀⠭⠀⠨⠅⠀⠼⠆⠒",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>2257</mn><mo>,</mo><mi>E</mi><mo>=</mo><mn>47</mn><mo>,</mo><mi>x</mi><mo>=</mo><mn>23</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_148",
+  "suite": "AataNemeth",
+  "braille": "⠷⠝⠠⠀⠠⠑⠾⠀⠨⠅⠀⠷⠲⠢⠂⠠⠀⠆⠒⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>n</mi><mo>,</mo><mi>E</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mo stretchy=\"false\">(</mo><mn>451</mn><mo>,</mo><mn>231</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_149",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠲⠢⠖⠆⠔⠠⠀⠠⠑⠀⠨⠅⠀⠼⠶⠦⠂⠠⠀⠭⠀⠨⠅⠀⠼⠆⠒⠂⠢⠖⠂",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>45629</mn><mo>,</mo><mi>E</mi><mo>=</mo><mn>781</mn><mo>,</mo><mi>x</mi><mo>=</mo><mn>231561</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_150",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠒⠲",
+  "mathml": "<math><mn>234</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_151",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠒⠶⠶⠂",
+  "mathml": "<math><mn>23771</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_152",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠂⠤⠂⠶⠀⠨⠅⠀⠼⠆⠲",
+  "mathml": "<math><mn>41</mn><mo>−<!-- − --></mo><mn>17</mn><mo>=</mo><mn>24</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_153",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠆⠀⠈⠑⠀⠨⠰⠠⠵⠆⠲⠴",
+  "mathml": "<math><mn>72</mn><mo>∈<!-- ∈ --></mo><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>240</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_154",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠲⠂⠢",
+  "mathml": "<math><mn>2415</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_155",
+  "suite": "AataNemeth",
+  "braille": "⠠⠝⠀⠨⠅⠀⠼⠆⠢⠴",
+  "mathml": "<math><mi>N</mi><mo>=</mo><mn>250</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_156",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠢⠢",
+  "mathml": "<math><mn>255</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_157",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠢⠢⠶⠘⠒⠲⠂⠐⠷⠍⠕⠙⠀⠼⠢⠖⠦⠂⠾",
+  "mathml": "<math> <msup><mn>2557</mn> <mrow><mn>341</mn></mrow></msup><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>5681</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_158",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠘⠦⠀⠨⠅⠀⠼⠆⠢⠖",
+  "mathml": "<math> <msup><mn>2</mn> <mrow><mn>8</mn></mrow></msup><mo>=</mo><mn>256</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_159",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠭⠬⠂⠀⠸⠇⠀⠼⠂⠒⠷⠍⠕⠙⠀⠼⠆⠖⠾",
+  "mathml": "<math><mn>5</mn><mi>x</mi><mo>+</mo><mn>1</mn><mo>≡<!-- ≡ --></mo><mn>13</mn><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>26</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_160",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠖⠴⠴⠀⠨⠅⠀⠼⠆⠘⠒⠐⠈⠡⠢⠘⠆⠐⠈⠡⠂⠒",
+  "mathml": "<math><mn>2600</mn><mo>=</mo> <msup><mn>2</mn><mn>3</mn></msup><mo>×<!-- × --></mo> <msup><mn>5</mn><mn>2</mn></msup><mo>×<!-- × --></mo><mn>13</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_161",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠵⠆⠶",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>27</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_162",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠶⠂⠘⠒⠆⠂⠐⠷⠍⠕⠙⠀⠼⠲⠦⠂⠾",
+  "mathml": "<math> <msup><mn>271</mn> <mrow><mn>321</mn></mrow></msup><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>481</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_163",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠂⠆⠴⠔⠶⠔⠠⠀⠠⠙⠀⠨⠅⠀⠼⠆⠶⠒⠒⠂⠠⠀⠽⠀⠨⠅⠀⠼⠂⠂⠆⠂⠒⠢",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>120979</mn><mo>,</mo><mi>D</mi><mo>=</mo><mn>27331</mn><mo>,</mo><mi>y</mi><mo>=</mo><mn>112135</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_164",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠶⠔⠂",
+  "mathml": "<math><mn>2791</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_165",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠦",
+  "mathml": "<math><mn>28</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_166",
+  "suite": "AataNemeth",
+  "braille": "⠟⠀⠨⠅⠀⠼⠆⠔",
+  "mathml": "<math><mi>q</mi><mo>=</mo><mn>29</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_167",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠔⠆⠘⠒⠂⠶⠂⠐⠷⠍⠕⠙⠀⠼⠢⠦⠆⠾",
+  "mathml": "<math> <msup><mn>292</mn> <mrow><mn>3171</mn></mrow></msup><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>582</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_168",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠂⠒⠲⠡⠂⠢⠒⠂⠀⠨⠅⠀⠼⠒⠠⠆⠖⠶⠠⠂⠢⠲",
+  "mathml": "<math><mn>2134</mn><mo>⋅<!-- ⋅ --></mo><mn>1531</mn><mo>=</mo><mn>3,267,154</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_169",
+  "suite": "AataNemeth",
+  "braille": "⠠⠥⠷⠒⠴⠾",
+  "mathml": "<math><mi>U</mi><mo stretchy=\"false\">(</mo><mn>30</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_170",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠒⠢⠢⠂⠠⠀⠠⠑⠀⠨⠅⠀⠼⠖⠆⠔⠠⠀⠭⠀⠨⠅⠀⠼⠒⠂",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>3551</mn><mo>,</mo><mi>E</mi><mo>=</mo><mn>629</mn><mo>,</mo><mi>x</mi><mo>=</mo><mn>31</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_171",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠂⠆⠀⠈⠑⠀⠨⠰⠠⠵⠲⠶⠂",
+  "mathml": "<math><mn>312</mn><mo>∈<!-- ∈ --></mo><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>471</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_172",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠲⠆",
+  "mathml": "<math><mn>342</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_173",
+  "suite": "AataNemeth",
+  "braille": "⠠⠛⠀⠨⠅⠀⠨⠷⠷⠂⠾⠠⠀⠷⠂⠆⠾⠠⠀⠷⠒⠲⠢⠾⠠⠀⠷⠒⠢⠲⠾⠠⠀⠷⠂⠆⠾⠷⠒⠲⠢⠾⠠⠀⠷⠂⠆⠾⠷⠒⠢⠲⠾⠨⠾",
+  "mathml": "<math><mi>G</mi><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mo stretchy=\"false\">(</mo><mn>1</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>12</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>345</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>354</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>12</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>345</mn><mo stretchy=\"false\">)</mo><mo>,</mo><mo stretchy=\"false\">(</mo><mn>12</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>354</mn><mo stretchy=\"false\">)</mo><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_174",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠲⠀⠒⠢⠆⠀⠴⠴⠴",
+  "mathml": "<math><mn>44</mn><mspace width=\"thinmathspace\"></mspace><mn>352</mn><mspace width=\"thinmathspace\"></mspace><mn>000</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_175",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠖⠴⠘⠨⠡",
+  "mathml": "<math><msup><mn>360</mn><mrow><mo>∘<!-- ∘ --></mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_176",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠶",
+  "mathml": "<math><mn>37</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_177",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠶⠢⠲",
+  "mathml": "<math><mn>3754</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_178",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠦",
+  "mathml": "<math><mn>38</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_179",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠔",
+  "mathml": "<math><mn>39</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_180",
+  "suite": "AataNemeth",
+  "braille": "⠼⠒⠔⠂⠀⠨⠅⠀⠼⠂⠶⠡⠆⠒",
+  "mathml": "<math><mn>391</mn><mo>=</mo><mn>17</mn><mo>⋅<!-- ⋅ --></mo><mn>23</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_181",
+  "suite": "AataNemeth",
+  "braille": "⠭⠀⠨⠅⠀⠼⠲",
+  "mathml": "<math><mi>x</mi><mo>=</mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_182",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠴",
+  "mathml": "<math><mn>40</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_183",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠆",
+  "mathml": "<math><mn>42</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_184",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠒⠤⠂⠦⠊",
+  "mathml": "<math><mn>43</mn><mo>−<!-- − --></mo><mn>18</mn><mi>i</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_185",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠦⠶⠶⠔⠡⠲⠒⠆⠶",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>8779</mn><mo>⋅<!-- ⋅ --></mo><mn>4327</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_186",
+  "suite": "AataNemeth",
+  "braille": "⠤⠼⠲⠒⠢⠶",
+  "mathml": "<math><mo>−<!-- − --></mo><mn>4357</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_187",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠲",
+  "mathml": "<math><mn>44</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_188",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠖",
+  "mathml": "<math><mn>46</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_189",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠖⠠⠒⠦⠦",
+  "mathml": "<math><mn>46,388</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_190",
+  "suite": "AataNemeth",
+  "braille": "⠠⠙⠲⠶⠴⠲⠲⠦",
+  "mathml": "<math><msub><mi>D</mi><mrow><mn>470448</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_191",
+  "suite": "AataNemeth",
+  "braille": "⠼⠲⠶⠂",
+  "mathml": "<math><mn>471</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_192",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠵⠲⠦",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>48</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_193",
+  "suite": "AataNemeth",
+  "braille": "⠠⠑⠀⠨⠅⠀⠼⠲⠦⠶",
+  "mathml": "<math><mi>E</mi><mo>=</mo><mn>487</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_194",
+  "suite": "AataNemeth",
+  "braille": "⠠⠥⠷⠲⠔⠾",
+  "mathml": "<math><mi>U</mi><mo stretchy=\"false\">(</mo><mn>49</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_195",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠬⠒⠀⠨⠅⠀⠼⠢",
+  "mathml": "<math><mn>2</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_196",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠴⠴",
+  "mathml": "<math><mn>500</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_197",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠯⠀⠨⠅⠀⠼⠢⠴⠲⠴",
+  "mathml": "<math><mn>7</mn><mo>!</mo><mo>=</mo><mn>5040</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_198",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠂",
+  "mathml": "<math><mn>51</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_199",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠘⠢⠂⠂⠐⠤⠂",
+  "mathml": "<math> <msup><mn>2</mn> <mrow><mn>511</mn></mrow></msup><mo>−<!-- − --></mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_200",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠆",
+  "mathml": "<math><mn>52</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_201",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠒",
+  "mathml": "<math><mn>53</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_202",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠲",
+  "mathml": "<math><mn>54</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_203",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠲⠴⠀⠨⠅⠀⠼⠆⠘⠆⠐⠡⠒⠘⠒⠐⠡⠢",
+  "mathml": "<math><mn>540</mn><mo>=</mo> <msup><mn>2</mn><mn>2</mn></msup><mo>⋅<!-- ⋅ --></mo> <msup><mn>3</mn><mn>3</mn></msup><mo>⋅<!-- ⋅ --></mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_204",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠖⠂",
+  "mathml": "<math><mn>561</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_205",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠖⠆",
+  "mathml": "<math><mn>562</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_206",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠶⠀⠨⠅⠀⠼⠆⠘⠴⠐⠬⠆⠘⠒⠐⠬⠆⠘⠲⠐⠬⠆⠘⠢",
+  "mathml": "<math><mn>57</mn><mo>=</mo> <msup><mn>2</mn><mn>0</mn></msup><mo>+</mo> <msup><mn>2</mn><mn>3</mn></msup><mo>+</mo> <msup><mn>2</mn><mn>4</mn></msup><mo>+</mo> <msup><mn>2</mn><mn>5</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_207",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠦",
+  "mathml": "<math><mn>58</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_208",
+  "suite": "AataNemeth",
+  "braille": "⠝⠀⠨⠅⠀⠼⠢⠦⠔⠒⠠⠀⠠⠙⠀⠨⠅⠀⠼⠦⠂⠠⠀⠽⠀⠨⠅⠀⠼⠒⠲",
+  "mathml": "<math><mi>n</mi><mo>=</mo><mn>5893</mn><mo>,</mo><mi>D</mi><mo>=</mo><mn>81</mn><mo>,</mo><mi>y</mi><mo>=</mo><mn>34</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_209",
+  "suite": "AataNemeth",
+  "braille": "⠼⠢⠔",
+  "mathml": "<math><mn>59</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_210",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠭⠀⠨⠅⠀⠼⠖",
+  "mathml": "<math><mn>2</mn><mi>x</mi><mo>=</mo><mn>6</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_211",
+  "suite": "AataNemeth",
+  "braille": "⠼⠖⠨⠴⠴⠴⠴⠴",
+  "mathml": "<math><mn>6.00000</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_212",
+  "suite": "AataNemeth",
+  "braille": "⠷⠂⠠⠀⠆⠠⠀⠲⠠⠀⠦⠾⠷⠒⠠⠀⠖⠨⠂⠆⠠⠀⠔⠾⠷⠢⠠⠀⠂⠴⠾⠷⠶⠠⠀⠂⠲⠠⠀⠂⠒⠠⠀⠂⠂⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>3</mn><mo>,</mo><mn>6.12</mn><mo>,</mo><mn>9</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>5</mn><mo>,</mo><mn>10</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mn>7</mn><mo>,</mo><mn>14</mn><mo>,</mo><mn>13</mn><mo>,</mo><mn>11</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_213",
+  "suite": "AataNemeth",
+  "braille": "⠵⠀⠨⠅⠀⠼⠆⠉⠊⠎⠀⠼⠖⠴⠘⠨⠡",
+  "mathml": "<math><mi>z</mi><mo>=</mo><mn>2</mn><mi>cis</mi><mo>⁡<!-- ⁡ --></mo> <msup><mn>60</mn> <mrow><mo>∘<!-- ∘ --></mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_214",
+  "suite": "AataNemeth",
+  "braille": "⠭⠘⠲⠐⠤⠷⠆⠸⠌⠒⠾⠭⠘⠆⠐⠤⠖⠆⠸⠌⠔",
+  "mathml": "<math> <msup><mi>x</mi><mn>4</mn></msup><mo>−<!-- − --></mo><mo stretchy=\"false\">(</mo><mn>2</mn> <mrow><mo>/</mo></mrow><mn>3</mn><mo stretchy=\"false\">)</mo> <msup><mi>x</mi><mn>2</mn></msup><mo>−<!-- − --></mo><mn>62</mn> <mrow><mo>/</mo></mrow><mn>9</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_215",
+  "suite": "AataNemeth",
+  "braille": "⠈⠷⠠⠠⠛⠋⠷⠖⠆⠢⠾⠸⠒⠠⠠⠛⠋⠷⠆⠢⠾⠈⠾",
+  "mathml": "<math><mo stretchy=\"false\">[</mo><mi>GF</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mn>625</mn><mo stretchy=\"false\">)</mo><mo>:</mo><mi>GF</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mn>25</mn><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">]</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_216",
+  "suite": "AataNemeth",
+  "braille": "⠼⠖⠒⠂",
+  "mathml": "<math><mn>631</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_217",
+  "suite": "AataNemeth",
+  "braille": "⠼⠖⠲",
+  "mathml": "<math><mn>64</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_218",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠘⠆⠘⠘⠲⠀⠨⠅⠀⠼⠖⠢⠠⠢⠒⠖",
+  "mathml": "<math> <msup><mn>2</mn> <mrow> <msup><mn>2</mn><mn>4</mn></msup></mrow></msup><mo>=</mo><mn>65,536</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_219",
+  "suite": "AataNemeth",
+  "braille": "⠼⠖⠖",
+  "mathml": "<math><mn>66</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_220",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠆⠴",
+  "mathml": "<math><mn>720</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_221",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠆⠔",
+  "mathml": "<math><mn>729</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_222",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠶⠂⠘⠒⠆⠂⠐⠷⠍⠕⠙⠀⠼⠶⠖⠢⠾",
+  "mathml": "<math> <msup><mn>971</mn> <mrow><mn>321</mn></mrow></msup><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mn>765</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_223",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠶⠂",
+  "mathml": "<math><mn>771</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_224",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠵⠂⠴⠈⠡⠨⠰⠠⠵⠆⠲⠈⠡⠨⠰⠠⠵⠦⠴",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>10</mn></mrow></msub><mo>×<!-- × --></mo><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>24</mn></mrow></msub><mo>×<!-- × --></mo><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow> <mrow><mn>80</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_225",
+  "suite": "AataNemeth",
+  "braille": "⠼⠶⠘⠢⠀⠨⠅⠀⠼⠂⠖⠀⠦⠴⠶",
+  "mathml": "<math> <msup><mn>7</mn><mn>5</mn></msup><mo>=</mo><mn>16</mn><mspace width=\"thinmathspace\"></mspace><mn>807</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_226",
+  "suite": "AataNemeth",
+  "braille": "⠼⠦⠂⠂",
+  "mathml": "<math><mn>811</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_227",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠢⠡⠔⠶⠡⠔⠦⠡⠔⠔⠀⠨⠅⠀⠼⠦⠔⠠⠲⠴⠒⠠⠔⠒⠴",
+  "mathml": "<math><mn>95</mn><mo>⋅<!-- ⋅ --></mo><mn>97</mn><mo>⋅<!-- ⋅ --></mo><mn>98</mn><mo>⋅<!-- ⋅ --></mo><mn>99</mn><mo>=</mo><mn>89,403,930</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_228",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠴⠘⠨⠡",
+  "mathml": "<math><msup><mn>90</mn><mrow><mo>∘<!-- ∘ --></mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_229",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠲⠢",
+  "mathml": "<math><mn>945</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_230",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠢",
+  "mathml": "<math><mn>95</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_231",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠖",
+  "mathml": "<math><mn>96</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_232",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠶",
+  "mathml": "<math><mn>97</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_233",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠦",
+  "mathml": "<math><mn>98</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_234",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠔",
+  "mathml": "<math><mn>99</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_235",
+  "suite": "AataNemeth",
+  "braille": "⠼⠔⠔⠆⠒",
+  "mathml": "<math><mn>9923</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_236",
+  "suite": "AataNemeth",
+  "braille": "⠁⠀⠈⠑⠀⠠⠁",
+  "mathml": "<math><mi>a</mi><mo>∈<!-- ∈ --></mo><mi>A</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_237",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠥⠞⠷⠠⠛⠾",
+  "mathml": "<math><mi>Aut</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>G</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_238",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠸⠐⠅⠀⠠⠃",
+  "mathml": "<math><mi>A</mi><mo>⊂<!-- ⊂ --></mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_239",
+  "suite": "AataNemeth",
+  "braille": "⠰⠓⠸⠒⠀⠠⠉⠀⠫⠕⠀⠠⠙",
+  "mathml": "<math><mi>h</mi><mo>:</mo><mi>C</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>D</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_240",
+  "suite": "AataNemeth",
+  "braille": "⠠⠛⠈⠡⠠⠛⠀⠫⠕⠀⠠⠛",
+  "mathml": "<math><mi>G</mi><mo>×<!-- × --></mo><mi>G</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>G</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_241",
+  "suite": "AataNemeth",
+  "braille": "⠠⠠⠛⠋⠷⠏⠘⠝⠐⠾",
+  "mathml": "<math><mi>GF</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo> <msup><mi>p</mi><mi>n</mi></msup><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_242",
+  "suite": "AataNemeth",
+  "braille": "⠠⠓⠀⠨⠅⠀⠨⠷⠑⠨⠾",
+  "mathml": "<math><mi>H</mi><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>e</mi><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_243",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠓",
+  "mathml": "<math><mrow><mrow><mi mathvariant=\"double-struck\">H</mi></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_244",
+  "suite": "AataNemeth",
+  "braille": "⠠⠓⠕⠍⠀⠷⠠⠧⠠⠀⠠⠺⠾",
+  "mathml": "<math><mi>Hom</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>V</mi><mo>,</mo><mi>W</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_245",
+  "suite": "AataNemeth",
+  "braille": "⠠⠊⠝⠝⠷⠠⠛⠾",
+  "mathml": "<math><mi>Inn</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>G</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_246",
+  "suite": "AataNemeth",
+  "braille": "⠠⠛⠠⠇⠆⠷⠨⠰⠠⠗⠾",
+  "mathml": "<math><mi>G</mi><msub><mi>L</mi><mn>2</mn></msub><mo stretchy=\"false\">(</mo> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_247",
+  "suite": "AataNemeth",
+  "braille": "⠨⠋⠸⠒⠀⠈⠰⠠⠇⠰⠠⠓⠀⠫⠕⠀⠈⠰⠠⠗⠰⠠⠓",
+  "mathml": "<math><mi>ϕ<!-- ϕ --></mi><mo>:</mo><msub> <mrow> <mrow><mi mathvariant=\"script\">L</mi></mrow></mrow><mi>H</mi></msub><mo stretchy=\"false\">→<!-- → --></mo><msub> <mrow> <mrow><mi mathvariant=\"script\">R</mi></mrow></mrow><mi>H</mi></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_248",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠍⠆⠷⠨⠰⠠⠗⠾",
+  "mathml": "<math><msub> <mrow> <mrow><mi mathvariant=\"double-struck\">M</mi></mrow></mrow><mn>2</mn></msub><mo stretchy=\"false\">(</mo> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_249",
+  "suite": "AataNemeth",
+  "braille": "⠠⠗⠸⠌⠠⠍",
+  "mathml": "<math><mi>R</mi><mrow><mo>/</mo></mrow><mi>M</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_250",
+  "suite": "AataNemeth",
+  "braille": "⠼⠂⠀⠐⠅⠀⠝⠀⠐⠅⠀⠠⠝",
+  "mathml": "<math><mn>1</mn><mo>&lt;</mo><mi>n</mi><mo>&lt;</mo><mi>N</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_251",
+  "suite": "AataNemeth",
+  "braille": "⠠⠝⠥⠇⠇⠷⠠⠓⠾",
+  "mathml": "<math><mi>Null</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>H</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_252",
+  "suite": "AataNemeth",
+  "braille": "⠠⠕⠷⠝⠾",
+  "mathml": "<math><mi>O</mi><mo stretchy=\"false\">(</mo><mi>n</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_253",
+  "suite": "AataNemeth",
+  "braille": "⠠⠏⠠⠁⠠⠏⠘⠤⠂⠀⠨⠅⠀⠠⠃",
+  "mathml": "<math><mi>P</mi><mi>A</mi> <msup><mi>P</mi> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup><mo>=</mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_254",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠏⠷⠨⠰⠠⠗⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"double-struck\">P</mi></mrow></mrow><mo stretchy=\"false\">(</mo> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_255",
+  "suite": "AataNemeth",
+  "braille": "⠠⠟⠠⠃⠠⠟⠘⠤⠂⠀⠨⠅⠀⠠⠉",
+  "mathml": "<math><mi>Q</mi><mi>B</mi> <msup><mi>Q</mi> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup><mo>=</mo><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_256",
+  "suite": "AataNemeth",
+  "braille": "⠠⠗⠀⠸⠐⠅⠀⠠⠭⠈⠡⠠⠭",
+  "mathml": "<math><mi>R</mi><mo>⊂<!-- ⊂ --></mo><mi>X</mi><mo>×<!-- × --></mo><mi>X</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_257",
+  "suite": "AataNemeth",
+  "braille": "⠠⠎⠀⠨⠅⠀⠨⠷⠂⠠⠀⠆⠠⠀⠒⠨⠾",
+  "mathml": "<math><mi>S</mi><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_258",
+  "suite": "AataNemeth",
+  "braille": "⠠⠎⠀⠨⠅⠀⠼⠂⠦",
+  "mathml": "<math><mtext>S</mtext><mo>=</mo><mn>18</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_259",
+  "suite": "AataNemeth",
+  "braille": "⠠⠞⠰⠠⠁⠸⠒⠀⠨⠰⠠⠗⠘⠆⠀⠫⠕⠀⠨⠰⠠⠗⠘⠆",
+  "mathml": "<math><msub><mi>T</mi><mi>A</mi></msub><mo>:</mo> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mn>2</mn></msup><mo stretchy=\"false\">→<!-- → --></mo> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mn>2</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_260",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠞⠀⠨⠅⠀⠨⠷⠵⠀⠈⠑⠀⠨⠰⠠⠉⠘⠈⠼⠸⠒⠀⠳⠵⠳⠀⠨⠅⠀⠼⠂⠨⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"double-struck\">T</mi></mrow></mrow><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>z</mi><mo>∈<!-- ∈ --></mo> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">C</mi></mrow></mrow><mo>∗<!-- ∗ --></mo></msup><mo>:</mo> <mrow><mo stretchy=\"false\">|</mo></mrow><mi>z</mi> <mrow><mo stretchy=\"false\">|</mo></mrow><mo>=</mo><mn>1</mn><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_261",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠸⠐⠅⠀⠠⠥",
+  "mathml": "<math><mi>A</mi><mo>⊂<!-- ⊂ --></mo><mi>U</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_262",
+  "suite": "AataNemeth",
+  "braille": "⠧⠀⠈⠑⠀⠠⠧",
+  "mathml": "<math><mi>v</mi><mo>∈<!-- ∈ --></mo><mi>V</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_263",
+  "suite": "AataNemeth",
+  "braille": "⠠⠽⠀⠨⠅⠀⠨⠷⠠⠃⠠⠀⠠⠺⠨⠾",
+  "mathml": "<math><mi>Y</mi><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>B</mi><mo>,</mo><mi>W</mi><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_264",
+  "suite": "AataNemeth",
+  "braille": "⠰⠋⠸⠒⠀⠠⠭⠀⠫⠕⠀⠠⠽",
+  "mathml": "<math><mi>f</mi><mo>:</mo><mi>X</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>Y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_265",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠍⠰⠍⠈⠡⠝⠐⠷⠸⠰⠠⠵⠆⠾",
+  "mathml": "<math><msub> <mrow><mi mathvariant=\"double-struck\">M</mi></mrow> <mrow><mi>m</mi><mo>×<!-- × --></mo><mi>n</mi></mrow></msub><mo stretchy=\"false\">(</mo><msub> <mrow><mi mathvariant=\"bold\">Z</mi></mrow><mn>2</mn></msub><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_266",
+  "suite": "AataNemeth",
+  "braille": "⠈⠷⠭⠈⠾⠀⠨⠅⠀⠨⠷⠽⠀⠈⠑⠀⠠⠭⠸⠒⠀⠽⠀⠈⠱⠀⠭⠨⠾",
+  "mathml": "<math><mo stretchy=\"false\">[</mo><mi>x</mi><mo stretchy=\"false\">]</mo><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>y</mi><mo>∈<!-- ∈ --></mo><mi>X</mi><mo>:</mo><mi>y</mi><mo>∼<!-- ∼ --></mo><mi>x</mi><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_267",
+  "suite": "AataNemeth",
+  "braille": "⠠⠋⠈⠷⠭⠈⠾",
+  "mathml": "<math><mi>F</mi><mo fence=\"false\" stretchy=\"false\">[</mo><mi>x</mi><mo fence=\"false\" stretchy=\"false\">]</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_268",
+  "suite": "AataNemeth",
+  "braille": "⠉⠓⠁⠗⠀⠠⠗",
+  "mathml": "<math><mi>char</mi><mo>⁡<!-- ⁡ --></mo><mi>R</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_269",
+  "suite": "AataNemeth",
+  "braille": "⠗⠉⠊⠎⠀⠨⠹",
+  "mathml": "<math><mi>r</mi><mi>cis</mi><mo>⁡<!-- ⁡ --></mo><mi>θ<!-- θ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_270",
+  "suite": "AataNemeth",
+  "braille": "⠨⠁⠨⠃⠀⠨⠅⠀⠊⠙",
+  "mathml": "<math><mi>α<!-- α --></mi><mi>β<!-- β --></mi><mo>=</mo> <mrow><mi mathvariant=\"normal\">i</mi><mi mathvariant=\"normal\">d</mi></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_271",
+  "suite": "AataNemeth",
+  "braille": "⠙⠑⠛⠀⠋⠷⠭⠾⠀⠨⠅⠀⠝",
+  "mathml": "<math><mi>deg</mi><mo>⁡<!-- ⁡ --></mo><mi>f</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mi>n</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_272",
+  "suite": "AataNemeth",
+  "braille": "⠙⠑⠞⠀⠠⠁⠀⠨⠅⠀⠁⠙⠤⠃⠉⠀⠌⠨⠅⠀⠼⠴",
+  "mathml": "<math><mo form=\"prefix\" movablelimits=\"true\">det</mo><mi>A</mi><mo>=</mo><mi>a</mi><mi>d</mi><mo>−<!-- − --></mo><mi>b</mi><mi>c</mi><mo>≠<!-- ≠ --></mo><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_273",
+  "suite": "AataNemeth",
+  "braille": "⠙⠊⠍⠀⠠⠧⠀⠨⠅⠀⠝",
+  "mathml": "<math><mi>dim</mi><mo>⁡<!-- ⁡ --></mo><mi>V</mi><mo>=</mo><mi>n</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_274",
+  "suite": "AataNemeth",
+  "braille": "⠋⠘⠤⠂⠐⠷⠭⠾⠀⠨⠅⠀⠑⠘⠭",
+  "mathml": "<math> <msup><mi>f</mi> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow></msup><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo> <msup><mi>e</mi><mi>x</mi></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_275",
+  "suite": "AataNemeth",
+  "braille": "⠋⠀⠸⠐⠅⠀⠠⠁⠈⠡⠠⠃",
+  "mathml": "<math><mi>f</mi><mo>⊂<!-- ⊂ --></mo><mi>A</mi><mo>×<!-- × --></mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_276",
+  "suite": "AataNemeth",
+  "braille": "⠛⠷⠂⠾⠀⠨⠅⠀⠁",
+  "mathml": "<math><mi>g</mi><mo stretchy=\"false\">(</mo><mn>1</mn><mo stretchy=\"false\">)</mo><mo>=</mo><mi>a</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_277",
+  "suite": "AataNemeth",
+  "braille": "⠙⠀⠨⠅⠀⠛⠉⠙⠀⠷⠁⠠⠀⠃⠾",
+  "mathml": "<math><mi>d</mi><mo>=</mo><mo form=\"prefix\" movablelimits=\"true\">gcd</mo><mo stretchy=\"false\">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_278",
+  "suite": "AataNemeth",
+  "braille": "⠠⠭⠰⠊⠐⠨⠩⠠⠭⠰⠚⠀⠨⠅⠀⠸⠴",
+  "mathml": "<math><msub><mi>X</mi><mi>i</mi></msub><mo>∩<!-- ∩ --></mo><msub><mi>X</mi><mi>j</mi></msub><mo>=</mo><mi mathvariant=\"normal\">∅<!-- ∅ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_279",
+  "suite": "AataNemeth",
+  "braille": "⠅⠑⠗⠀⠨⠋",
+  "mathml": "<math><mi>ker</mi><mo>⁡<!-- ⁡ --></mo><mi>ϕ<!-- ϕ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_280",
+  "suite": "AataNemeth",
+  "braille": "⠎⠤⠞⠀⠨⠅⠀⠇⠝",
+  "mathml": "<math><mi>s</mi><mo>−<!-- − --></mo><mi>t</mi><mo>=</mo><mi>l</mi><mi>n</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_281",
+  "suite": "AataNemeth",
+  "braille": "⠇⠉⠍⠀⠷⠁⠠⠀⠃⠾",
+  "mathml": "<math><mi>lcm</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_282",
+  "suite": "AataNemeth",
+  "braille": "⠐⠇⠊⠍⠩⠝⠀⠫⠕⠀⠠⠿⠻⠀⠋⠰⠝⠐⠸⠌⠋⠰⠝⠬⠂⠀⠨⠅⠀⠷⠜⠢⠻⠤⠂⠾⠸⠌⠆",
+  "mathml": "<math><munder><mo form=\"prefix\" movablelimits=\"true\">lim</mo> <mrow><mi>n</mi><mo stretchy=\"false\">→<!-- → --></mo><mi mathvariant=\"normal\">∞<!-- ∞ --></mi></mrow></munder><msub><mi>f</mi><mi>n</mi></msub> <mrow><mo>/</mo></mrow><msub><mi>f</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mo stretchy=\"false\">(</mo> <msqrt><mn>5</mn></msqrt><mo>−<!-- − --></mo><mn>1</mn><mo stretchy=\"false\">)</mo> <mrow><mo>/</mo></mrow><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_283",
+  "suite": "AataNemeth",
+  "braille": "⠋⠷⠭⠾⠀⠨⠅⠀⠇⠝⠀⠭",
+  "mathml": "<math><mi>f</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mi>ln</mi><mo>⁡<!-- ⁡ --></mo><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_284",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠗⠘⠍",
+  "mathml": "<math> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mi>m</mi></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_285",
+  "suite": "AataNemeth",
+  "braille": "⠙⠑⠛⠀⠷⠏⠷⠭⠾⠬⠟⠷⠭⠾⠾⠀⠐⠅⠱⠀⠍⠁⠭⠀⠷⠙⠑⠛⠀⠏⠷⠭⠾⠠⠀⠙⠑⠛⠀⠟⠷⠭⠾⠾",
+  "mathml": "<math><mi>deg</mi><mo>⁡<!-- ⁡ --></mo><mo stretchy=\"false\">(</mo><mi>p</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>+</mo><mi>q</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">)</mo><mo>≤<!-- ≤ --></mo><mo form=\"prefix\" movablelimits=\"true\">max</mo><mo stretchy=\"false\">(</mo><mi>deg</mi><mo>⁡<!-- ⁡ --></mo><mi>p</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>,</mo><mi>deg</mi><mo>⁡<!-- ⁡ --></mo><mi>q</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_286",
+  "suite": "AataNemeth",
+  "braille": "⠙⠰⠍⠊⠝",
+  "mathml": "<math><msub><mi>d</mi> <mrow><mo form=\"prefix\" movablelimits=\"true\">min</mo></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_287",
+  "suite": "AataNemeth",
+  "braille": "⠗⠀⠨⠅⠀⠎",
+  "mathml": "<math><mi>r</mi><mo>=</mo><mi>s</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_288",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠗",
+  "mathml": "<math><mrow><mrow><mi mathvariant=\"bold\">r</mi></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_289",
+  "suite": "AataNemeth",
+  "braille": "⠋⠷⠭⠾⠀⠨⠅⠀⠎⠊⠝⠀⠭",
+  "mathml": "<math><mi>f</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mi>sin</mi><mo>⁡<!-- ⁡ --></mo><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_290",
+  "suite": "AataNemeth",
+  "braille": "⠗⠸⠌⠎⠀⠈⠱⠀⠞⠸⠌⠥",
+  "mathml": "<math><mi>r</mi> <mrow><mo>/</mo></mrow><mi>s</mi><mo>∼<!-- ∼ --></mo><mi>t</mi> <mrow><mo>/</mo></mrow><mi>u</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_291",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠃⠀⠨⠅⠀⠷⠆⠠⠀⠆⠾⠘⠞",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">b</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><mn>2</mn><mo>,</mo><mn>2</mn> <msup><mo stretchy=\"false\">)</mo><mtext>t</mtext></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_292",
+  "suite": "AataNemeth",
+  "braille": "⠧⠀⠈⠑⠀⠨⠰⠠⠗⠘⠆",
+  "mathml": "<math><mi>v</mi><mo>∈<!-- ∈ --></mo> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">R</mi></mrow></mrow><mn>2</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_293",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠺",
+  "mathml": "<math><mrow><mrow><mi mathvariant=\"bold\">w</mi></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_294",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠭⠀⠨⠅⠀⠷⠭⠂⠠⠀⠄⠄⠄⠠⠀⠭⠰⠝⠐⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">x</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mo>…<!-- … --></mo><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_295",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠨⠅⠀⠨⠷⠭⠠⠀⠽⠨⠾",
+  "mathml": "<math><mi>A</mi><mo>=</mo><mo fence=\"false\" stretchy=\"false\">{</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_296",
+  "suite": "AataNemeth",
+  "braille": "⠸⠰⠽⠀⠨⠅⠀⠷⠽⠂⠠⠀⠄⠄⠄⠠⠀⠽⠰⠝⠐⠾",
+  "mathml": "<math> <mrow> <mrow><mi mathvariant=\"bold\">y</mi></mrow></mrow><mo>=</mo><mo stretchy=\"false\">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>,</mo><mo>…<!-- … --></mo><mo>,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_297",
+  "suite": "AataNemeth",
+  "braille": "⠳⠭⠤⠽⠳⠀⠐⠅⠱⠀⠼⠲",
+  "mathml": "<math> <mrow><mo stretchy=\"false\">|</mo></mrow><mi>x</mi><mo>−<!-- − --></mo><mi>y</mi> <mrow><mo stretchy=\"false\">|</mo></mrow><mo>≤<!-- ≤ --></mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_298",
+  "suite": "AataNemeth",
+  "braille": "⠐⠨⠎⠣⠈⠱⠻",
+  "mathml": "<math> <mrow><mover><mi>σ<!-- σ --></mi><mo>~<!-- ~ --></mo></mover></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_299",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠈⠡⠠⠃",
+  "mathml": "<math><mi>A</mi><mo>×<!-- × --></mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_300",
+  "suite": "AataNemeth",
+  "braille": "⠨⠠⠙⠀⠨⠅⠀⠃⠘⠆⠐⠤⠲⠁⠉",
+  "mathml": "<math><mi mathvariant=\"normal\">Δ<!-- Δ --></mi><mo>=</mo> <msup><mi>b</mi><mn>2</mn></msup><mo>−<!-- − --></mo><mn>4</mn><mi>a</mi><mi>c</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_301",
+  "suite": "AataNemeth",
+  "braille": "⠨⠁",
+  "mathml": "<math><mi>α<!-- α --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_302",
+  "suite": "AataNemeth",
+  "braille": "⠨⠃",
+  "mathml": "<math><mi>β<!-- β --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_303",
+  "suite": "AataNemeth",
+  "braille": "⠨⠨⠷⠸⠰⠁⠰⠗⠠⠀⠸⠰⠁⠰⠎⠐⠨⠨⠾⠀⠨⠅⠀⠨⠙⠰⠗⠎",
+  "mathml": "<math><mo fence=\"false\" stretchy=\"false\">⟨<!-- ⟨ --></mo><msub> <mrow> <mrow><mi mathvariant=\"bold\">a</mi></mrow></mrow><mi>r</mi></msub><mo>,</mo><msub> <mrow> <mrow><mi mathvariant=\"bold\">a</mi></mrow></mrow><mi>s</mi></msub><mo fence=\"false\" stretchy=\"false\">⟩<!-- ⟩ --></mo><mo>=</mo><msub><mi>δ<!-- δ --></mi> <mrow><mi>r</mi><mi>s</mi></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_304",
+  "suite": "AataNemeth",
+  "braille": "⠨⠱⠸⠒⠀⠠⠛⠸⠌⠠⠅⠀⠫⠕⠀⠨⠽⠷⠠⠛⠾",
+  "mathml": "<math><mi>η<!-- η --></mi><mo>:</mo><mi>G</mi> <mrow><mo>/</mo></mrow><mi>K</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>ψ<!-- ψ --></mi><mo stretchy=\"false\">(</mo><mi>G</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_305",
+  "suite": "AataNemeth",
+  "braille": "⠨⠇",
+  "mathml": "<math><mi>λ<!-- λ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_306",
+  "suite": "AataNemeth",
+  "braille": "⠨⠍⠂⠨⠗⠂",
+  "mathml": "<math><msub><mi>μ<!-- μ --></mi><mn>1</mn></msub><msub><mi>ρ<!-- ρ --></mi><mn>1</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_307",
+  "suite": "AataNemeth",
+  "braille": "⠨⠝⠸⠒⠀⠨⠰⠠⠵⠈⠷⠜⠒⠻⠊⠈⠾⠀⠫⠕⠀⠨⠰⠠⠝⠨⠬⠨⠷⠴⠨⠾",
+  "mathml": "<math><mi>ν<!-- ν --></mi><mo>:</mo> <mrow> <mrow><mi mathvariant=\"double-struck\">Z</mi></mrow></mrow><mo stretchy=\"false\">[</mo> <msqrt><mn>3</mn></msqrt><mspace width=\"thinmathspace\"></mspace><mi>i</mi><mo stretchy=\"false\">]</mo><mo stretchy=\"false\">→<!-- → --></mo> <mrow> <mrow><mi mathvariant=\"double-struck\">N</mi></mrow></mrow><mo>∪<!-- ∪ --></mo><mo fence=\"false\" stretchy=\"false\">{</mo><mn>0</mn><mo fence=\"false\" stretchy=\"false\">}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_308",
+  "suite": "AataNemeth",
+  "braille": "⠨⠏⠸⠒⠀⠠⠎⠀⠫⠕⠀⠠⠎",
+  "mathml": "<math><mi>π<!-- π --></mi><mo>:</mo><mi>S</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>S</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_309",
+  "suite": "AataNemeth",
+  "braille": "⠨⠽",
+  "mathml": "<math><mi>ψ<!-- ψ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_310",
+  "suite": "AataNemeth",
+  "braille": "⠺⠀⠨⠅⠀⠎⠉⠊⠎⠀⠨⠋",
+  "mathml": "<math><mi>w</mi><mo>=</mo><mi>s</mi><mi>cis</mi><mo>⁡<!-- ⁡ --></mo><mi>ϕ<!-- ϕ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_311",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠄",
+  "mathml": "<math><msup><mi>A</mi><mo>′</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_312",
+  "suite": "AataNemeth",
+  "braille": "⠛⠄⠄",
+  "mathml": "<math><msup><mi>g</mi><mo>″</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_313",
+  "suite": "AataNemeth",
+  "braille": "⠈⠰⠇",
+  "mathml": "<math><mi>ℓ<!-- ℓ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_314",
+  "suite": "AataNemeth",
+  "braille": "⠰⠋⠸⠒⠀⠠⠁⠀⠫⠕⠀⠠⠃",
+  "mathml": "<math><mi>f</mi><mo>:</mo><mi>A</mi><mo stretchy=\"false\">→<!-- → --></mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_315",
+  "suite": "AataNemeth",
+  "braille": "⠰⠋⠸⠒⠀⠁⠀⠫⠳⠒⠒⠕⠀⠃",
+  "mathml": "<math><mi>f</mi><mo>:</mo><mi>a</mi><mo stretchy=\"false\">↦<!-- ↦ --></mo><mi>b</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_316",
+  "suite": "AataNemeth",
+  "braille": "⠷⠫⠪⠶⠶⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mo stretchy=\"false\">⇐<!-- ⇐ --></mo><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_317",
+  "suite": "AataNemeth",
+  "braille": "⠸⠴",
+  "mathml": "<math><mi mathvariant=\"normal\">∅<!-- ∅ --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_318",
+  "suite": "AataNemeth",
+  "braille": "⠤⠼⠒⠀⠌⠈⠑⠀⠠⠑",
+  "mathml": "<math><mo>−<!-- − --></mo><mn>3</mn><mo>∉<!-- ∉ --></mo><mi>E</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_319",
+  "suite": "AataNemeth",
+  "braille": "⠨⠰⠠⠉⠘⠈⠼",
+  "mathml": "<math> <msup> <mrow> <mrow><mi mathvariant=\"double-struck\">C</mi></mrow></mrow><mo>∗<!-- ∗ --></mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_320",
+  "suite": "AataNemeth",
+  "braille": "⠷⠛⠨⠡⠋⠾⠷⠭⠾⠀⠨⠅⠀⠛⠷⠋⠷⠭⠾⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>g</mi><mo>∘<!-- ∘ --></mo><mi>f</mi><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo>=</mo><mi>g</mi><mo stretchy=\"false\">(</mo><mi>f</mi><mo stretchy=\"false\">(</mo><mi>x</mi><mo stretchy=\"false\">)</mo><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_321",
+  "suite": "AataNemeth",
+  "braille": "⠁⠳⠃",
+  "mathml": "<math><mi>a</mi><mo>∣<!-- ∣ --></mo><mi>b</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_322",
+  "suite": "AataNemeth",
+  "braille": "⠏⠌⠳⠁",
+  "mathml": "<math><mi>p</mi><mo>∤<!-- ∤ --></mo><mi>a</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_323",
+  "suite": "AataNemeth",
+  "braille": "⠁⠈⠩⠃",
+  "mathml": "<math><mi>a</mi><mo>∧<!-- ∧ --></mo><mi>b</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_324",
+  "suite": "AataNemeth",
+  "braille": "⠁⠈⠬⠃",
+  "mathml": "<math><mi>a</mi><mo>∨<!-- ∨ --></mo><mi>b</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_325",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠨⠬⠠⠃",
+  "mathml": "<math><mi>A</mi><mo>∪<!-- ∪ --></mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_326",
+  "suite": "AataNemeth",
+  "braille": "⠭⠀⠈⠱⠀⠽",
+  "mathml": "<math><mi>x</mi><mo>∼<!-- ∼ --></mo><mi>y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_327",
+  "suite": "AataNemeth",
+  "braille": "⠈⠱⠨⠅",
+  "mathml": "<math><mo>≅<!-- ≅ --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_328",
+  "suite": "AataNemeth",
+  "braille": "⠁⠀⠌⠨⠅⠀⠼⠴",
+  "mathml": "<math><mi>a</mi><mo>≠<!-- ≠ --></mo><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_329",
+  "suite": "AataNemeth",
+  "braille": "⠸⠇",
+  "mathml": "<math><mo>≡<!-- ≡ --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_330",
+  "suite": "AataNemeth",
+  "braille": "⠟⠀⠌⠸⠇⠀⠼⠂⠷⠍⠕⠙⠀⠏⠾",
+  "mathml": "<math><mi>q</mi><mo>≢</mo><mn>1</mn><mspace width=\"0.444em\"></mspace><mo stretchy=\"false\">(</mo><mi>mod</mi><mspace width=\"0.333em\"></mspace><mi>p</mi><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_331",
+  "suite": "AataNemeth",
+  "braille": "⠭⠀⠨⠂⠱⠀⠽",
+  "mathml": "<math><mi>x</mi><mo>≥<!-- ≥ --></mo><mi>y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_332",
+  "suite": "AataNemeth",
+  "braille": "⠠⠃⠀⠸⠨⠂⠀⠠⠁",
+  "mathml": "<math><mi>B</mi><mo>⊃<!-- ⊃ --></mo><mi>A</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_333",
+  "suite": "AataNemeth",
+  "braille": "⠠⠁⠀⠌⠸⠐⠅⠀⠠⠃",
+  "mathml": "<math><mi>A</mi><mo>⊄</mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_334",
+  "suite": "AataNemeth",
+  "braille": "⠠⠺⠀⠨⠅⠀⠠⠥⠫⠉⠸⠫⠬⠻⠠⠧",
+  "mathml": "<math><mi>W</mi><mo>=</mo><mi>U</mi><mo>⊕<!-- ⊕ --></mo><mi>V</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_335",
+  "suite": "AataNemeth",
+  "braille": "⠼⠆⠡⠲",
+  "mathml": "<math><mn>2</mn><mo>⋅<!-- ⋅ --></mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_336",
+  "suite": "AataNemeth",
+  "braille": "⠠⠵⠒⠈⠡⠳⠠⠵⠲",
+  "mathml": "<math><msub><mi>Z</mi><mn>3</mn></msub><mo>⋊<!-- ⋊ --></mo><msub><mi>Z</mi><mn>4</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_337",
+  "suite": "AataNemeth",
+  "braille": "⠫⠞⠀⠠⠁⠠⠃⠠⠉",
+  "mathml": "<math><mo>△<!-- △ --></mo><mi>A</mi><mi>B</mi><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_338",
+  "suite": "AataNemeth",
+  "braille": "⠁⠀⠨⠐⠅⠱⠀⠃",
+  "mathml": "<math><mi>a</mi><mo>⪯<!-- ⪯ --></mo><mi>b</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_339",
+  "suite": "AataNemeth",
+  "braille": "⠨⠨⠂⠱",
+  "mathml": "<math><mo>⪰<!-- ⪰ --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_000",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠤⠼⠂",
+  "mathml": "<math><mo>-</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_001",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠤⠼⠨⠒",
+  "mathml": "<math><mo>-</mo><mn>.3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_002",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠝⠯",
+  "mathml": "<math><mi>n</mi><mo>!</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_003",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠂⠠⠒⠶⠦",
+  "mathml": "<math><mn>1,378</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_004",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠒⠨⠶⠖",
+  "mathml": "<math><mn>3.76</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_005",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠂⠠⠲⠶⠦",
+  "mathml": "<math><mn>1,478</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_006",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠂⠴⠴⠠⠀⠼⠆⠴⠴⠠⠀⠼⠒⠴⠴",
+  "mathml": "<math><mn>100</mn><mo>,</mo><mtext>&#xA0;</mtext><mn>200</mn><mo>,</mo><mtext>&#xA0;</mtext><mn>300</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_007",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠨⠒⠢",
+  "mathml": "<math><mn>.35</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_008",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠒⠨⠂⠲",
+  "mathml": "<math><mn>3.14</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_009",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠨⠆⠁⠂⠁⠆⠁⠒",
+  "mathml": "<math><mn>.2</mn><msub><mi>a</mi><mn>1</mn></msub><msub><mi>a</mi><mn>2</mn></msub><msub><mi>a</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_010",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠨⠐⠁⠂⠁⠆⠁⠒",
+  "mathml": "<math><mn>.</mn><msub><mi>a</mi><mn>1</mn></msub><msub><mi>a</mi><mn>2</mn></msub><msub><mi>a</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_011",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠨⠂⠬⠨⠆⠀⠨⠅⠀⠨⠐⠤⠤⠤⠤",
+  "mathml": "<math><mn>.1</mn><mo>+</mo><mn>.2</mn><mo>=</mo><mo>.</mo><mo>----</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_012",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠆⠶",
+  "mathml": "<math><mn>27</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_013",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠂⠬⠭⠬⠽⠀⠨⠅⠀⠼⠴",
+  "mathml": "<math><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_014",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠽⠀⠨⠅⠀⠼⠆⠎⠊⠝⠀⠭",
+  "mathml": "<math><mi>y</mi><mo>=</mo><mn>2</mn><mi>sin</mi><mo>⁡</mo><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_015",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠎⠊⠝⠀⠼⠂",
+  "mathml": "<math><mi>sin</mi><mo>⁡</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_016",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠎⠊⠝⠘⠆⠀⠼⠆⠭",
+  "mathml": "<math><msup><mi>sin</mi><mn>2</mn></msup><mo>⁡</mo><mn>2</mn><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_017",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠴⠨⠒⠒⠒⠀⠄⠄⠄⠀⠼⠒⠀⠄⠄⠄",
+  "mathml": "<math><mn>0.333</mn><mo>…</mo><mn>3</mn><mo>…</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_018",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠇⠕⠛⠂⠴⠀⠼⠆",
+  "mathml": "<math><msub><mi>log</mi> <mrow><mn>10</mn></mrow></msub><mo>⁡</mo><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_019",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠷⠭⠀⠨⠅⠀⠼⠴⠾",
+  "mathml": "<math><mo>(</mo><mi>x</mi><mo>=</mo><mn>0</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_020",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠂⠂⠌⠢⠼",
+  "mathml": "<math><mfrac><mn>11</mn><mn>5</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_023",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠦⠼⠒⠀⠙⠕⠛⠎⠴",
+  "mathml": "<math><mtext>“3&#xA0;dogs”</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_024",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠏⠗⠕⠃⠁⠃⠊⠇⠊⠞⠽⠤⠤⠼⠴",
+  "mathml": "<math><mtext>Probability</mtext><mo>—</mo><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_025",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠦⠼⠨⠢",
+  "mathml": "<math><mtext>“</mtext><mn>.5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_026",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠦⠤⠼⠲",
+  "mathml": "<math><mtext>“</mtext><mo>-</mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_027",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠂⠌⠒⠼",
+  "mathml": "<math><mfrac><mn>1</mn><mn>3</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_028",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠭⠘⠹⠂⠌⠆⠼",
+  "mathml": "<math><msup><mi>x</mi><mfrac><mn>1</mn><mn>2</mn></mfrac></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_029",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠁⠬⠃⠌⠉⠼",
+  "mathml": "<math> <mfrac> <mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mi>c</mi></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_030",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠭⠘⠹⠂⠌⠆⠼⠐⠌⠆⠼",
+  "mathml": "<math> <mfrac> <msup><mi>x</mi> <mfrac><mn>1</mn><mn>2</mn></mfrac></msup><mn>2</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_031",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠗⠁⠞⠑⠀⠨⠅⠀⠹⠙⠊⠎⠞⠁⠝⠉⠑⠌⠞⠊⠍⠑⠼",
+  "mathml": "<math><mtext>rate</mtext><mo>=</mo> <mfrac><mtext>distance</mtext><mtext>time</mtext></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_032",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠁⠬⠃⠸⠌⠉⠬⠙⠼",
+  "mathml": "<math><mfrac bevelled=\"true\"> <mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow> <mrow><mi>c</mi><mo>+</mo><mi>d</mi></mrow></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_033",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠹⠹⠒⠌⠦⠼⠠⠌⠢⠠⠼",
+  "mathml": "<math><mfrac><mfrac><mn>3</mn><mn>8</mn></mfrac><mn>5</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_034",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠹⠂⠸⠌⠆⠠⠌⠆⠸⠹⠆⠌⠒⠸⠼⠠⠼",
+  "mathml": "<math> <mfrac> <mrow><mn>1</mn> <mrow><mo>/</mo></mrow><mn>2</mn></mrow> <mrow><mn>2</mn> <mfrac><mn>2</mn><mn>3</mn></mfrac></mrow></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_035",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠹⠢⠠⠌⠲⠸⠹⠒⠌⠦⠸⠼⠠⠼",
+  "mathml": "<math> <mfrac><mn>5</mn> <mrow><mn>4</mn> <mfrac><mn>3</mn><mn>8</mn></mfrac></mrow></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_036",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠹⠹⠂⠌⠆⠼⠠⠸⠌⠹⠒⠌⠲⠼⠠⠼",
+  "mathml": "<math><mfrac bevelled=\"true\"> <mfrac><mn>1</mn><mn>2</mn></mfrac> <mfrac><mn>3</mn><mn>4</mn></mfrac></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_037",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠹⠁⠌⠃⠘⠠⠹⠹⠒⠌⠲⠼⠠⠌⠹⠢⠌⠖⠼⠠⠼⠐⠼",
+  "mathml": "<math> <mfrac><mi>a</mi> <msup><mi>b</mi> <mrow> <mfrac> <mfrac><mn>3</mn><mn>4</mn></mfrac> <mfrac><mn>5</mn><mn>6</mn></mfrac></mfrac></mrow></msup></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_038",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠠⠹⠠⠹⠂⠸⠹⠂⠌⠲⠸⠼⠠⠌⠂⠸⠹⠒⠌⠢⠸⠼⠠⠼⠠⠠⠌⠢⠠⠠⠼",
+  "mathml": "<math> <mfrac> <mfrac> <mrow><mn>1</mn> <mfrac><mn>1</mn><mn>4</mn></mfrac></mrow> <mrow><mn>1</mn> <mfrac><mn>3</mn><mn>5</mn></mfrac></mrow></mfrac><mn>5</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_039",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠠⠠⠹⠠⠹⠷⠂⠤⠭⠾⠹⠙⠌⠙⠭⠼⠷⠆⠭⠾⠤⠆⠭⠹⠙⠌⠙⠭⠼⠷⠂⠤⠭⠾⠠⠌⠷⠂⠤⠭⠾⠘⠆⠐⠠⠼⠠⠠⠌⠂⠬⠷⠹⠆⠭⠌⠂⠤⠭⠼⠾⠘⠆⠐⠠⠠⠼",
+  "mathml": "<math> <mfrac> <mfrac> <mrow><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−</mo><mi>x</mi><mo stretchy=\"false\">)</mo> <mfrac><mi>d</mi><mi>dx</mi></mfrac><mo stretchy=\"false\">(</mo><mn>2</mn><mi>x</mi><mo stretchy=\"false\">)</mo><mo>−</mo><mn>2</mn><mi>x</mi> <mfrac><mi>d</mi><mi>dx</mi></mfrac><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−</mo><mi>x</mi><mo stretchy=\"false\">)</mo></mrow> <mrow><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−</mo><mi>x</mi> <msup><mo stretchy=\"false\">)</mo><mn>2</mn></msup></mrow></mfrac> <mrow><mn>1</mn><mo>+</mo> <msup> <mrow><mo>(</mo> <mfrac> <mrow><mn>2</mn><mi>x</mi></mrow> <mrow><mn>1</mn><mo>−</mo><mi>x</mi></mrow></mfrac><mo>)</mo></mrow><mn>2</mn></msup></mrow></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_040",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠆⠻⠀⠨⠅⠀⠼⠂⠬⠠⠠⠠⠹⠂⠠⠠⠠⠌⠆⠬⠠⠠⠹⠂⠠⠠⠌⠆⠬⠠⠹⠂⠠⠌⠆⠬⠹⠂⠌⠆⠬⠀⠄⠄⠄⠼⠠⠼⠠⠠⠼⠠⠠⠠⠼",
+  "mathml": "<math> <msqrt><mn>2</mn></msqrt><mo>=</mo> <mrow><mn>1</mn><mo>+</mo> <mfrac><mn>1</mn> <mrow><mn>2</mn><mo>+</mo> <mfrac><mn>1</mn> <mrow><mn>2</mn><mo>+</mo> <mfrac><mn>1</mn> <mrow><mn>2</mn><mo>+</mo> <mfrac><mn>1</mn> <mrow><mn>2</mn><mo>+</mo><mo>…</mo></mrow></mfrac></mrow></mfrac></mrow></mfrac></mrow></mfrac></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_041",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠆⠻",
+  "mathml": "<math><msqrt><mn>2</mn></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_042",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠭⠬⠽⠻",
+  "mathml": "<math><msqrt><mi>x</mi><mo>+</mo><mi>y</mi></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_043",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠭⠘⠆⠐⠬⠂⠻",
+  "mathml": "<math> <msqrt> <msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_044",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠭⠘⠆⠐⠬⠽⠘⠆⠐⠻",
+  "mathml": "<math> <msqrt> <msup><mi>x</mi><mn>2</mn></msup><mo>+</mo> <msup><mi>y</mi><mn>2</mn></msup></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_045",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠹⠭⠌⠽⠼⠻",
+  "mathml": "<math><msqrt><mfrac><mi>x</mi><mi>y</mi></mfrac></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_046",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠼⠒⠜⠁⠻",
+  "mathml": "<math><mn>3</mn><msqrt><mi>a</mi></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_047",
+  "suite": "SRE_Nemeth72",
+  "braille": "⠜⠭⠻⠘⠒",
+  "mathml": "<math><msup><msqrt><mi>x</mi></msqrt><mn>3</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_00",
+  "suite": "SRE_NemethBase",
+  "braille": "⠈⠼",
+  "mathml": "<math><mo>∗<!-- ∗ --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_01",
+  "suite": "SRE_NemethBase",
+  "braille": "⠸⠻",
+  "mathml": "<math><mo>†<!-- † --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_02",
+  "suite": "SRE_NemethBase",
+  "braille": "⠸⠸⠻",
+  "mathml": "<math><mo>‡<!-- ‡ --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_03",
+  "suite": "SRE_NemethBase",
+  "braille": "⠈⠠⠎",
+  "mathml": "<math><mi mathvariant=\"normal\">§<!-- § --></mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_04",
+  "suite": "SRE_NemethBase",
+  "braille": "⠈⠠⠎⠀⠈⠠⠎",
+  "mathml": "<math><mi mathvariant=\"normal\">§<!-- § --></mi><mi mathvariant=\"normal\">§<!-- § --></mi></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_05",
+  "suite": "SRE_NemethBase",
+  "braille": "⠫⠎",
+  "mathml": "<math><mo>☆</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_06",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠁⠀⠠⠉⠁⠝⠞⠕⠗⠘⠈⠼⠐⠀⠎⠑⠞⠀⠊⠎⠀⠄⠄⠄",
+  "mathml": "<math> <msup><mtext>A Cantor</mtext><mo>∗<!-- ∗ --></mo></msup><mtext> set is</mtext><mo>…<!-- … --></mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_07",
+  "suite": "SRE_NemethBase",
+  "braille": "⠋⠈⠼⠛",
+  "mathml": "<math><mi>f</mi><mo>∗<!-- ∗ --></mo><mi>g</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_08",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠋⠊⠝⠙⠀⠞⠓⠑⠀⠊⠝⠙⠑⠭⠘⠂⠐⠀⠕⠋⠀⠞⠓⠑⠀⠗⠁⠙⠊⠉⠁⠇⠨",
+  "mathml": "<math> <msup><mtext>Find the index</mtext><mn>1</mn></msup><mtext> of the radical.</mtext></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_09",
+  "suite": "SRE_NemethBase",
+  "braille": "⠘⠈⠼⠐⠠⠊⠗⠗⠁⠞⠊⠕⠝⠁⠇⠀⠝⠥⠍⠃⠑⠗⠎⠀⠄⠄⠄",
+  "mathml": "<math> <msup><mi></mi><mo>∗<!-- ∗ --></mo></msup><mtext>Irrational numbers</mtext><mo>…<!-- … --></mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_10",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠊⠗⠗⠁⠞⠊⠕⠝⠁⠇⠘⠈⠼⠐⠀⠝⠥⠍⠃⠑⠗⠎⠀⠄⠄⠄",
+  "mathml": "<math> <msup><mtext>Irrational</mtext><mo>∗<!-- ∗ --></mo></msup><mtext> numbers</mtext><mo>…<!-- … --></mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_11",
+  "suite": "SRE_NemethBase",
+  "braille": "⠘⠈⠼⠐⠀⠠⠊⠗⠗⠁⠞⠊⠕⠝⠁⠇⠀⠝⠥⠍⠃⠑⠗⠎⠀⠄⠄⠄",
+  "mathml": "<math> <msup><mi></mi><mo>∗<!-- ∗ --></mo></msup><mtext> Irrational numbers</mtext><mo>…<!-- … --></mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_12",
+  "suite": "SRE_NemethBase",
+  "braille": "⠀⠄⠄⠄⠎⠑⠞⠎⠨⠈⠼",
+  "mathml": "<math><mo>…<!-- … --></mo> <msup><mtext>sets.</mtext><mo>∗<!-- ∗ --></mo></msup></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_13",
+  "suite": "SRE_NemethBase",
+  "braille": "⠀⠄⠄⠄⠀⠎⠑⠞⠎⠈⠼⠨⠐",
+  "mathml": "<math><mo>…<!-- … --></mo> <msup><mtext>sets</mtext><mo>∗<!-- ∗ --></mo></msup><mo>.</mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_14",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠁⠀⠠⠉⠁⠝⠞⠕⠗⠘⠂⠐⠀⠎⠑⠞⠀⠊⠎⠀⠄⠄⠄",
+  "mathml": "<math> <msup><mtext>A Cantor</mtext><mn>1</mn></msup><mtext> set is</mtext><mo>…<!-- … --></mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_15",
+  "suite": "SRE_NemethBase",
+  "braille": "⠘⠈⠼⠐⠂⠴⠨",
+  "mathml": "<math><msup><mi></mi><mo>∗<!-- ∗ --></mo></msup><mn>10.</mn></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_16",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠘⠈⠼⠨⠐",
+  "mathml": "<math><msup><mn>1</mn><mo>∗<!-- ∗ --></mo></msup><mo>.</mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_17",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠨⠘⠈⠼",
+  "mathml": "<math><msup><mn>1.</mn><mo>∗<!-- ∗ --></mo></msup></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_18",
+  "suite": "SRE_NemethBase",
+  "braille": "⠘⠈⠼⠐⠀⠠⠋⠕⠗⠀⠑⠭⠞⠗⠁⠀⠉⠗⠑⠙⠊⠞⠨",
+  "mathml": "<math> <msup><mi></mi><mo>∗<!-- ∗ --></mo></msup><mtext> For extra credit.</mtext></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_19",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠴",
+  "mathml": "<math><mn>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_20",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂",
+  "mathml": "<math><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_21",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠆",
+  "mathml": "<math><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_22",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠒",
+  "mathml": "<math><mn>3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_23",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠲",
+  "mathml": "<math><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_24",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠢",
+  "mathml": "<math><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_25",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠖",
+  "mathml": "<math><mn>6</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_26",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠶",
+  "mathml": "<math><mn>7</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_27",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠦",
+  "mathml": "<math><mn>8</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_28",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠔",
+  "mathml": "<math><mn>9</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_29",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠",
+  "mathml": "<math><mo>,</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_30",
+  "suite": "SRE_NemethBase",
+  "braille": "⠨⠐",
+  "mathml": "<math><mo>.</mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_33",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠠⠒⠶⠦",
+  "mathml": "<math><mn>1</mn><mo>,</mo><mn>378</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_34",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠨⠒⠶⠦",
+  "mathml": "<math><mn>1.378</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_36",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠒⠠⠀⠼⠶⠖",
+  "mathml": "<math><mn>3</mn><mo>,</mo><mn>76</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_37",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠠⠲⠶⠦",
+  "mathml": "<math><mn>1</mn><mo>,</mo><mn>478</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_38",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠴⠴⠠⠀⠼⠆⠴⠴⠠⠀⠼⠒⠴⠴",
+  "mathml": "<math><mn>100</mn><mo>,</mo><mn>200</mn><mo>,</mo><mn>300</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_38_wiris",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠴⠴⠠⠀⠼⠆⠴⠴⠠⠀⠼⠒⠴⠴",
+  "mathml": "<math><mn>100</mn><mo>,</mo><mo>&#xA0;</mo><mn>200</mn><mo>,</mo><mo>&#xA0;</mo><mn>300</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_42",
+  "suite": "SRE_NemethBase",
+  "braille": "⠨⠐⠁⠂⠁⠆⠁⠒",
+  "mathml": "<math><mo>.</mo><msub><mi>a</mi><mn>1</mn></msub><msub><mi>a</mi><mn>2</mn></msub><msub><mi>a</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_43",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠨⠂⠬⠨⠆⠀⠨⠅⠀⠨⠐⠀⠤⠤⠤⠤",
+  "mathml": "<math><mn>.1</mn><mo>+</mo><mn>.2</mn><mo>=</mo><mo>.</mo><mstyle displaystyle=\"false\" scriptlevel=\"0\"><mtext>---</mtext></mstyle></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_45",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠞⠓⠑⠗⠑⠀⠺⠑⠗⠑⠀⠼⠶⠀⠃⠁⠇⠇⠎⠨⠐",
+  "mathml": "<math><mtext>There were </mtext><mn>7</mn><mtext> balls</mtext><mo>.</mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_47",
+  "suite": "SRE_NemethBase",
+  "braille": "⠽⠀⠨⠅⠀⠼⠆⠎⠊⠝⠀⠭",
+  "mathml": "<math><mi>y</mi><mo>=</mo><mn>2</mn><mi>sin</mi><mo>⁡<!-- ⁡ --></mo><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_49",
+  "suite": "SRE_NemethBase",
+  "braille": "⠎⠊⠝⠀⠼⠂",
+  "mathml": "<math><mi>sin</mi><mo>⁡<!-- ⁡ --></mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_50",
+  "suite": "SRE_NemethBase",
+  "braille": "⠎⠊⠝⠘⠆⠀⠼⠆⠭",
+  "mathml": "<math><msup><mi>sin</mi><mn>2</mn></msup><mo>⁡<!-- ⁡ --></mo><mn>2</mn><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_51",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠴⠨⠒⠒⠒⠀⠄⠄⠄⠀⠼⠒⠀⠄⠄⠄",
+  "mathml": "<math><mn>0.333</mn><mo>…<!-- … --></mo><mn>3</mn><mo>…<!-- … --></mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_52",
+  "suite": "SRE_NemethBase",
+  "braille": "⠫⠪⠀⠼⠂",
+  "mathml": "<math><mi mathvariant=\"normal\">∠<!-- ∠ --></mi><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_53",
+  "suite": "SRE_NemethBase",
+  "braille": "⠷⠭⠀⠨⠅⠀⠼⠴⠾",
+  "mathml": "<math><mo stretchy=\"false\">(</mo><mi>x</mi><mo>=</mo><mn>0</mn><mo stretchy=\"false\">)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_55",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠹⠹⠂⠬⠒⠌⠲⠬⠢⠼⠠⠌⠹⠒⠬⠲⠌⠢⠬⠖⠼⠠⠼",
+  "mathml": "<math> <mfrac> <mfrac> <mrow><mn>1</mn><mo>+</mo><mn>3</mn></mrow> <mrow><mn>4</mn><mo>+</mo><mn>5</mn></mrow></mfrac> <mfrac> <mrow><mn>3</mn><mo>+</mo><mn>4</mn></mrow> <mrow><mn>5</mn><mo>+</mo><mn>6</mn></mrow></mfrac></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_56",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠠⠹⠠⠹⠷⠂⠤⠭⠾⠹⠙⠌⠙⠭⠼⠷⠆⠭⠾⠤⠆⠭⠹⠙⠌⠙⠭⠼⠷⠂⠤⠭⠾⠠⠌⠷⠂⠤⠭⠾⠘⠆⠐⠠⠼⠠⠠⠌⠂⠬⠷⠹⠆⠭⠌⠂⠤⠭⠼⠾⠘⠆⠐⠠⠠⠼",
+  "mathml": "<math> <mfrac> <mfrac> <mrow><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−<!-- − --></mo><mi>x</mi><mo stretchy=\"false\">)</mo> <mfrac><mi>d</mi> <mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo stretchy=\"false\">(</mo><mn>2</mn><mi>x</mi><mo stretchy=\"false\">)</mo><mo>−<!-- − --></mo><mn>2</mn><mi>x</mi> <mfrac><mi>d</mi> <mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−<!-- − --></mo><mi>x</mi><mo stretchy=\"false\">)</mo></mrow> <mrow><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−<!-- − --></mo><mi>x</mi> <msup><mo stretchy=\"false\">)</mo><mn>2</mn></msup></mrow></mfrac> <mrow><mn>1</mn><mo>+</mo><mo stretchy=\"false\">(</mo> <mfrac> <mrow><mn>2</mn><mi>x</mi></mrow> <mrow><mn>1</mn><mo>−<!-- − --></mo><mi>x</mi></mrow></mfrac> <msup><mo stretchy=\"false\">)</mo><mn>2</mn></msup></mrow></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_57",
+  "suite": "SRE_NemethBase",
+  "braille": "⠤⠼⠂",
+  "mathml": "<math><mo>−<!-- − --></mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_58",
+  "suite": "SRE_NemethBase",
+  "braille": "⠤⠼⠨⠒",
+  "mathml": "<math><mo>−<!-- − --></mo><mn>.3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_59",
+  "suite": "SRE_NemethBase",
+  "braille": "⠦⠼⠒⠀⠙⠕⠛⠎⠴",
+  "mathml": "<math><mo>“</mo><mn>3</mn><mstyle displaystyle=\"false\" scriptlevel=\"0\"><mtext> dogs</mtext></mstyle><mo>”</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_60",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠏⠗⠕⠃⠁⠃⠊⠇⠊⠞⠽⠀⠤⠤⠤⠼⠴",
+  "mathml": "<math><mtext>Probability ---</mtext><mn>0</mn></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_61",
+  "suite": "SRE_NemethBase",
+  "braille": "⠦⠼⠨⠢",
+  "mathml": "<math><mo>“</mo><mn>.5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_62",
+  "suite": "SRE_NemethBase",
+  "braille": "⠦⠤⠼⠲",
+  "mathml": "<math><mo>“</mo><mo>−<!-- − --></mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_63",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠳⠼⠂⠀⠼⠆⠠⠳⠀⠠⠳⠤⠼⠒⠀⠤⠼⠲⠠⠳",
+  "mathml": "<math> <mrow><mo>|</mo><mtable columnspacing=\"1em\" rowspacing=\"4pt\"><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mo>−<!-- − --></mo><mn>3</mn></mtd><mtd><mo>−<!-- − --></mo><mn>4</mn></mtd></mtr></mtable><mo>|</mo></mrow></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_64",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠳⠼⠂⠀⠹⠂⠌⠆⠼⠠⠳⠀⠠⠳⠹⠂⠌⠆⠼⠀⠹⠂⠌⠲⠗⠼⠠⠳",
+  "mathml": "<math> <mrow><mo>|</mo><mtable columnspacing=\"1em\" rowspacing=\"4pt\"><mtr><mtd><mn>1</mn></mtd><mtd> <mfrac><mn>1</mn><mn>2</mn></mfrac></mtd></mtr><mtr><mtd> <mfrac><mn>1</mn><mn>2</mn></mfrac></mtd><mtd> <mfrac><mn>1</mn> <mrow><mn>4</mn><mi>r</mi></mrow></mfrac></mtd></mtr></mtable><mo>|</mo></mrow></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_65",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠒⠈⠠⠎⠼⠲",
+  "mathml": "<math><mn>3</mn><mi mathvariant=\"normal\">§<!-- § --></mi><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_66",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠒⠨⠼⠼⠲",
+  "mathml": "<math><mn>3</mn><mi mathvariant=\"normal\">#<!-- # --></mi><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_67",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠒⠈⠼⠼⠲",
+  "mathml": "<math><mn>3</mn><mo>∗<!-- ∗ --></mo><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_68",
+  "suite": "SRE_NemethBase",
+  "braille": "⠠⠎⠑⠑⠀⠏⠁⠛⠑⠀⠼⠂⠢⠘⠂⠨⠐",
+  "mathml": "<math><mtext>See page </mtext> <msup><mn>15</mn><mn>1</mn></msup><mo>.</mo></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_69",
+  "suite": "SRE_NemethBase",
+  "braille": "⠸⠻⠼⠒",
+  "mathml": "<math><mo>†<!-- † --></mo><mn>3</mn></math>",
+  "ignored": true
+ },
+ {
+  "name": "test_70",
+  "suite": "SRE_NemethBase",
+  "braille": "⠨⠼⠒",
+  "mathml": "<math><mn mathvariant=\"italic\">3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_71",
+  "suite": "SRE_NemethBase",
+  "braille": "⠸⠼⠴",
+  "mathml": "<math><mn mathvariant=\"bold\">0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_72",
+  "suite": "SRE_NemethBase",
+  "braille": "⠨⠼⠨⠒",
+  "mathml": "<math><mn mathvariant=\"italic\">.3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_73",
+  "suite": "SRE_NemethBase",
+  "braille": "⠈⠼⠆",
+  "mathml": "<math><mn mathvariant=\"script\">2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_74",
+  "suite": "SRE_NemethBase",
+  "braille": "⠸⠼⠲⠒⠸⠼⠢⠖",
+  "mathml": "<math><mn mathvariant=\"bold\">43</mn><mn mathvariant=\"bold\">56</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_77",
+  "suite": "SRE_NemethBase",
+  "braille": "⠼⠂⠤⠞⠕⠤⠼⠂⠀⠉⠕⠗⠗⠑⠎⠏⠕⠝⠙⠑⠝⠉⠑",
+  "mathml": "<math> <mrow> <mrow><mn>1</mn><mo>−<!-- − --></mo></mrow><mtext>to</mtext> <mrow><mo>−<!-- − --></mo><mn>1</mn></mrow><mtext> correspondence</mtext></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "bond_2_1",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠸⠒⠻⠠⠃⠑⠸⠒⠻⠠⠓",
+  "mathml": "<math><mi mathvariant=\"normal\">H</mi><mo>-</mo><mi>Be</mi><mo>-</mo><mi mathvariant=\"normal\">H</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "bond_2_2",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠆⠠⠉⠸⠶⠻⠠⠉⠠⠓⠆",
+  "mathml": "<math><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mi mathvariant=\"normal\">C</mi><mo>=</mo> <msub><mi>CH</mi><mn>2</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "bond_2_2_mhchem",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠆⠠⠉⠸⠶⠻⠠⠉⠠⠓⠆",
+  "mathml": "<math> <mrow data-mjx-texclass=\"ORD\"> <mi mathvariant=\"normal\">H</mi> <msub> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mpadded height=\"0\"> <mn>2</mn> </mpadded> </msub> <mi mathvariant=\"normal\">C</mi> <mo>=</mo> <mi data-mjx-auto-op=\"false\">CH</mi> <msub> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mpadded height=\"0\"> <mn>2</mn> </mpadded> </msub> </mrow> </math>",
+  "ignored": false
+ },
+ {
+  "name": "bond_2_3",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠸⠒⠻⠠⠉⠸⠿⠻⠠⠉⠸⠒⠻⠠⠓",
+  "mathml": "<math><mi mathvariant=\"normal\">H</mi><mo>-</mo><mi mathvariant=\"normal\">C</mi><mo>&#x2261;</mo> <mi mathvariant=\"normal\">C</mi><mo>-</mo><mi mathvariant=\"normal\">H</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "bond_2_5",
+  "suite": "chemistry",
+  "braille": "⠠⠋⠑⠬⠠⠉⠇⠆⠀⠨⠅⠀⠠⠋⠑⠠⠉⠇⠒",
+  "mathml": "<math><mi>Fe</mi><mo>+</mo><msub><mi>Cl</mi><mn>2</mn></msub><mo>&#xA0;</mo><mo>=</mo> <msub><mi>FeCl</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_bond_sec_2_2_2_c",
+  "suite": "chemistry",
+  "braille": "⠼⠆⠠⠝⠁⠬⠠⠉⠇⠆⠀⠫⠕⠀⠼⠆⠠⠝⠁⠠⠉⠇",
+  "mathml": "<math><mn>2</mn><mi>Na</mi><mo>+</mo><msub><mi>Cl</mi><mn>2</mn></msub><mo>&#x2192;</mo> <mn>2</mn><mi>NaCl</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_bond_sec_2_2_2_d",
+  "suite": "chemistry",
+  "braille": "⠠⠗⠠⠝⠠⠓⠆⠬⠠⠗⠠⠭⠀⠫⠕⠀⠠⠗⠆⠠⠝⠠⠓⠆⠐⠘⠬⠐⠠⠭⠘⠤",
+  "mathml": "<math> <msub><mi>RNH</mi><mn>2</mn></msub><mo>+</mo><mi>RX</mi><mo>&#x2192;</mo> <msub><mi mathvariant=\"normal\">R</mi><mn>2</mn></msub> <msup><msub><mi>NH</mi><mn>2</mn></msub><mo>+</mo></msup><msup><mi mathvariant=\"normal\">X</mi><mo>-</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_bond_sec_2_2_2_d_mhchem",
+  "suite": "chemistry",
+  "braille": "⠠⠗⠠⠝⠠⠓⠆⠬⠠⠗⠠⠭⠀⠫⠕⠀⠠⠗⠆⠠⠝⠠⠓⠆⠐⠘⠬⠐⠠⠭⠘⠤",
+  "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"block\"> <mrow data-mjx-texclass=\"ORD\"> <mi data-mjx-auto-op=\"false\">RNH</mi> <msub> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mpadded height=\"0\"> <mn>2</mn> </mpadded> </msub> <mrow data-mjx-texclass=\"ORD\"> </mrow> <mo>+</mo> <mrow data-mjx-texclass=\"ORD\"> </mrow> <mi data-mjx-auto-op=\"false\">RX</mi> <mrow data-mjx-texclass=\"ORD\"> </mrow> <mo stretchy=\"false\">→</mo> <mrow data-mjx-texclass=\"ORD\"> </mrow> <mi mathvariant=\"normal\">R</mi> <msub> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mpadded height=\"0\"> <mn>2</mn> </mpadded> </msub> <mi data-mjx-auto-op=\"false\">NH</mi> <msub> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mpadded height=\"0\"> <mn>2</mn> </mpadded> </msub> <msup> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mo>+</mo> </msup> <mi mathvariant=\"normal\">X</mi> <msup> <mpadded width=\"0\"> <mphantom> <mi>A</mi> </mphantom> </mpadded> <mo>&#x2212;</mo> </msup> </mrow> </math>",
+  "ignored": false
+ },
+ {
+  "name": "lewis_2_20",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠠⠕⠆⠬⠠⠝⠠⠕⠀⠫⠕⠀⠠⠝⠠⠕⠆⠬⠡⠠⠕⠠⠓",
+  "mathml": "<math><msub><mi>HO</mi><mn>2</mn></msub><mo>+</mo><mi>NO</mi><mo>&#x2192;</mo> <msub><mi>NO</mi><mn>2</mn></msub><mo>+</mo><mo>&#x2022;</mo><mi>OH</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "lewis_2_21",
+  "suite": "chemistry",
+  "braille": "⠠⠗⠡⠬⠡⠠⠉⠠⠓⠒⠀⠫⠕⠀⠠⠗⠠⠉⠠⠓⠒",
+  "mathml": "<math><msup><mi mathvariant=\"normal\">R</mi><mo>&#x2022;</mo></msup><mo>+</mo><mmultiscripts><mi>CH</mi><mn>3</mn><none/><mprescripts/><none/><mo>&#x2022;</mo> </mmultiscripts><mo>&#x2192;</mo><msub><mi>RCH</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "lewis_2_22",
+  "suite": "chemistry",
+  "braille": "⠈⠷⠠⠉⠠⠓⠒⠈⠾⠡",
+  "mathml": "<math><msup><mrow><mo>[</mo><msub><mi>CH</mi><mn>3</mn></msub><mo>]</mo></mrow><mo>&#x2022;</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "dots_2_37_a",
+  "suite": "chemistry",
+  "braille": "⠹⠠⠝⠨⠹⠠⠝⠹",
+  "mathml": "<math><mo>:</mo><mi mathvariant=\"normal\">N</mi><mo>:</mo><mo>:</mo><mo>:</mo><mi mathvariant=\"normal\">N</mi><mo>:</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "dots_2_37_b",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠹⠠⠉⠨⠹⠠⠉⠹⠠⠓",
+  "mathml": "<math><mi mathvariant=\"normal\">H</mi><mo>:</mo><mi mathvariant=\"normal\">C</mi> <mo>&#x22EE;</mo><mo>&#x22EE;</mo> <mi mathvariant=\"normal\">C</mi><mo>:</mo><mi mathvariant=\"normal\">H</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "yields_3_1",
+  "suite": "chemistry",
+  "braille": "⠠⠉⠠⠓⠲⠷⠛⠾⠬⠆⠠⠕⠆⠷⠛⠾⠀⠫⠕⠀⠠⠉⠠⠕⠆⠷⠛⠾⠬⠆⠠⠓⠆⠠⠕⠷⠛⠾",
+  "mathml": "<math><msub><mi>CH</mi><mn>4</mn></msub><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo><mo>+</mo> <mn>2</mn><msub><mi mathvariant=\"normal\">O</mi><mn>2</mn></msub><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo> <mo>&#x2192;</mo> <msub><mi>CO</mi><mn>2</mn></msub><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo><mo>+</mo> <mn>2</mn><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mi mathvariant=\"normal\">O</mi><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "reverse_3_2",
+  "suite": "chemistry",
+  "braille": "⠠⠝⠆⠬⠒⠠⠓⠆⠀⠫⠪⠒⠒⠀⠼⠆⠠⠝⠠⠓⠒",
+  "mathml": "<math><msub><mi mathvariant=\"normal\">N</mi><mn>2</mn></msub><mo>+</mo> <mn>3</mn><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mo>&#x2190;</mo> <mn>2</mn><msub><mi>NH</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "reaction_arrow_3_9",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠆⠷⠛⠾⠬⠠⠊⠆⠷⠛⠾⠀⠫⠒⠕⠫⠪⠒⠀⠼⠆⠠⠓⠠⠊⠷⠛⠾",
+  "mathml": "<math><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo><mo>+</mo> <msub><mi mathvariant=\"normal\">I</mi><mn>2</mn></msub><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo><mo>&#x21CC;</mo> <mn>2</mn><mi>HI</mi><mo>(</mo><mi mathvariant=\"normal\">g</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "reaction_arrow_3_13",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠒⠠⠉⠸⠒⠻⠠⠉⠸⠿⠻⠠⠉⠘⠤⠐⠠⠝⠁⠘⠬⠐⠬⠠⠝⠠⠓⠒⠀⠫⠪⠒⠒⠫⠒⠕⠀⠠⠓⠒⠠⠉⠸⠒⠻⠠⠉⠸⠿⠻⠠⠉⠸⠒⠻⠠⠓⠬⠠⠝⠁⠘⠬⠐⠠⠝⠠⠓⠆⠐⠘⠤",
+  "mathml": "<math><msub><mi mathvariant=\"normal\">H</mi><mn>3</mn></msub><mi mathvariant=\"normal\">C</mi><mo>-</mo> <mi mathvariant=\"normal\">C</mi><mo>≡</mo> <msup><mi mathvariant=\"normal\">C</mi><mo>-</mo></msup><msup><mi>Na</mi><mo>+</mo> </msup><mo>+</mo><msub><mi>NH</mi><mn>3</mn></msub><mo>⥃</mo> <msub><mi mathvariant=\"normal\">H</mi><mn>3</mn></msub><mi mathvariant=\"normal\">C</mi><mo>-</mo> <mi mathvariant=\"normal\">C</mi><mo>≡</mo><mi mathvariant=\"normal\">C</mi><mo>-</mo> <mi mathvariant=\"normal\">H</mi><mo>+</mo> <msup><mi>Na</mi><mo>+</mo></msup><msup><msub><mi>NH</mi><mn>2</mn></msub><mo>-</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "reaction_arrow_3_14_a",
+  "suite": "chemistry",
+  "braille": "⠠⠗⠀⠫⠒⠒⠕⠫⠪⠒⠀⠠⠏",
+  "mathml": "<math intent=':chemical-equation'><mi mathvariant=\"normal\">R</mi><mo>⥂</mo><mi mathvariant=\"normal\">P</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "reaction_arrow_3_14_b",
+  "suite": "chemistry",
+  "braille": "⠠⠗⠀⠫⠒⠕⠫⠪⠒⠒⠀⠠⠏",
+  "mathml": "<math intent=':chemical-equation'><mi mathvariant=\"normal\">R</mi><mo>⥄</mo><mi mathvariant=\"normal\">P</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_3_36",
+  "suite": "chemistry",
+  "braille": "⠼⠆⠠⠁⠇⠬⠆⠠⠝⠁⠠⠕⠠⠓⠬⠆⠠⠓⠆⠠⠕⠀⠫⠕⠀⠠⠝⠁⠆⠠⠁⠇⠆⠠⠕⠲⠬⠒⠠⠓⠆⠫⠣",
+  "mathml": "<math><mn>2</mn><mi>Al</mi><mo>+</mo><mn>2</mn><mi>NaOH</mi><mo>+</mo> <mn>2</mn><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mi mathvariant=\"normal\">O</mi><mo>&#x2192;</mo> <msub><mi>Na</mi><mn>2</mn></msub><msub><mi>Al</mi><mn>2</mn></msub><msub><mi mathvariant=\"normal\">O</mi><mn>4</mn></msub><mo>+</mo> <mn>3</mn><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mo>↑</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_3_37",
+  "suite": "chemistry",
+  "braille": "⠠⠉⠁⠷⠠⠓⠠⠉⠠⠕⠒⠾⠰⠆⠐⠬⠠⠉⠁⠷⠠⠕⠠⠓⠾⠰⠆⠀⠫⠕⠀⠼⠆⠠⠉⠁⠠⠉⠠⠕⠒⠫⠩⠀⠬⠆⠠⠓⠆⠠⠕",
+  "mathml": "<math><mi>Ca</mi><msub><mrow><mo>(</mo><msub><mi>HCO</mi><mn>3</mn></msub><mo>)</mo></mrow><mn>2</mn></msub><mo>+</mo> <mi>Ca</mi><msub><mrow><mo>(</mo><mi>OH</mi><mo>)</mo></mrow><mn>2</mn></msub><mo>&#x2192;</mo> <mn>2</mn><msub><mi>CaCO</mi><mn>3</mn></msub><mo>&#x2193;</mo><mo>+</mo> <mn>2</mn><msub><mi mathvariant=\"normal\">H</mi><mn>2</mn></msub><mi mathvariant=\"normal\">O</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "dot_4_5",
+  "suite": "chemistry",
+  "braille": "⠠⠅⠂⠈⠷⠠⠏⠠⠉⠇⠢⠈⠾⠀⠨⠅⠀⠠⠅⠆⠈⠷⠠⠏⠠⠉⠇⠒⠈⠾⠡⠈⠷⠠⠉⠇⠆⠈⠾",
+  "mathml": "<math><msub><mi mathvariant=\"normal\">K</mi><mn>1</mn></msub> <mo>[</mo><msub><mi>PCl</mi><mn>5</mn></msub><mo>]</mo><mo>=</mo> <msub><mi mathvariant=\"normal\">K</mi><mn>2</mn></msub><mo>[</mo><msub><mi>PCl</mi><mn>3</mn></msub><mo>]</mo><mo>&#xB7;</mo> <mo>[</mo><msub><mi>Cl</mi><mn>2</mn></msub><mo>]</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "charge_5_1_c",
+  "suite": "chemistry",
+  "braille": "⠼⠆⠠⠁⠇⠀⠫⠕⠀⠼⠆⠠⠁⠇⠘⠒⠬⠐⠬⠖⠑⠘⠤",
+  "mathml": "<math><mn>2</mn><mi>Al</mi><mo>&#x2192;</mo> <mn>2</mn><msup><mi>Al</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><mo>+</mo> <mn>6</mn><msup><mi mathvariant=\"normal\">e</mi><mo>-</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "charge_5_3_a",
+  "suite": "chemistry",
+  "braille": "⠠⠓⠠⠏⠠⠕⠲⠐⠘⠆⠤",
+  "mathml": "<math><msup><msub><mi>HPO</mi><mn>4</mn></msub><mrow><mo>-</mo><mo>-</mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "charge_5_3_b",
+  "suite": "chemistry",
+  "braille": "⠰⠆⠘⠲⠐⠠⠓⠑⠘⠆⠬",
+  "mathml": "<math><msup> <mmultiscripts><mi>He</mi><mprescripts/><mn>2</mn><mn>4</mn></mmultiscripts> <mrow><mo>+</mo><mo>+</mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "simultaneious_scripts_5_8_b",
+  "suite": "chemistry",
+  "braille": "⠠⠎⠠⠕⠲⠘⠆⠤",
+  "mathml": "<math><msubsup><mi>SO</mi><mn>4</mn><mrow><mn>2</mn><mo>-</mo></mrow></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "staggered_scripts_5_9_a",
+  "suite": "chemistry",
+  "braille": "⠼⠢⠠⠉⠆⠠⠕⠲⠐⠘⠆⠤⠐⠷⠁⠟⠾",
+  "mathml": "<math><mn>5</mn><msub><mi mathvariant=\"normal\">C</mi><mn>2</mn></msub> <msup><msub><mi mathvariant=\"normal\">O</mi><mn>4</mn></msub><mrow><mn>2</mn><mo>-</mo></mrow></msup> <mo>(</mo><mi>a</mi><mi>q</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "staggered_scripts_5_9_b",
+  "suite": "chemistry",
+  "braille": "⠷⠠⠎⠊⠠⠕⠒⠾⠰⠝⠐⠘⠆⠝⠤",
+  "mathml": "<math><msup><msub><mrow><mo>(</mo><msub><mi>SiO</mi><mn>3</mn></msub><mo>)</mo></mrow> <mi>n</mi></msub> <mrow><mn>2</mn><mi>n</mi><mo>-</mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "state_5_10",
+  "suite": "chemistry",
+  "braille": "⠨⠠⠙⠠⠓⠘⠨⠡⠰⠷⠗⠑⠁⠉⠞⠊⠕⠝⠾",
+  "mathml": "<math><msubsup><mrow><mo>&#x2206;</mo><mi mathvariant=\"normal\">H</mi></mrow><mrow><mo>(</mo><mi>reaction</mi><mo>)</mo></mrow><mo>&#xB0;</mo></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "state_as_subscript_5_13",
+  "suite": "chemistry",
+  "braille": "⠠⠎⠝⠘⠆⠬⠐⠷⠁⠟⠾",
+  "mathml": "<math><msubsup><mi>Sn</mi> <mrow><mo>(</mo><mi>aq</mi><mo>)</mo></mrow> <mrow><mn>2</mn><mo>+</mo></mrow></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prescripts_5_14",
+  "suite": "chemistry",
+  "braille": "⠰⠔⠔⠘⠆⠢⠲⠐⠠⠑⠎⠬⠰⠆⠘⠲⠐⠠⠓⠑⠀⠫⠕⠀⠰⠂⠴⠂⠘⠆⠢⠖⠐⠠⠍⠙⠬⠆⠰⠴⠘⠂⠐⠝",
+  "mathml": "<math><mmultiscripts><mi>Es</mi><mprescripts/><mn>99</mn><mn>254</mn></mmultiscripts><mo>+</mo> <mmultiscripts><mi>He</mi><mprescripts/><mn>2</mn><mn>4</mn></mmultiscripts><mo>&#x2192;</mo> <mmultiscripts><mi>Md</mi><mprescripts/><mn>101</mn><mn>256</mn></mmultiscripts><mo>+</mo> <mn>2</mn><mmultiscripts><mi>n</mi><mprescripts/><mn>0</mn><mn>1</mn></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "not_number_space_blocks",
+  "suite": "other",
+  "braille": "⠼⠂⠆⠒⠀⠼⠲⠢⠖",
+  "mathml": "<math><mn>123</mn><mtext>&nbsp;&#x2063;</mtext><mn>456</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "space_between_digits",
+  "suite": "other",
+  "braille": "⠼⠂⠀⠼⠒⠀⠼⠢",
+  "mathml": "<math><mn>1</mn><mtext>&#x00a0;</mtext><mn>3</mn><mtext>&#x00a0;</mtext><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "space_hack_between_digits",
+  "suite": "other",
+  "braille": "⠼⠂⠀⠼⠒⠀⠼⠢",
+  "mathml": "<math><mn>1</mn><mtext>&#x00a0;&#x2063;</mtext><mn>3</mn><mtext>&#x00a0;&#x2063;</mtext><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "tilde_prefix_bug_244",
+  "suite": "other",
+  "braille": "⠈⠱⠏",
+  "mathml": "<math> <mo>~</mo> <mi>p</mi> </math>",
+  "ignored": false
+ },
+ {
+  "name": "double_struck_bug_334",
+  "suite": "other",
+  "braille": "⠨⠼⠂⠠⠀⠸⠼⠆⠠⠀⠠⠨⠸⠼⠒⠠⠀⠼⠲",
+  "mathml": "<math><mn>𝟙</mn><mo>,</mo><mn>𝟐</mn><mo>,</mo><mn>𝟯</mn><mo>,</mo><mn>𝟺</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "extra_indicators_bug_343",
+  "suite": "other",
+  "braille": "⠑⠘⠤⠭⠘⠘⠆⠐⠬⠠⠉⠂",
+  "mathml": "<math xmlns='http://www.w3.org/1998/Math/MathML'> <mrow> <msup> <mi>e</mi> <mrow> <mo>-</mo> <msup> <mi>x</mi> <mn>2</mn> </msup> </mrow> </msup> <mo>+</mo> <msub> <mi>C</mi> <mn>1</mn> </msub> </mrow> </math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_a_4",
+  "suite": "rules",
+  "braille": "⠽⠀⠨⠅⠀⠼⠆⠎⠊⠝⠀⠭",
+  "mathml": "<math><mrow><mi>y</mi><mo>=</mo><mrow><mn>2</mn><mo>&#x2062;</mo><mrow><mi>sin</mi><mo>&#x2061;</mo><mi>x</mi></mrow></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_a_5",
+  "suite": "rules",
+  "braille": "⠎⠊⠝⠀⠼⠂",
+  "mathml": "<math><mrow><mi>sin</mi><mo>&#x2061;</mo><mn>1</mn></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_a_9",
+  "suite": "rules",
+  "braille": "⠫⠪⠀⠼⠂",
+  "mathml": "<math><mrow><mo>∠</mo><mn>1</mn></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_9_b_1",
+  "suite": "rules",
+  "braille": "⠦⠼⠒⠀⠙⠕⠛⠎⠴",
+  "mathml": "<math><mrow><mo>“</mo><mrow><mn>3</mn><mtext>&#xa0;dogs</mtext><mo>”</mo></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_9_b_1_mtext",
+  "suite": "rules",
+  "braille": "⠦⠼⠒⠀⠙⠕⠛⠎⠴",
+  "mathml": "<math><mtext displaystyle='true'>&#x201C;3 dogs&#x201D;</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_9_b_4",
+  "suite": "rules",
+  "braille": "⠦⠤⠼⠲",
+  "mathml": "<math><mrow><mo>“</mo><mrow><mo>-</mo><mn>4</mn></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "test_9_c_1_linear",
+  "suite": "rules",
+  "braille": "⠠⠳⠼⠂⠀⠼⠆⠀⣍⠤⠒⠀⠤⠼⠲⠠⠳",
+  "mathml": "<math><mo>|</mo><mtable> <mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr> <mtr><mtd><mo>-</mo><mn>3</mn></mtd><mtd><mo>-</mo><mn>4</mn></mtd></mtr> </mtable><mo>|</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_d_2",
+  "suite": "rules",
+  "braille": "⠼⠒⠨⠼⠼⠲",
+  "mathml": "<math><mn>3</mn><mi mathvariant='normal'>#<!-- # --></mi><mn>4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_e_2",
+  "suite": "rules",
+  "braille": "⠸⠼⠴",
+  "mathml": "<math><mn mathvariant='bold'>0</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_e_5",
+  "suite": "rules",
+  "braille": "⠸⠼⠲⠒⠼⠢⠖",
+  "mathml": "<math><mn>𝟒𝟑56</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_e_6",
+  "suite": "rules",
+  "braille": "⠫⠉⠸⠫⠼⠢⠻",
+  "mathml": "<math><mn>⑤</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "num_indicator_9_f_1",
+  "suite": "rules",
+  "braille": "⠼⠂⠤⠞⠕⠤⠼⠂",
+  "mathml": "<math><mtext>1-to-1</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "non_list_10_4",
+  "suite": "rules",
+  "braille": "⠷⠂⠠⠀⠼⠆⠠⠀⠁⠝⠙⠀⠼⠒⠾",
+  "mathml": "<math><mo>(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mtext>and&#xA0;</mtext><mn>3</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_10_6_1",
+  "suite": "rules",
+  "braille": "⠼⠂⠠⠀⠰⠊⠠⠀⠤⠼⠂⠠⠀⠤⠊",
+  "mathml": "<math><mrow><mn>1</mn><mo>,</mo><mi>i</mi><mo>,</mo><mrow><mo>−</mo><mn>1</mn></mrow><mo>,</mo><mrow><mo>−</mo><mi>i</mi></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_10_6_8",
+  "suite": "rules",
+  "braille": "⠈⠷⠫⠪⠀⠼⠂⠘⠨⠡⠠⠀⠎⠊⠝⠀⠼⠂⠘⠨⠡⠐⠈⠾",
+  "mathml": "<math> <mo>[</mo> <mrow><mo>&#x2220;</mo><mn>1</mn><mo>&#x00B0;</mo><mo>,</mo><mi>sin</mi><mn>1</mn><mo>&#x00B0;</mo></mrow> <mo>]</mo> </math>",
+  "ignored": false
+ },
+ {
+  "name": "list_10_6_11",
+  "suite": "rules",
+  "braille": "⠷⠭⠀⠨⠅⠀⠼⠂⠠⠀⠼⠆⠠⠀⠄⠄⠄⠠⠀⠼⠂⠴⠾",
+  "mathml": "<math><mo>(</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>…</mn><mo>,</mo><mn>10</mn></mrow> <mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_10_6_14",
+  "suite": "rules",
+  "braille": "⠷⠂⠠⠀⠆⠠⠀⠒⠾",
+  "mathml": "<math><mfenced><mrow><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn></mrow></mfenced></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_a_1",
+  "suite": "rules",
+  "braille": "⠈⠷⠴⠠⠀⠂⠈⠾",
+  "mathml": "<math><mo>[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>]</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_a_2",
+  "suite": "rules",
+  "braille": "⠷⠤⠂⠠⠀⠤⠆⠠⠀⠤⠒⠾",
+  "mathml": "<math><mo>(</mo><mo>-</mo><mn>1</mn><mo>,</mo><mo>-</mo><mn>2</mn><mo>,</mo><mo>-</mo><mn>3</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind__11_a_3",
+  "suite": "rules",
+  "braille": "⠷⠂⠬⠓⠠⠀⠆⠬⠅⠠⠀⠴⠾",
+  "mathml": "<math><mo>(</mo><mn>1</mn><mo>+</mo><mi>h</mi><mo>,</mo><mn>2</mn><mo>+</mo><mi>k</mi><mo>,</mo><mn>0</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind__11_a_4",
+  "suite": "rules",
+  "braille": "⠷⠴⠠⠀⠤⠂⠠⠀⠬⠤⠆⠾",
+  "mathml": "<math><mfenced><mrow><mn>0</mn><mo>,</mo><mrow><mo>−</mo><mn>1</mn></mrow><mo>,</mo><mrow><mo>±</mo><mn>2</mn></mrow></mrow></mfenced></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_a_5",
+  "suite": "rules",
+  "braille": "⠷⠆⠎⠊⠝⠀⠼⠒⠴⠘⠨⠡⠠⠀⠒⠉⠕⠎⠀⠼⠖⠴⠘⠨⠡⠐⠾",
+  "mathml": "<math><mfenced class='paren'> <mrow> <mrow><mn>2</mn><mo>⁢</mo><mrow><mi>sin</mi><mo>⁡</mo><mrow><mn>30</mn><mo>⁢</mo><mo>°</mo></mrow></mrow></mrow> <mo>,</mo> <mrow><mn>3</mn><mo>⁢</mo><mrow><mi>cos</mi><mo>⁡</mo><mrow><mn>60</mn><mo>⁢</mo><mo>°</mo></mrow></mrow></mrow> </mrow> </mfenced></math>",
+  "ignored": false
+ },
+ {
+  "name": "lesson_11_35_1",
+  "suite": "rules",
+  "braille": "⠷⠫⠪⠀⠼⠂⠠⠀⠫⠪⠀⠼⠆⠠⠀⠫⠪⠀⠼⠒⠾",
+  "mathml": "<math><mrow><mrow><mo>(</mo><mrow><mo>∠</mo><mn>1</mn><mo>,</mo><mo>∠</mo><mn>2</mn><mo>,</mo><mo>∠</mo><mn>3</mn></mrow><mo>)</mo></mrow></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_a_7",
+  "suite": "rules",
+  "braille": "⠷⠭⠠⠀⠶⠠⠀⠸⠼⠦⠠⠀⠽⠾",
+  "mathml": "<math><mo>(</mo><mi>x</mi><mo>,</mo><mn>7</mn><mo>,</mo><mn mathvariant='bold'>8</mn><mo>,</mo><mi>y</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_c_1",
+  "suite": "rules",
+  "braille": "⠨⠏⠀⠨⠅⠀⠼⠒⠨⠂⠲⠂⠢⠔⠀⠆⠖⠢⠒⠢⠀⠄⠄⠄",
+  "mathml": "<math><mi>&#x3C0;</mi><mo>=</mo><mn>3</mn><mo>.</mo><mn>14159</mn><mo>&#xA0;</mo><mn>26535</mn><mo>&#x2026;</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_d_1",
+  "suite": "rules",
+  "braille": "⠼⠖⠢⠤⠶⠢",
+  "mathml": "<math><mrow><mn>65</mn><mo>-</mo><mn>75</mn></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "list_num_ind_11_d_2",
+  "suite": "rules",
+  "braille": "⠼⠒⠸⠒⠼⠒⠴⠤⠲⠸⠒⠼⠲⠢",
+  "mathml": "<math><mn>3</mn><mo>:</mo><mn>30</mn><mo>&#x2212;</mo><mn>4</mn><mo>:</mo><mn>45</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "no_num_ind_11_e_3",
+  "suite": "rules",
+  "braille": "⠗⠐⠢",
+  "mathml": "<math><mrow><mi>r</mi><mn>5</mn></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "cap_roman_numeral_18_a_3",
+  "suite": "rules",
+  "braille": "⠠⠠⠧⠊⠊⠬⠠⠧⠀⠨⠅⠀⠠⠠⠭⠊⠊",
+  "mathml": "<math><mtext>VII</mtext><mo>+</mo><mtext>V</mtext><mo>=</mo><mtext>XII</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "lower_roman_numeral_18_b_4",
+  "suite": "rules",
+  "braille": "⠧⠊⠬⠊⠧⠀⠨⠅⠀⠭",
+  "mathml": "<math><mtext>vi</mtext><mo>+</mo><mtext>iv</mtext><mo>=</mo><mtext>x</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "cap_22_a_1",
+  "suite": "rules",
+  "braille": "⠫⠞⠀⠠⠁⠠⠃⠠⠉",
+  "mathml": "<math><mo>&#x25B3;</mo><mo>&#xA0;</mo><mi>A</mi><mi>B</mi><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "greek_24_a_1",
+  "suite": "rules",
+  "braille": "⠨⠁",
+  "mathml": "<math><mi>α</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "german_24_a_7",
+  "suite": "rules",
+  "braille": "⠸⠠⠁",
+  "mathml": "<math><mi>𝔄</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "hebrew_24_a_8",
+  "suite": "rules",
+  "braille": "⠠⠠⠁⠴",
+  "mathml": "<math><msub><mi>ℵ</mi><mn>0</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "russian_24_a_10",
+  "suite": "rules",
+  "braille": "⠈⠈⠠⠁",
+  "mathml": "<math><mi>А</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "greek_24_b_1_together",
+  "suite": "rules",
+  "braille": "⠨⠁⠨⠃",
+  "mathml": "<math><mi>αβ</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "greek_24_b_1",
+  "suite": "rules",
+  "braille": "⠨⠁⠨⠃",
+  "mathml": "<math><mi>α</mi><mi>β</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "eli_nemeth_UEB_rule_book_4_11_1",
+  "suite": "rules",
+  "braille": "⠰⠏⠀⠰⠠⠙⠀⠰⠵⠀⠰⠠⠗⠀⠰⠭⠠⠀⠦⠰⠽⠸⠴⠀⠦⠰⠺⠀⠰⠠⠎⠸⠴⠀⠦⠰⠭⠸⠴⠬⠸⠦⠰⠽⠸⠴",
+  "mathml": "<math> <mtext>p</mtext><mtext>&#xA0;</mtext> <mtext>D</mtext><mtext>&#xA0;</mtext> <mtext>z</mtext><mtext>&#xA0;</mtext> <mtext>R</mtext><mtext>&#xA0;</mtext> <mtext>x</mtext><mo>,</mo><mtext>&#xA0;</mtext> <mtext>“y”</mtext><mtext>&#xA0;</mtext> <mtext>“w S”</mtext><mtext>&#xA0;</mtext> <mtext>“x”</mtext><mo>+</mo><mtext>“y”</mtext> </math>",
+  "ignored": false
+ },
+ {
+  "name": "letter_26_b_18",
+  "suite": "rules",
+  "braille": "⠷⠰⠏⠀⠁⠝⠙⠀⠰⠟⠾",
+  "mathml": "<math><mo>(</mo><mi>p</mi><mo>&#xA0;</mo><mtext>and</mtext><mo>&#xA0;</mo><mi>q</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "letter_26_b_19",
+  "suite": "rules",
+  "braille": "⠷⠰⠇⠠⠀⠰⠍⠠⠀⠰⠝⠠⠀⠁⠗⠑⠀⠊⠝⠀⠎⠑⠞⠀⠰⠠⠗⠾",
+  "mathml": "<math><mo>(</mo> <mi mathvariant='normal'>l</mi><mo>,</mo> <mi mathvariant='normal'>m</mi><mo>,</mo> <mi mathvariant='normal'>n</mi><mo>,</mo> <mtext>are in set&#xa0;</mtext> <mi mathvariant='normal'>R</mi> <mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "boldface_32_a_7",
+  "suite": "rules",
+  "braille": "⠸⠸⠁",
+  "mathml": "<math><mn mathvariant='bold-fraktur'>a</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "boldface_32_a_14",
+  "suite": "rules",
+  "braille": "⠠⠨⠰⠠⠓",
+  "mathml": "<math><mn mathvariant='sans-serif'>H</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "boldface_32_b_2",
+  "suite": "rules",
+  "braille": "⠈⠼⠆",
+  "mathml": "<math><mn mathvariant='script'>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "boldface_32_b_3",
+  "suite": "rules",
+  "braille": "⠸⠼⠒⠲⠢",
+  "mathml": "<math><mn mathvariant='bold'>345</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "boldface_32_b_6",
+  "suite": "rules",
+  "braille": "⠸⠼⠲⠼⠒⠢",
+  "mathml": "<math><mn>𝟒35</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_1_1",
+  "suite": "rules",
+  "braille": "⠹⠂⠌⠆⠼⠠⠀⠹⠒⠌⠲⠼⠸⠲",
+  "mathml": "<math> <mfrac><mn>1</mn><mn>2</mn></mfrac> <mo>,</mo> <mfrac><mn>3</mn><mn>4</mn></mfrac> <mo>.</mo> </math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_1_2",
+  "suite": "rules",
+  "braille": "⠐⠧⠑⠇⠕⠉⠊⠞⠽⠣⠱⠻⠸⠲",
+  "mathml": "<math> <mover> <mi>velocity</mi> <mo>_</mo> </mover> <mtext>.</mtext> </math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_2_2",
+  "suite": "rules",
+  "braille": "⠦⠼⠲⠔⠸⠴",
+  "mathml": "<math><mtext>“</mtext> <mn>49</mn> <mtext>”</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_3_1",
+  "suite": "rules",
+  "braille": "⠰⠠⠊⠠⠀⠠⠠⠊⠊⠠⠀⠠⠠⠊⠊⠊⠸⠲",
+  "mathml": "<math><mtext>I</mtext><mo>,</mo><mtext>II</mtext><mo>,</mo><mtext>III</mtext><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_4_2",
+  "suite": "rules",
+  "braille": "⠼⠂⠠⠀⠼⠒⠠⠀⠄⠄⠄⠸⠲",
+  "mathml": "<math><mn>1</mn><mo>,</mo><mn>3</mn><mo>,</mo><mo>…</mo><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_6_1",
+  "suite": "rules",
+  "braille": "⠼⠢⠈⠡⠒⠀⠨⠅⠀⠿⠸⠲",
+  "mathml": "<math><mn>5</mn><mo>×</mo><mn>3</mn><mo>=</mo><mo>?</mo><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_7_1",
+  "suite": "rules",
+  "braille": "⠰⠁⠠⠀⠰⠃⠠⠀⠰⠉⠸⠲",
+  "mathml": "<math><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>c</mi><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_8_1",
+  "suite": "rules",
+  "braille": "⠫⠞⠀⠠⠁⠠⠃⠠⠉⠸⠲",
+  "mathml": "<math><mo>&#x25B3;</mo><mi>A</mi><mi>B</mi><mi>C</mi><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_11_1",
+  "suite": "rules",
+  "braille": "⠭⠱⠸⠲",
+  "mathml": "<math><mover><mi>x</mi><mo>&#xAF;</mo></mover><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_16_1",
+  "suite": "rules",
+  "braille": "⠼⠂⠴⠴⠈⠴⠸⠲",
+  "mathml": "<math><mn>100</mn><mo>%</mo><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_37_17_1",
+  "suite": "rules",
+  "braille": "⠼⠴⠠⠸⠴",
+  "mathml": "<math><mn>0</mn><mo>,</mo><mo>”</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_38_1_2",
+  "suite": "rules",
+  "braille": "⠴⠠⠼⠲⠔",
+  "mathml": "<math><mo>’</mo><mn>49</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_38_4_12",
+  "suite": "rules",
+  "braille": "⠗⠁⠞⠑⠈⠡⠞⠊⠍⠑⠲",
+  "mathml": "<math><mi>rate</mi><mo>×</mo><mi>time</mi><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_38_6_1",
+  "suite": "rules",
+  "braille": "⠼⠴⠠⠀⠼⠂⠠⠀⠼⠆",
+  "mathml": "<math><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "punct_38_6_3",
+  "suite": "rules",
+  "braille": "⠷⠂⠾⠠⠀⠷⠆⠾⠠⠀⠷⠒⠾⠸⠲",
+  "mathml": "<math><mo>(</mo><mn>1</mn><mo>)</mo><mo>,</mo><mo>(</mo><mn>2</mn><mo>)</mo><mo>,</mo><mo>(</mo><mn>3</mn><mo>)</mo><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "colon_40_1",
+  "suite": "rules",
+  "braille": "⠼⠒⠸⠒⠼⠒⠴",
+  "mathml": "<math><mn>3</mn><mo intent='time'>:</mo><mn>30</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "colon_40_1_mtext",
+  "suite": "rules",
+  "braille": "⠼⠒⠸⠒⠼⠒⠴",
+  "mathml": "<math><mtext>3:30</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "colon_40_2",
+  "suite": "rules",
+  "braille": "⠰⠋⠸⠒⠷⠭⠠⠀⠽⠾",
+  "mathml": "<math><mi>f</mi><mo>:</mo><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "dash_42_4",
+  "suite": "rules",
+  "braille": "⠹⠤⠤⠤⠤⠀⠌⠂⠢⠼⠀⠨⠅⠀⠹⠆⠌⠒⠼",
+  "mathml": "<math><mfrac><mo>&#x2015;</mo><mn>15</mn></mfrac><mo>=</mo><mfrac><mn>2</mn><mn>3</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "dash_42_6",
+  "suite": "rules",
+  "braille": "⠈⠎⠆⠬⠈⠎⠒⠀⠨⠅⠀⠈⠎⠤⠤⠤⠤",
+  "mathml": "<math><mo>$</mo><mn>2</mn><mo>+</mo><mo>$</mo><mn>3</mn><mo>=</mo><mo>$</mo><mo>&#x2015;</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "ellipsis_43_a_1",
+  "suite": "rules",
+  "braille": "⠼⠂⠠⠀⠼⠒⠠⠀⠼⠢⠠⠀⠄⠄⠄⠠⠀⠼⠂⠢⠸⠲",
+  "mathml": "<math><mn>1</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>5</mn><mo>,</mo><mo>…</mo><mo>,</mo><mn>15</mn><mo>.</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "ellipsis_43_b_3",
+  "suite": "rules",
+  "braille": "⠏⠂⠘⠨⠁⠘⠰⠂⠐⠄⠄⠄⠀⠏⠰⠗⠘⠨⠁⠘⠰⠗",
+  "mathml": "<math> <msubsup><mi>p</mi><mn>1</mn><msub><mi>&#x3B1;</mi><mn>1</mn></msub></msubsup> <mo>&#x2026;</mo> <msubsup><mi>p</mi><mi>r</mi><msub><mi>&#x3B1;</mi><mi>r</mi></msub></msubsup> </math>",
+  "ignored": false
+ },
+ {
+  "name": "ellipsis_43_b_4",
+  "suite": "rules",
+  "braille": "⠷⠄⠄⠄⠠⠀⠤⠂⠠⠀⠴⠠⠀⠂⠠⠀⠄⠄⠄⠾",
+  "mathml": "<math><mo>(</mo><mo>…</mo><mo>,</mo><mo>-</mo><mn>1</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "ellipsis_43_b_5",
+  "suite": "rules",
+  "braille": "⠼⠂⠆⠈⠉⠬⠂⠲⠈⠉⠀⠨⠅⠀⠄⠄⠄⠈⠉",
+  "mathml": "<math><mn>12</mn><mi>¢</mi><mo>+</mo><mn>14</mn><mi>¢</mi><mo>=</mo><mo>…</mo><mi>¢</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_1",
+  "suite": "rules",
+  "braille": "⠷⠿⠾⠘⠒⠀⠨⠅⠀⠼⠆⠶",
+  "mathml": "<math><msup><mrow><mo>(</mo><mo>?</mo><mo>)</mo></mrow><mn>3</mn></msup><mo>=</mo><mn>27</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_3",
+  "suite": "rules",
+  "braille": "⠼⠶⠈⠡⠆⠀⠿⠀⠼⠂⠲",
+  "mathml": "<math><mn>7</mn><mo>&#xD7;</mo><mn>2</mn><mo>?</mo><mn>14</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_4",
+  "suite": "rules",
+  "braille": "⠿⠬⠿⠀⠨⠅⠀⠼⠂⠴",
+  "mathml": "<math><mo>?</mo><mo>+</mo><mo>?</mo><mo>=</mo><mn>10</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_5",
+  "suite": "rules",
+  "braille": "⠼⠶⠤⠿⠀⠨⠅⠀⠼⠢",
+  "mathml": "<math><mn>7</mn><mo>-</mo><menclose notation='bottom'><mo>?</mo></menclose><mo>=</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_6",
+  "suite": "rules",
+  "braille": "⠼⠔⠤⠢⠀⠨⠅⠀⠿",
+  "mathml": "<math><mn>9</mn><mo>-</mo><mn>5</mn><mo>=</mo><mtext>-?-</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_7",
+  "suite": "rules",
+  "braille": "⠷⠢⠠⠀⠿⠾⠬⠷⠿⠠⠀⠂⠢⠾⠀⠨⠅⠀⠷⠶⠠⠀⠂⠒⠾",
+  "mathml": "<math> <mo>(</mo><mn>5</mn><mo>,</mo><mspace width='1.5em'/><mo>)</mo><mo>+</mo> <mo>(</mo><mo>&#xA0;</mo><mo>&#xA0;</mo><mo>,</mo><mn>15</mn><mo>)</mo><mo>=</mo> <mo>(</mo><mn>7</mn><mo>,</mo><mn>13</mn><mo>)</mo> </math>",
+  "ignored": false
+ },
+ {
+  "name": "omission_57_8",
+  "suite": "rules",
+  "braille": "⠼⠢⠈⠡⠆⠢⠀⠨⠅⠀⠿",
+  "mathml": "<math><mn>5</mn><mo>×</mo><mn>25</mn><mo>=</mo><mspace width='1.5em'/></math>",
+  "ignored": false
+ },
+ {
+  "name": "simple_frac_62_a_3",
+  "suite": "rules",
+  "braille": "⠹⠁⠬⠃⠌⠉⠼",
+  "mathml": "<math><mfrac><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mi>c</mi></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "beveled_frac_62_b_1",
+  "suite": "rules",
+  "braille": "⠹⠁⠬⠃⠸⠌⠉⠬⠙⠼",
+  "mathml": "<math><mfrac bevelled='true'> <mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow> <mrow><mi>c</mi><mo>+</mo><mi>d</mi></mrow> </mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "mixed_frac_63_a_1",
+  "suite": "rules",
+  "braille": "⠼⠲⠸⠹⠒⠌⠦⠸⠼",
+  "mathml": "<math><mn>4</mn><mfrac><mn>3</mn><mn>8</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "mixed_frac_64_2",
+  "suite": "rules",
+  "braille": "⠼⠲⠸⠹⠒⠸⠌⠦⠸⠼",
+  "mathml": "<math><mn>4</mn><mn>3</mn><mo>/</mo><mn>8</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "non_hyper_complex_frac_67_1",
+  "suite": "rules",
+  "braille": "⠹⠁⠌⠃⠘⠠⠹⠹⠒⠌⠲⠼⠠⠌⠹⠢⠌⠖⠼⠠⠼⠐⠼",
+  "mathml": "<math><mfrac><mi>a</mi><msup><mi>b</mi> <mfrac> <mfrac><mn>3</mn><mn>4</mn></mfrac> <mfrac><mn>5</mn><mn>6</mn></mfrac> </mfrac> </msup></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "hyper_complex_frac_68_a_1",
+  "suite": "rules",
+  "braille": "⠠⠠⠹⠠⠹⠂⠸⠹⠂⠌⠲⠸⠼⠠⠌⠂⠸⠹⠒⠌⠢⠸⠼⠠⠼⠠⠠⠌⠢⠠⠠⠼",
+  "mathml": "<math><mfrac> <mfrac> <mrow><mn>1</mn><mfrac><mn>1</mn><mn>4</mn></mfrac></mrow> <mrow><mn>1</mn><mfrac><mn>3</mn><mn>5</mn></mfrac></mrow> </mfrac> <mn>5</mn> </mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sup_74_b_1",
+  "suite": "rules",
+  "braille": "⠝⠘⠭⠘⠘⠽",
+  "mathml": "<math><msup><mi>n</mi><msup><mi>x</mi><mi>y</mi></msup></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sup_mmultiscripts_74_b_1",
+  "suite": "rules",
+  "braille": "⠝⠘⠭⠘⠘⠽",
+  "mathml": "<math><mmultiscripts><mi>n</mi><none/><msup><mi>x</mi><mi>y</mi></msup></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sup_74_b_4",
+  "suite": "rules",
+  "braille": "⠝⠰⠭⠰⠰⠽",
+  "mathml": "<math><msub><mi>n</mi><msub><mi>x</mi><mi>y</mi></msub></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sub_sup_74_c_5",
+  "suite": "rules",
+  "braille": "⠝⠘⠭⠘⠰⠁⠘⠰⠰⠚",
+  "mathml": "<math><msup><mi>n</mi><msub><mi>x</mi><msub><mi>a</mi><mi>j</mi></msub></msub></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "as_multiscript_nested_sub_sup_74_c_5",
+  "suite": "rules",
+  "braille": "⠝⠘⠭⠘⠰⠁⠘⠰⠰⠚",
+  "mathml": "<math><mmultiscripts><mi>n</mi><none/><msub><mi>x</mi><msub><mi>a</mi><mi>j</mi></msub></msub></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "left_sup_75_1",
+  "suite": "rules",
+  "braille": "⠘⠭⠐⠝",
+  "mathml": "<math><mmultiscripts><mi>n</mi><mprescripts/><none/><mi>x</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "left_sup_75_4",
+  "suite": "rules",
+  "braille": "⠰⠭⠐⠝⠰⠽",
+  "mathml": "<math><mmultiscripts><mi>n</mi><mi>y</mi><none/><mprescripts/><mi>x</mi><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "left_sup_75_7",
+  "suite": "rules",
+  "braille": "⠘⠰⠁⠘⠝⠐⠭",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mprescripts/><none/> <mmultiscripts><mi>n</mi><mprescripts/><mi>a</mi><none/></mmultiscripts> </mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "left_sup_75_8",
+  "suite": "rules",
+  "braille": "⠰⠝⠰⠘⠁⠐⠭",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mprescripts/><msup><mi>n</mi><mi>a</mi></msup><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "left_sup_75_12",
+  "suite": "rules",
+  "braille": "⠏⠘⠃⠘⠉⠐⠭",
+  "mathml": "<math><msup><mi>p</mi><mi>b</mi></msup><mmultiscripts><mi>x</mi><mprescripts/><none/><mi>c</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "german_base_77_4_3",
+  "suite": "rules",
+  "braille": "⠸⠠⠁⠂",
+  "mathml": "<math><msub> <mi>𝔄</mi> <mn>1</mn> </msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_77_4_4",
+  "suite": "rules",
+  "braille": "⠭⠄⠂",
+  "mathml": "<math><msub> <msup><mi>x</mi><mo>'</mo></msup> <mn>1</mn> </msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "prescript_77_4_6",
+  "suite": "rules",
+  "braille": "⠰⠒⠐⠭",
+  "mathml": "<math><mmultiscripts> <mi>x</mi> <mprescripts/> <mn>3</mn><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prescript_77_4_7",
+  "suite": "rules",
+  "braille": "⠭⠰⠊⠰⠰⠂",
+  "mathml": "<math><msub><mi>x</mi><msub><mi>i</mi><mn>1</mn></msub></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "log_77_4_8",
+  "suite": "rules",
+  "braille": "⠇⠕⠛⠆⠀⠭",
+  "mathml": "<math><msub><mi>log</mi><mn>2</mn></msub> <mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_77_4_10",
+  "suite": "rules",
+  "braille": "⠷⠠⠉⠠⠕⠒⠾⠰⠆",
+  "mathml": "<math> <mmultiscripts> <mrow> <mo>(</mo> <mi mathvariant='normal'>C</mi> <mmultiscripts> <mi mathvariant='normal'>O</mi> <mn>3</mn> <none/> </mmultiscripts> <mo>)</mo> </mrow> <mn>2</mn> <none/> </mmultiscripts> </math>",
+  "ignored": false
+ },
+ {
+  "name": "word_77_4_12",
+  "suite": "rules",
+  "braille": "⠎⠑⠧⠑⠝⠰⠒",
+  "mathml": "<math><msub><mi>seven</mi><mn>3</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "prescript_77_4_18",
+  "suite": "rules",
+  "braille": "⠰⠒⠐⠭⠂",
+  "mathml": "<math><msub><mrow/><mn>3</mn></msub><msub><mi>x</mi><mn>1</mn></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_77_4_18",
+  "suite": "rules",
+  "braille": "⠰⠒⠐⠭⠂",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mn>1</mn><none/><mprescripts/><mn>3</mn><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_number_77_4_20",
+  "suite": "rules",
+  "braille": "⠭⠂⠴⠠⠴⠴⠴",
+  "mathml": "<math><msub><mi>x</mi><mrow><mn>10</mn><mo>,</mo><mn>000</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "sum_77_4_23",
+  "suite": "rules",
+  "braille": "⠨⠠⠎⠴⠘⠝⠐⠁⠰⠅",
+  "mathml": "<math><msubsup><mo>&#x2211;</mo><mn>0</mn><mi>n</mi></msubsup><msub><mi>a</mi><mi>k</mi></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "product_77_4_24",
+  "suite": "rules",
+  "braille": "⠨⠠⠏⠴⠘⠝⠐⠁⠰⠅",
+  "mathml": "<math><msubsup><mo>&#x220F;</mo><mn>0</mn><mi>n</mi></msubsup><msub><mi>a</mi><mi>k</mi></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "integral_77_4_26",
+  "suite": "rules",
+  "braille": "⠮⠰⠴⠘⠜⠂⠤⠭⠘⠘⠆⠘⠻⠐⠋⠷⠭⠾⠙⠭",
+  "mathml": "<math> <msubsup> <mo>&#x222B;</mo> <mn>0</mn> <msqrt><mn>1</mn><mo>-</mo><msup><mi>x</mi><mn>2</mn></msup></msqrt> </msubsup> <mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow> </math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_space_78_1",
+  "suite": "rules",
+  "braille": "⠭⠰⠊⠪⠚⠪⠅",
+  "mathml": "<math><msub><mi>x</mi> <mrow><mi>i</mi><mo>,</mo><mo>&#xA0;</mo><mi>j</mi><mo>,</mo><mo>&#xA0;</mo><mi>k</mi></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_78_2",
+  "suite": "rules",
+  "braille": "⠭⠰⠷⠁⠪⠃⠾",
+  "mathml": "<math><msub><mi>x</mi><mrow><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>)</mo></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_78_2_invisible",
+  "suite": "rules",
+  "braille": "⠭⠰⠷⠁⠪⠃⠾",
+  "mathml": "<math><msub><mi>x</mi><mrow><mo>(</mo><mi>a</mi><mo>&#x2063;</mo><mi>b</mi><mo>)</mo></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_78_3",
+  "suite": "rules",
+  "braille": "⠭⠰⠂⠪⠆",
+  "mathml": "<math><msub><mi>x</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_78_6",
+  "suite": "rules",
+  "braille": "⠷⠭⠠⠀⠽⠾",
+  "mathml": "<math><mo>(</mo><mi>x</mi><mo>,</mo><mo>&#xA0;</mo><mi>y</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_super_79_a_2",
+  "suite": "rules",
+  "braille": "⠭⠰⠁⠐⠬⠽⠘⠆",
+  "mathml": "<math><msub><mi>x</mi><mi>a</mi></msub><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_super_79_a_3",
+  "suite": "rules",
+  "braille": "⠹⠑⠘⠭⠘⠘⠆⠐⠌⠆⠼",
+  "mathml": "<math><mfrac><mrow><msup><mi>e</mi><mrow><msup><mi>x</mi><mn>2</mn></msup></mrow></msup></mrow><mn>2</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "punctuation_after_sup_79_b_2",
+  "suite": "rules",
+  "braille": "⠭⠘⠆⠠⠀⠭⠘⠒",
+  "mathml": "<math><msup><mi>x</mi><mn>2</mn></msup><mo>,</mo><msup><mi>x</mi><mn>3</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_in_number_in_sup_79_b_3",
+  "suite": "rules",
+  "braille": "⠭⠘⠂⠴⠠⠴⠴⠴",
+  "mathml": "<math><msup><mi>x</mi><mrow><mn>10</mn><mo>,</mo><mn>000</mn></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_in_sup_79_b_4",
+  "suite": "rules",
+  "braille": "⠭⠰⠊⠪⠚",
+  "mathml": "<math><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "comma_ellipsis_in_sub_79_b_5",
+  "suite": "rules",
+  "braille": "⠠⠏⠰⠝⠰⠰⠂⠰⠪⠝⠰⠰⠆⠰⠪⠀⠄⠄⠄",
+  "mathml": "<math> <msub><mi>P</mi> <mrow><msub><mi>n</mi><mn>1</mn></msub> <mo>,</mo> <msub><mi>n</mi><mn>2</mn></msub> <mo>,</mo><mo>&#x2026;</mo> </mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "text_after_sup_79_c_3",
+  "suite": "rules",
+  "braille": "⠼⠖⠨⠖⠔⠖⠈⠡⠂⠴⠘⠦⠀⠍⠏⠓",
+  "mathml": "<math><mn>6</mn><mo>.</mo><mn>696</mn><mo>×</mo><msup><mn>10</mn><mn>8</mn></msup><mo>&#xA0;</mo><mtext>mph</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "table_entry_after_sup_79_c_4",
+  "suite": "rules",
+  "braille": "⠷⠭⠘⠆⠀⠽⠘⠆⠐⠾",
+  "mathml": "<math><mrow><mo>(</mo> <mtable><mtr> <mtd><msup><mi>x</mi><mn>2</mn></msup></mtd> <mtd><msup><mi>y</mi><mn>2</mn></msup></mtd> </mtr></mtable> <mo>)</mo></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_super_space_79_d_3",
+  "suite": "rules",
+  "braille": "⠉⠕⠎⠘⠆⠀⠭",
+  "mathml": "<math><msup><mi>cos</mi><mn>2</mn></msup><mi>x</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_super_space_79_d_7",
+  "suite": "rules",
+  "braille": "⠑⠘⠉⠕⠎⠘⠘⠆⠀⠭",
+  "mathml": "<math><mrow><msup><mi>e</mi><mrow><msup><mi>cos</mi><mn>2</mn></msup><mi>x</mi></mrow></msup></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sup_sup_space_79_d_9",
+  "suite": "rules",
+  "braille": "⠟⠘⠇⠕⠛⠘⠰⠟⠀⠁",
+  "mathml": "<math><msup><mi>q</mi><mrow><msub><mi>log</mi><mi>q</mi></msub><mi>a</mi></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "whitespace_in_sup_79_e_1",
+  "suite": "rules",
+  "braille": "⠑⠘⠒⠨⠂⠲⠂⠢⠔⠀⠆⠖⠢⠒⠢",
+  "mathml": "<math><msup><mi>e</mi><mn>3.14159 26535</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "ellipsis_level_79_f_1",
+  "suite": "rules",
+  "braille": "⠭⠘⠂⠬⠂⠸⠌⠆⠬⠂⠸⠌⠒⠬⠀⠄⠄⠄⠀⠬⠂⠸⠌⠝",
+  "mathml": "<math><msup><mi>x</mi> <mrow><mn>1</mn><mo>+</mo><mn>1</mn><mo>/</mo><mn>2</mn><mo>+</mo><mn>1</mn><mo>/</mo><mn>3</mn><mo>+</mo> <mo>…</mo><mo>+</mo><mn>1</mn><mo>/</mo><mi>n</mi></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "comparison_79_g_2",
+  "suite": "rules",
+  "braille": "⠼⠆⠘⠭⠀⠐⠅⠀⠼⠒⠘⠭",
+  "mathml": "<math><msup><mn>2</mn><mi>x</mi></msup><mo>&lt;</mo><msup><mn>3</mn><mi>x</mi></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_ind_79_g_4",
+  "suite": "rules",
+  "braille": "⠮⠰⠥⠀⠰⠨⠅⠀⠁",
+  "mathml": "<math><msub><mo>∫</mo><mrow><mi>u</mi><mo>=</mo><mi>a</mi></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "baseline_80_a_1",
+  "suite": "rules",
+  "braille": "⠜⠭⠘⠆⠐⠬⠽⠘⠆⠐⠻",
+  "mathml": "<math><msqrt><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "superscript_80_a_2",
+  "suite": "rules",
+  "braille": "⠑⠘⠜⠭⠘⠘⠆⠘⠬⠽⠘⠘⠆⠘⠻",
+  "mathml": "<math><msup><mi>e</mi><msqrt><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></msqrt></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_ind_80_b_3",
+  "suite": "rules",
+  "braille": "⠠⠏⠂⠰⠆⠐⠠⠟",
+  "mathml": "<math><msub><mi>P</mi><mn>1</mn></msub><mmultiscripts><mi>Q</mi><mprescripts/><mn>2</mn><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_ind_mmultiscripts_80_b_3",
+  "suite": "rules",
+  "braille": "⠠⠏⠂⠰⠆⠐⠠⠟",
+  "mathml": "<math><mmultiscripts><mi>P</mi><mn>1</mn><none/></mmultiscripts> <mmultiscripts><mi>Q</mi><mprescripts/><mn>2</mn><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_ind_80_b_4",
+  "suite": "rules",
+  "braille": "⠠⠁⠰⠐⠭⠣⠈⠱⠻⠬⠰⠐⠽⠣⠈⠱⠻",
+  "mathml": "<math><msub><mi>A</mi><mrow><mover><mi>x</mi><mo>~</mo></mover><mo>+</mo><mover><mi>y</mi><mo>~</mo></mover></mrow></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "numeric_sub_81_a_1",
+  "suite": "rules",
+  "braille": "⠷⠭⠂⠬⠂⠾",
+  "mathml": "<math><mo>(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><mn>1</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "msubsup_82_a_1",
+  "suite": "rules",
+  "braille": "⠭⠰⠁⠘⠝",
+  "mathml": "<math><msubsup><mi>x</mi><mi>a</mi><mi>n</mi></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "msubsup_82_a_3",
+  "suite": "rules",
+  "braille": "⠭⠂⠘⠆",
+  "mathml": "<math><msubsup><mi>x</mi><mn>1</mn><mn>2</mn></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_a_1",
+  "suite": "rules",
+  "braille": "⠭⠰⠁⠘⠝",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mi>a</mi><mi>n</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_a_2",
+  "suite": "rules",
+  "braille": "⠰⠁⠘⠝⠐⠭",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mprescripts/><mi>a</mi><mi>n</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_a_3",
+  "suite": "rules",
+  "braille": "⠭⠂⠘⠆",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mn>1</mn><mn>2</mn></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_sup_82_b_1",
+  "suite": "rules",
+  "braille": "⠁⠘⠝⠐⠰⠍",
+  "mathml": "<math><msub><msup><mi>a</mi><mi>n</mi></msup><mi>m</mi></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_1",
+  "suite": "rules",
+  "braille": "⠁⠘⠝⠐⠰⠍",
+  "mathml": "<math><mmultiscripts><mi>a</mi><none/><mi>n</mi><mi>m</mi><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "sub_sup_82_b_2",
+  "suite": "rules",
+  "braille": "⠁⠰⠍⠐⠘⠝",
+  "mathml": "<math><msup><msub><mi>a</mi><mi>m</mi></msub><mi>n</mi></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_2",
+  "suite": "rules",
+  "braille": "⠁⠰⠍⠐⠘⠝",
+  "mathml": "<math><mmultiscripts><mi>a</mi><mi>m</mi><none/><none/><mi>n</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_3",
+  "suite": "rules",
+  "braille": "⠘⠁⠐⠰⠃⠐⠭",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mprescripts/><none/><mi>a</mi><mi>b</mi><none/></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_4",
+  "suite": "rules",
+  "braille": "⠰⠃⠐⠘⠁⠐⠭",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mprescripts/><mi>b</mi><none/><none/><mi>a</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_5",
+  "suite": "rules",
+  "braille": "⠭⠂⠐⠘⠆",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mn>1</mn><none/><none/><mn>2</mn></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "mmultiscripts_82_b_6",
+  "suite": "rules",
+  "braille": "⠭⠄⠰⠁⠐⠘⠃",
+  "mathml": "<math><mmultiscripts><mi>x</mi><mi>a</mi><mo>'</mo><none/><mi>b</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_1",
+  "suite": "rules",
+  "braille": "⠭⠄⠰⠁",
+  "mathml": "<math><msubsup><mi>x</mi><mi>a</mi><mo>'</mo></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_mmultiscripts_83_b_2",
+  "suite": "rules",
+  "braille": "⠭⠄⠘⠆",
+  "mathml": "<math><mmultiscripts> <mi>x</mi> <none/><mo>'</mo> <none/><mn>2</mn></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_mathjax_83_b_2",
+  "suite": "rules",
+  "braille": "⠭⠄⠘⠆",
+  "mathml": "<math><msup> <mrow><mi>x</mi><mo>'</mo></mrow> <mn>2</mn></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_wiris_83_b_2",
+  "suite": "rules",
+  "braille": "⠭⠄⠘⠆",
+  "mathml": "<math><msup><mi>x</mi> <mrow><mi>&#x2032;</mi><mn>2</mn></mrow> </msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_3",
+  "suite": "rules",
+  "braille": "⠭⠄⠰⠁⠘⠃",
+  "mathml": "<math><mmultiscripts> <mi>x</mi> <none/><mo>'</mo> <mi>a</mi><mi>b</mi></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_4",
+  "suite": "rules",
+  "braille": "⠭⠄⠄⠂⠘⠒",
+  "mathml": "<math><msubsup> <msup><mi>x</mi><mo>''</mo></msup> <mn>1</mn> <mn>3</mn></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_mmultiscripts_83_b_4",
+  "suite": "rules",
+  "braille": "⠭⠄⠄⠂⠘⠒",
+  "mathml": "<math><mmultiscripts> <mi>x</mi> <none/><mo>''</mo> <mn>1</mn><mn>3</mn></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_5",
+  "suite": "rules",
+  "braille": "⠭⠄⠘⠈⠼",
+  "mathml": "<math><mmultiscripts> <mi>x</mi> <none/><mo>'</mo> <none/><mo>*</mo></mmultiscripts></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_6",
+  "suite": "rules",
+  "braille": "⠭⠘⠈⠼⠄",
+  "mathml": "<math><msup> <mi>x</mi> <mrow><mo>*</mo> <mo>'</mo></mrow> </msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_7",
+  "suite": "rules",
+  "braille": "⠠⠁⠰⠥⠑⠘⠈⠼⠄",
+  "mathml": "<math> <msubsup> <mi>A</mi> <mrow><mi>u</mi><mi>e</mi></mrow> <mrow><mo>&#x2217;</mo><mo>&#x2032;</mo></mrow> </msubsup> </math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_83_b_8",
+  "suite": "rules",
+  "braille": "⠠⠁⠄⠰⠥⠑⠘⠈⠼",
+  "mathml": "<math> <msubsup> <mi>A</mi> <mrow><mi>u</mi><mi>e</mi></mrow> <mrow><mo>&#x2032;</mo><mo>&#x2217;</mo></mrow> </msubsup> </math>",
+  "ignored": false
+ },
+ {
+  "name": "underbar_86_a_1",
+  "suite": "rules",
+  "braille": "⠭⠩⠱",
+  "mathml": "<math><munder><mi>x</mi><mo>&#xAF;</mo></munder></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_86_a_1",
+  "suite": "rules",
+  "braille": "⠭⠩⠱",
+  "mathml": "<math><menclose notation='bottom'><mi>x</mi></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "lim_86_a_3",
+  "suite": "rules",
+  "braille": "⠐⠇⠊⠍⠩⠭⠀⠫⠕⠀⠼⠴⠻⠀⠋⠷⠭⠾",
+  "mathml": "<math><munder><mi>lim</mi><mrow><mi>x</mi><mo>&#x2192;</mo><mn>0</mn></mrow></munder><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "overbar_86_a_4",
+  "suite": "rules",
+  "braille": "⠐⠭⠘⠆⠐⠣⠱⠻",
+  "mathml": "<math><mover><msup><mi>x</mi><mn>2</mn></msup><mo>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_86_a_4",
+  "suite": "rules",
+  "braille": "⠐⠭⠘⠆⠐⠣⠱⠻",
+  "mathml": "<math><menclose notation='top'><msup><mi>x</mi><mn>2</mn></msup></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "mathml_spec_example_86_a",
+  "suite": "rules",
+  "braille": "⠐⠷⠩⠱⠻⠹⠁⠌⠃⠼⠐⠾⠣⠱⠻",
+  "mathml": "<math> <munder><mo>(</mo><mo>&#x5F;<!--LOW LINE--></mo></munder> <mfrac><mi>a</mi><mi>b</mi></mfrac> <mover><mo>)</mo><mo>&#x203E;<!--OVERLINE--></mo></mover> </math>",
+  "ignored": false
+ },
+ {
+  "name": "mathml_spec_example_alt_char_86_a",
+  "suite": "rules",
+  "braille": "⠐⠷⠩⠱⠻⠹⠁⠌⠃⠼⠐⠾⠣⠱⠻",
+  "mathml": "<math> <munder><mo>(</mo><mo>&#x2015;</mo></munder> <mfrac><mi>a</mi><mi>b</mi></mfrac> <mover><mo>)</mo><mo>&#x2015;</mo></mover> </math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_lesson_12_5_5_5",
+  "suite": "rules",
+  "braille": "⠠⠁⠷⠎⠩⠱⠝⠾",
+  "mathml": "<math><mi>A</mi><mo>(</mo><menclose notation='bottom'><mi>s</mi></menclose><mi>n</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "munder_lesson_12_5_5_5",
+  "suite": "rules",
+  "braille": "⠠⠁⠷⠎⠩⠱⠝⠾",
+  "mathml": "<math><mi>A</mi><mo>(</mo><munder><mi>s</mi><mo>&#xAF;</mo></munder><mi>n</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "overbar_86_b_1",
+  "suite": "rules",
+  "braille": "⠭⠱",
+  "mathml": "<math><mover><mi>x</mi><mo>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_86_b_1",
+  "suite": "rules",
+  "braille": "⠭⠱",
+  "mathml": "<math><menclose notation='top'><mi>x</mi></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "overbar_86_b_2",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠣⠱⠻",
+  "mathml": "<math><mover> <mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow> <mo>&#xAF;</mo> </mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "primed_86_b_6",
+  "suite": "rules",
+  "braille": "⠭⠱⠄",
+  "mathml": "<math><msup><mrow><mover><mi>x</mi><mo>&#xAF;</mo></mover></mrow><mo>&#x2032;</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_primed_86_b_6",
+  "suite": "rules",
+  "braille": "⠭⠱⠄",
+  "mathml": "<math><msup><menclose notation='top'><mi>x</mi></menclose><mo>&#x2032;</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "overbar_86_b_10",
+  "suite": "rules",
+  "braille": "⠼⠒⠨⠢⠲⠱",
+  "mathml": "<math><mn>3</mn><mo>.</mo><mn>5</mn><mover><mn>4</mn><mo>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "overbar_86_b_11",
+  "suite": "rules",
+  "braille": "⠐⠷⠁⠱⠸⠰⠠⠁⠬⠃⠱⠸⠰⠠⠃⠾⠣⠱⠻",
+  "mathml": "<math><mover><mfenced> <mrow><mover><mi>a</mi><mo>&#xAF;</mo></mover><mi mathvariant='bold'>A</mi><mo>+</mo> <mover><mi>b</mi><mo>&#xAF;</mo></mover><mi mathvariant='bold'>B</mi></mrow> </mfenced><mo>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_86_b_11",
+  "suite": "rules",
+  "braille": "⠐⠷⠁⠱⠸⠰⠠⠁⠬⠃⠱⠸⠰⠠⠃⠾⠣⠱⠻",
+  "mathml": "<math><menclose notation='top'><mfenced> <mrow><menclose notation='top'><mi>a</mi></menclose><mi mathvariant='bold'>A</mi><mo>+</mo> <menclose notation='top'><mi>b</mi></menclose><mi mathvariant='bold'>B</mi></mrow> </mfenced></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "order2_overbar_87_a_1",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠣⠱⠣⠣⠁⠀⠨⠅⠀⠼⠒⠻",
+  "mathml": "<math><mover> <mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow> <mover><mo>&#xAF;</mo><mrow><mi>a</mi><mo>=</mo><mn>3</mn></mrow></mover> </mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "bar_above_and_below_88_1",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠩⠱⠣⠱⠻",
+  "mathml": "<math><munderover> <mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow> <mo>&#xAF;</mo> <mo>&#xAF;</mo> </munderover></math>",
+  "ignored": false
+ },
+ {
+  "name": "above_and_below_88_2",
+  "suite": "rules",
+  "braille": "⠐⠨⠠⠎⠩⠝⠀⠨⠅⠀⠼⠂⠣⠠⠿⠻⠹⠂⠌⠆⠘⠝⠐⠼⠀⠨⠅⠀⠼⠂",
+  "mathml": "<math><munderover><mo>&#x2211;</mo><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><mo>&#x221E;</mo></munderover> <mfrac><mn>1</mn><msup><mn>2</mn><mi>n</mi></msup></mfrac><mo>=</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_top_bottom_88_1",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠩⠱⠣⠱⠻",
+  "mathml": "<math><menclose notation='top bottom'><mi>x</mi><mo>+</mo><mi>y</mi></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "binomial_90_1",
+  "suite": "rules",
+  "braille": "⠷⠝⠩⠅⠾",
+  "mathml": "<math><mo>(</mo><mfrac linethickness='0'><mi>n</mi><mi>k</mi></mfrac><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "binomial_90_1_mtable",
+  "suite": "rules",
+  "braille": "⠷⠝⠩⠅⠾",
+  "mathml": "<math><mrow intent='binomial($n,$k)'> <mo>(</mo> <mtable> <mtr><mtd><mi arg='n'>n</mi></mtd></mtr> <mtr><mtd><mi arg='k'>k</mi></mtd></mtr> </mtable> <mo>)</mo> </mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "modifier_in_script_91_1",
+  "suite": "rules",
+  "braille": "⠠⠁⠰⠐⠭⠣⠈⠱⠻",
+  "mathml": "<math><msub><mi>A</mi><mover><mi>x</mi><mo>~</mo></mover></msub></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_96_1",
+  "suite": "rules",
+  "braille": "⠐⠠⠁⠠⠃⠣⠫⠕⠻",
+  "mathml": "<math> <mover> <mrow><mi mathvariant='normal'>A</mi> <mi mathvariant='normal'>B</mi></mrow> <mo>→</mo> </mover> </math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_96_10",
+  "suite": "rules",
+  "braille": "⠠⠭⠀⠐⠫⠒⠒⠕⠣⠋⠨⠡⠛⠻⠀⠠⠽",
+  "mathml": "<math> <mi>X</mi> <mover> <mo>→</mo> <mrow><mi>f</mi> <mo>∘</mo><mi>g</mi></mrow> </mover> <mi>Y</mi> </math>",
+  "ignored": false
+ },
+ {
+  "name": "bar_97_b_1",
+  "suite": "rules",
+  "braille": "⠼⠨⠒⠱",
+  "mathml": "<math><mo>.</mo><mover><mn>3</mn><mo>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_bar_97_b_1",
+  "suite": "rules",
+  "braille": "⠼⠨⠒⠱",
+  "mathml": "<math><mo>.</mo><menclose notation='top'><mn>3</mn></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_bar_97_b_3",
+  "suite": "rules",
+  "braille": "⠼⠒⠨⠢⠶⠐⠆⠔⠣⠱⠻",
+  "mathml": "<math><mn>3.57</mn><mover><mn>29</mn><mo stretchy='true'>&#xAF;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "carrot_98_1",
+  "suite": "rules",
+  "braille": "⠐⠭⠣⠸⠣⠻",
+  "mathml": "<math><mover><mi>x</mi><mo>^</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "dots_99_a_1",
+  "suite": "rules",
+  "braille": "⠼⠨⠐⠒⠣⠡⠻",
+  "mathml": "<math><mo>.</mo><mover><mn>3</mn><mo>&#x2D9;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "dots_99_a_2",
+  "suite": "rules",
+  "braille": "⠼⠨⠐⠂⠒⠢⠣⠡⠻",
+  "mathml": "<math><mo>.</mo><mover><mn>1</mn><mo>&#x2D9;</mo></mover><mover><mn>3</mn><mo>&#x2D9;</mo></mover><mover><mn>5</mn><mo>&#x2D9;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "dots_99_a_3",
+  "suite": "rules",
+  "braille": "⠼⠨⠂⠒⠐⠢⠣⠡⠻",
+  "mathml": "<math><mn>.13</mn><mover><mn>5</mn><mo>&#x2D9;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "ring_dot_100_1",
+  "suite": "rules",
+  "braille": "⠐⠨⠅⠣⠨⠡⠻",
+  "mathml": "<math><mo>≗</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "question_mark_over_equals_101_1",
+  "suite": "rules",
+  "braille": "⠐⠨⠅⠣⠸⠦⠻",
+  "mathml": "<math><mover><mo>=</mo><mo>?</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "question_mark_under_equals_101_2",
+  "suite": "rules",
+  "braille": "⠐⠨⠅⠩⠸⠦⠻",
+  "mathml": "<math><munder><mo>=</mo><mo>?</mo></munder></math>",
+  "ignored": false
+ },
+ {
+  "name": "sqrt_103_a_2",
+  "suite": "rules",
+  "braille": "⠜⠭⠬⠽⠻",
+  "mathml": "<math><msqrt><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "sqrt_103_a_4",
+  "suite": "rules",
+  "braille": "⠜⠭⠘⠆⠐⠬⠽⠘⠆⠐⠻",
+  "mathml": "<math><msqrt> <msup><mi>x</mi><mn>2</mn></msup> <mo>+</mo> <msup><mi>y</mi><mn>2</mn></msup> </msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "sqrt_103_b_2",
+  "suite": "rules",
+  "braille": "⠜⠷⠭⠬⠽⠾",
+  "mathml": "<math><mo>√</mo><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "root_104_iii_1",
+  "suite": "rules",
+  "braille": "⠣⠒⠜⠆⠻",
+  "mathml": "<math><mroot><mn>2</mn><mn>3</mn></mroot></math>",
+  "ignored": false
+ },
+ {
+  "name": "root_104_iii_4",
+  "suite": "rules",
+  "braille": "⠣⠍⠬⠝⠜⠏⠬⠟⠻",
+  "mathml": "<math><mroot> <mrow><mi>p</mi><mo>+</mo><mi>q</mi></mrow> <mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow> </mroot></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sqrt_105_1",
+  "suite": "rules",
+  "braille": "⠜⠭⠬⠨⠜⠭⠬⠽⠨⠻⠬⠵⠻",
+  "mathml": "<math><msqrt><mi>x</mi><mo>+</mo> <msqrt><mi>x</mi><mo>+</mo><mi>y</mi></msqrt> <mo>+</mo><mi>z</mi></msqrt></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_root_105_2",
+  "suite": "rules",
+  "braille": "⠣⠒⠜⠭⠘⠆⠐⠬⠨⠣⠒⠜⠭⠘⠆⠐⠬⠽⠘⠆⠐⠨⠻⠬⠽⠘⠆⠐⠻",
+  "mathml": "<math><mroot> <mrow> <msup> <mi>x</mi><mn>2</mn> </msup> <mo>+</mo> <mroot> <mrow> <msup> <mi>x</mi> <mn>2</mn> </msup> <mo>+</mo> <msup> <mi>y</mi> <mn>2</mn> </msup> </mrow> <mn>3</mn> </mroot> <mo>+</mo> <msup> <mi>y</mi> <mn>2</mn> </msup> </mrow> <mn>3</mn> </mroot></math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sqrt_105_3",
+  "suite": "rules",
+  "braille": "⠜⠨⠣⠒⠜⠭⠨⠻⠻⠀⠨⠅⠀⠣⠒⠜⠨⠜⠭⠨⠻⠻",
+  "mathml": "<math> <msqrt> <mroot> <mi>x</mi><mn>3</mn> </mroot> </msqrt> <mo>=</mo> <mroot> <msqrt><mi>x</mi></msqrt> <mn>3</mn></mroot> </math>",
+  "ignored": false
+ },
+ {
+  "name": "nested_sqrt_105_4",
+  "suite": "rules",
+  "braille": "⠜⠭⠬⠨⠜⠽⠬⠨⠨⠜⠵⠨⠨⠻⠨⠻⠻",
+  "mathml": "<math> <msqrt><mi>x</mi><mo>+</mo><msqrt><mi>y</mi><mo>+</mo><msqrt><mi>z</mi></msqrt></msqrt></msqrt> </math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_111_a_4",
+  "suite": "rules",
+  "braille": "⠫⠪⠸⠫⠼⠒⠴⠘⠨⠡⠐⠻",
+  "mathml": "<math><menclose notation='phasorangle'><mrow><mn>30</mn><mo>&#xB0;</mo></mrow></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "menclose_111_a_1",
+  "suite": "rules",
+  "braille": "⠫⠉⠸⠫⠠⠁⠻",
+  "mathml": "<math><menclose notation='circle'><mi>A</mi></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "shape_115_a_1",
+  "suite": "rules",
+  "braille": "⠫⠪⠀⠼⠂",
+  "mathml": "<math><mo>∠</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "shape_115_a_3",
+  "suite": "rules",
+  "braille": "⠫⠉⠀⠠⠗",
+  "mathml": "<math><mo>&#x25CB;</mo><mi>R</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "shape_115_a_6",
+  "suite": "rules",
+  "braille": "⠫⠪⠨⠗⠻⠀⠠⠁",
+  "mathml": "<math><mo>∟</mo><mi>A</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "shape_115_a_11",
+  "suite": "rules",
+  "braille": "⠍⠫⠪⠀⠠⠁⠠⠃⠠⠉",
+  "mathml": "<math><mi>m</mi><mo>&#x2220;</mo><mi>A</mi><mi>B</mi><mi>C</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "function_space_119_c_3",
+  "suite": "rules",
+  "braille": "⠎⠊⠝⠀⠼⠒⠴⠘⠨⠡⠐⠉⠕⠎⠀⠼⠲⠢⠘⠨⠡⠐⠬⠉⠕⠎⠀⠼⠒⠴⠘⠨⠡⠐⠎⠊⠝⠀⠼⠲⠢⠘⠨⠡",
+  "mathml": "<math><mi>sin</mi><mn>30</mn><mo>&#xB0;</mo><mi>cos</mi><mn>45</mn><mo>&#xB0;</mo> <mo>+</mo><mi>cos</mi><mn>30</mn><mo>&#xB0;</mo><mi>sin</mi><mn>45</mn><mo>&#xB0;</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "brace_above_121_1",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠣⠨⠷⠻",
+  "mathml": "<math><mover><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>&#x23DE;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "brace_below_121_2",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠩⠨⠾⠻",
+  "mathml": "<math><munder><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>&#x23DF;</mo></munder></math>",
+  "ignored": false
+ },
+ {
+  "name": "bracket_above_121_3",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠣⠈⠷⠻",
+  "mathml": "<math><mover><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>&#x23B4;</mo></mover></math>",
+  "ignored": false
+ },
+ {
+  "name": "racket_below_121_4",
+  "suite": "rules",
+  "braille": "⠐⠭⠬⠽⠩⠈⠾⠻",
+  "mathml": "<math><munder><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>&#x23B5;</mo></munder></math>",
+  "ignored": false
+ },
+ {
+  "name": "identity_matrix_126_linearize",
+  "suite": "rules",
+  "braille": "⠠⠷⠼⠂⠀⠼⠴⠀⠼⠴⠀⣍⠴⠀⠼⠂⠀⠼⠴⠀⣍⠴⠀⠼⠴⠀⠼⠂⠠⠾",
+  "mathml": "<math> <mrow><mo>(</mo> <mtable> <mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr> <mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr> <mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr> </mtable><mo>)</mo></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_134_1",
+  "suite": "rules",
+  "braille": "⠬⠆⠤⠐⠬⠒",
+  "mathml": "<math><mo>+</mo><mn>2</mn><mo>-</mo><mo>+</mo><mn>3</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "plus_minus_134_4",
+  "suite": "rules",
+  "braille": "⠭⠬⠤⠽",
+  "mathml": "<math><mi>x</mi><mo>&#xB1;</mo><mi>y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_2_3",
+  "suite": "rules",
+  "braille": "⠼⠂⠴⠬⠐⠤⠢",
+  "mathml": "<math><mn>10</mn><mo>+</mo><mo>-</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_2_4",
+  "suite": "rules",
+  "braille": "⠼⠂⠴⠤⠐⠬⠢",
+  "mathml": "<math><mn>10</mn><mo>-</mo><mo>+</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_2_5",
+  "suite": "rules",
+  "braille": "⠼⠂⠴⠤⠐⠤⠢",
+  "mathml": "<math><mn>10</mn><mo>-</mo><mo>-</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "tilde_137_2",
+  "suite": "rules",
+  "braille": "⠈⠱⠏⠈⠬⠈⠱⠟⠈⠬⠈⠱⠗",
+  "mathml": "<math><mo>∼</mo><mi>p</mi><mo>∨</mo><mo>∼</mo><mi>q</mi><mo>∨</mo><mo>∼</mo><mi>r</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "tilde_137_3",
+  "suite": "rules",
+  "braille": "⠈⠱⠐⠈⠱⠠⠞⠈⠬⠠⠗",
+  "mathml": "<math><mo>~</mo><mo>~</mo><mi>T</mi><mo>&#x2228;</mo><mi>R</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "tilde_137_3_mathjax",
+  "suite": "rules",
+  "braille": "⠈⠱⠐⠈⠱⠠⠞⠈⠬⠠⠗",
+  "mathml": "<math><mo>∼∼</mo><mi>T</mi><mo>∨</mo><mi>R</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "tilde_144_1",
+  "suite": "rules",
+  "braille": "⠭⠀⠈⠱⠀⠽",
+  "mathml": "<math><mi>x</mi><mo>∼</mo><mi>y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "set_vertical_bar_145_1",
+  "suite": "rules",
+  "braille": "⠨⠷⠭⠀⠳⠀⠳⠭⠳⠀⠐⠅⠀⠼⠂⠴⠨⠾",
+  "mathml": "<math><mo>{</mo><mi>x</mi><mo>|</mo><mo>|</mo><mi>x</mi><mo>|</mo><mo>&lt;</mo><mn>10</mn><mo>}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "vertical_bar_145_4",
+  "suite": "rules",
+  "braille": "⠠⠏⠷⠠⠁⠀⠳⠀⠠⠃⠾",
+  "mathml": "<math><mi>P</mi><mo>(</mo><mi>A</mi><mo>|</mo><mi>B</mi><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "ratio_151_10",
+  "suite": "rules",
+  "braille": "⠼⠂⠀⠐⠂⠀⠼⠆⠀⠰⠆⠀⠼⠒⠀⠐⠂⠀⠼⠖",
+  "mathml": "<math><mn>1</mn><mo>:</mo><mn>2</mn><mo>∷</mo><mn>3</mn><mo>:</mo><mn>6</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "ratio_151_11",
+  "suite": "rules",
+  "braille": "⠁⠬⠃⠀⠐⠂⠀⠃⠀⠰⠆⠀⠉⠬⠙⠀⠐⠂⠀⠙",
+  "mathml": "<math><mi>a</mi><mo>+</mo><mi>b</mi><mo>:</mo><mi>b</mi><mo>∷</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>:</mo><mi>d</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "space_after_punct_bug_152",
+  "suite": "rules",
+  "braille": "⠼⠶⠀⠐⠨⠅⠣⠸⠦⠻⠀⠼⠦",
+  "mathml": "<math><mn>7</mn><mover><mo>=</mo><mo>?</mo></mover><mn>8</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "arrow_lesson_9_5_1",
+  "suite": "rules",
+  "braille": "⠠⠁⠀⠫⠕⠀⠠⠃",
+  "mathml": "<math><mi>A</mi><mo>→</mo><mi>B</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "not_ratio_nfb_5_7_b_2",
+  "suite": "rules",
+  "braille": "⠨⠷⠰⠭⠸⠒⠀⠭⠀⠨⠂⠀⠼⠴⠨⠾",
+  "mathml": "<math><mo>{</mo><mi>x</mi><mo>:</mo><mi>x</mi><mo>></mo><mn>0</mn><mo>}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "not_ratio_nfb_5_7_b_4",
+  "suite": "rules",
+  "braille": "⠰⠏⠸⠒⠗⠀⠨⠅⠀⠟⠸⠒⠰⠎",
+  "mathml": "<math><mi>p</mi><mo>:</mo><mi>r</mi><mo>=</mo><mi>q</mi><mo>:</mo><mi>s</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "trilinear_not_ratio",
+  "suite": "rules",
+  "braille": "⠰⠁⠸⠒⠰⠃⠸⠒⠰⠉",
+  "mathml": "<math><mi>a</mi><mo>:</mo><mi>b</mi><mo>:</mo><mi>c</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "extension_field_not_ratio",
+  "suite": "rules",
+  "braille": "⠈⠷⠰⠠⠅⠸⠒⠰⠠⠋⠈⠾",
+  "mathml": "<math><mo>[</mo><mi>K</mi><mo>:</mo><mi>F</mi><mo>]</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "proportional_151_12",
+  "suite": "rules",
+  "braille": "⠭⠀⠸⠿⠀⠽",
+  "mathml": "<math><mi>x</mi><mo>∝</mo><mi>y</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "comparison_ops_151_14",
+  "suite": "rules",
+  "braille": "⠨⠷⠭⠀⠳⠀⠼⠴⠀⠐⠅⠱⠀⠭⠀⠐⠅⠱⠀⠼⠂⠨⠾",
+  "mathml": "<math><mo>{</mo><mi>x</mi><mo>|</mo><mn>0</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mn>1</mn><mo>}</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "no_space_comparison_151_16",
+  "suite": "rules",
+  "braille": "⠷⠐⠅⠠⠀⠨⠅⠠⠀⠨⠂⠾",
+  "mathml": "<math><mo>(</mo><mo>&lt;</mo><mo>,</mo><mo>=</mo><mo>,</mo><mo>&gt;</mo><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "in_scripts_comparison_151_17",
+  "suite": "rules",
+  "braille": "⠮⠰⠭⠀⠰⠨⠅⠀⠁⠘⠭⠀⠘⠨⠅⠀⠃⠐⠋⠷⠭⠾⠙⠭",
+  "mathml": "<math> <msubsup> <mo>∫</mo> <mrow><mi>x</mi><mo>=</mo><mi>a</mi></mrow> <mrow><mi>x</mi><mo>=</mo><mi>b</mi></mrow> </msubsup> <mrow> <mrow> <mi>f</mi> <mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow> </mrow> <mi>d</mi> <mi>x</mi> </mrow> </math>",
+  "ignored": false
+ },
+ {
+  "name": "degrees_165_1",
+  "suite": "rules",
+  "braille": "⠼⠔⠴⠘⠨⠡⠐⠬⠔⠴⠘⠨⠡⠀⠨⠅⠀⠼⠂⠦⠴⠘⠨⠡",
+  "mathml": "<math><mn>90</mn><mo>&#xB0;</mo><mo>+</mo><mn>90</mn><mo>&#xB0;</mo><mo>=</mo><mn>180</mn><mo>&#xB0;</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_172_5",
+  "suite": "rules",
+  "braille": "⠭⠄⠰⠊",
+  "mathml": "<math><msubsup><mi>x</mi><mi>i</mi><mo>'</mo></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_172_6",
+  "suite": "rules",
+  "braille": "⠭⠄⠂",
+  "mathml": "<math><msubsup><mi>x</mi><mn>1</mn><mo>'</mo></msubsup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_172_8",
+  "suite": "rules",
+  "braille": "⠭⠱⠄",
+  "mathml": "<math><msup><mover><mi>x</mi><mo>&#xAF;</mo></mover><mo>'</mo></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "prime_172_9",
+  "suite": "rules",
+  "braille": "⠼⠢⠄⠦⠄⠄",
+  "mathml": "<math><msup><mn>5</mn><mo>'</mo></msup><msup><mn>8</mn><mrow><mo>'</mo><mo>'</mo></mrow></msup></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_2_1",
+  "suite": "rules",
+  "braille": "⠭⠐⠢",
+  "mathml": "<math> <mi>x5</mi> </math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_2_2",
+  "suite": "rules",
+  "braille": "⠭⠐⠨⠖",
+  "mathml": "<math> <mi>x</mi> <mn>.6</mn> </math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_3_1",
+  "suite": "rules",
+  "braille": "⠉⠴⠐⠂⠴⠘⠆⠐⠬⠉⠂⠐⠂⠴⠬⠉⠆",
+  "mathml": "<math> <msub><mi>c</mi><mn>0</mn></msub> <msup><mn>10</mn><mn>2</mn></msup> <mo>+</mo> <msub><mi>c</mi><mn>1</mn></msub> <mn>10</mn><mo>+</mo> <msub><mi>c</mi><mn>2</mn></msub> </math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_5_1",
+  "suite": "rules",
+  "braille": "⠼⠴⠨⠐⠁⠂⠁⠆⠀⠄⠄⠄",
+  "mathml": "<math><mn>0.</mn><msub><mi>a</mi><mn>1</mn></msub><msub><mi>a</mi><mn>2</mn></msub><mo>…</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_5_4",
+  "suite": "rules",
+  "braille": "⠼⠒⠨⠐⠬⠨⠲⠀⠨⠅⠀⠼⠒⠨⠲",
+  "mathml": "<math><mn>3.</mn><mo>+</mo><mn>.4</mn><mo>=</mo><mn>3.4</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_5_5",
+  "suite": "rules",
+  "braille": "⠷⠒⠨⠐⠾",
+  "mathml": "<math><mo>(</mo><mn>3.</mn><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_5_6",
+  "suite": "rules",
+  "braille": "⠹⠂⠨⠐⠌⠆⠨⠐⠼",
+  "mathml": "<math><mfrac><mn>1.</mn><mn>2.</mn></mfrac></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_7_1",
+  "suite": "rules",
+  "braille": "⠳⠭⠳⠐⠳⠽⠳",
+  "mathml": "<math><mrow><mo>|</mo><mi>x</mi><mo>|</mo></mrow><mrow><mo>|</mo><mi>y</mi><mo>|</mo></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_7_2",
+  "suite": "rules",
+  "braille": "⠳⠳⠭⠳⠳⠐⠳⠳⠽⠳⠳",
+  "mathml": "<math><mrow><mo>‖</mo><mi>x</mi><mo>‖</mo></mrow><mrow><mo>‖</mo><mi>y</mi><mo>‖</mo></mrow></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_177_7_9",
+  "suite": "rules",
+  "braille": "⠈⠱⠐⠈⠱⠠⠞",
+  "mathml": "<math><mo>∼</mo><mo>∼</mo><mi>T</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "no_multipurpose_lesson_5_2_6",
+  "suite": "rules",
+  "braille": "⠤⠼⠂⠴⠬⠬⠢",
+  "mathml": "<math><mo>-</mo><mn>10</mn><mo>+</mo><mo>+</mo><mn>5</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_9_1_1",
+  "suite": "rules",
+  "braille": "⠝⠀⠨⠂⠐⠐⠅⠀⠼⠂",
+  "mathml": "<math><mi>n</mi><mo>&gt;</mo><mo>&lt;</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_9_2_1",
+  "suite": "rules",
+  "braille": "⠝⠀⠐⠅⠐⠨⠂⠀⠼⠂",
+  "mathml": "<math><mi>n</mi><mo>&lt;</mo><mo>&gt;</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "multipurpose_lesson_5_9_2_2",
+  "suite": "rules",
+  "braille": "⠝⠀⠐⠅⠐⠨⠅⠐⠨⠂⠀⠼⠂",
+  "mathml": "<math><mi>n</mi><mo>&lt;</mo><mo>=</mo><mo>&gt;</mo><mn>1</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "lesson_11_24_1",
+  "suite": "rules",
+  "braille": "⠫⠅⠭⠘⠆⠐⠻",
+  "mathml": "<math><menclose notation='roundedbox'><msup><mi>x</mi><mn>2</mn></msup></menclose></math>",
+  "ignored": false
+ },
+ {
+  "name": "ms_38_4_8",
+  "suite": "rules",
+  "braille": "⠷⠸⠦⠞⠓⠗⠑⠑⠴⠾",
+  "mathml": "<math><mo>(</mo><ms lquote='“' rquote='”'>three</ms><mo>)</mo></math>",
+  "ignored": false
+ },
+ {
+  "name": "ms",
+  "suite": "rules",
+  "braille": "⠄⠄⠁⠀⠎⠞⠗⠊⠝⠛⠄⠄⠠⠀⠸⠠⠦⠁⠝⠕⠞⠓⠑⠗⠀⠎⠞⠗⠊⠝⠛⠴⠠",
+  "mathml": "<math><ms>a string</ms><mo>,</mo><ms lquote='‘' rquote='’'>another string</ms></math>",
+  "ignored": false
+ },
+ {
+  "name": "full_binomial",
+  "suite": "rules",
+  "braille": "⠷⠭⠬⠁⠾⠘⠝⠀⠨⠅⠀⠐⠨⠠⠎⠩⠅⠀⠨⠅⠀⠼⠴⠣⠝⠻⠷⠝⠩⠅⠾⠭⠘⠅⠐⠁⠘⠝⠤⠅",
+  "mathml": "<math> <mo stretchy='false'>(</mo> <mi>x</mi> <mo>+</mo> <mi>a</mi> <msup> <mo stretchy='false'>)</mo> <mrow> <mi>n</mi> </mrow> </msup> <mo>=</mo> <munderover> <mo>∑</mo> <mrow> <mi>k</mi> <mo>=</mo> <mn>0</mn> </mrow> <mrow> <mi>n</mi> </mrow> </munderover> <mrow> <mo>(</mo> <mfrac linethickness='0'> <mi>n</mi> <mi>k</mi> </mfrac> <mo>)</mo> </mrow> <msup> <mi>x</mi> <mrow> <mi>k</mi> </mrow> </msup> <msup> <mi>a</mi> <mrow> <mi>n</mi> <mo>−</mo> <mi>k</mi> </mrow> </msup> </math>",
+  "ignored": false
+ },
+ {
+  "name": "number_space_before",
+  "suite": "rules",
+  "braille": "⠼⠆",
+  "mathml": "<math><mtext>&#xA0;</mtext><mn>2</mn></math>",
+  "ignored": false
+ },
+ {
+  "name": "number_space_after",
+  "suite": "rules",
+  "braille": "⠼⠆",
+  "mathml": "<math><mn>2</mn><mtext>&#xA0;</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "number_space_before_and_after",
+  "suite": "rules",
+  "braille": "⠼⠆",
+  "mathml": "<math><mtext>&#xA0;</mtext><mn>2</mn><mtext>&#xA0;</mtext></math>",
+  "ignored": false
+ },
+ {
+  "name": "tensor_from_mathml_spec",
+  "suite": "rules",
+  "braille": "⠠⠗⠰⠊⠐⠘⠚⠐⠰⠅⠐⠰⠇",
+  "mathml": "<math> <mmultiscripts> <mi>R</mi> <mi>i</mi> <none></none> <none></none> <mi>j</mi> <mi>k</mi> <none></none> <mi>l</mi> <none></none> </mmultiscripts> </math>",
+  "ignored": false
+ },
+ {
+  "name": "perpendicular_17_57",
+  "suite": "rules",
+  "braille": "⠠⠁⠠⠃⠀⠫⠏⠀⠠⠉⠠⠙",
+  "mathml": "<math><mi>A</mi><mi>B</mi><mo>&#x22A5;</mo><mi>C</mi><mi>D</mi></math>",
+  "ignored": false
+ },
+ {
+  "name": "chem_HOH_1_1_1_mchem",
+  "suite": "rules",
+  "braille": "⠠⠓⠸⠒⠻⠠⠕⠸⠒⠻⠠⠓",
+  "mathml": "<math> <mi mathvariant='normal'>H</mi> <mo>-</mo> <mi mathvariant='normal'>O</mi> <mo>-</mo> <mi mathvariant='normal'>H</mi> </math>",
+  "ignored": false
+ },
+ {
+  "name": "chem_2_5_1_mchem",
+  "suite": "rules",
+  "braille": "⠠⠉⠁⠠⠉⠆⠬⠆⠠⠓⠠⠕⠠⠓⠀⠫⠒⠒⠒⠕⠀⠠⠓⠸⠒⠻⠠⠉⠸⠿⠻⠠⠉⠸⠒⠻⠠⠓⠬⠠⠉⠁⠷⠠⠕⠠⠓⠾⠰⠆",
+  "mathml": "<math> <mrow> <mrow><mi>CaC</mi></mrow> <msub> <mrow><mrow><mpadded width='0'><mphantom><mi>A</mi></mphantom></mpadded></mrow></mrow> <mrow><mrow><mpadded height='0'><mn>2</mn></mpadded></mrow></mrow> </msub> <mrow></mrow> <mo>+</mo> <mrow></mrow> <mn>2</mn> <mstyle scriptlevel='0'><mspace width='0.167em'/></mstyle> <mrow><mi>HOH</mi></mrow> <mrow></mrow> <mrow><mo stretchy='false'>&#x27F6;</mo></mrow> <mrow></mrow> <mrow><mi mathvariant='normal'>H</mi></mrow> <mrow><mo>&#x2212;</mo></mrow> <mrow><mi mathvariant='normal'>C</mi></mrow> <mrow><mo>&#x2261;</mo></mrow> <mrow><mi mathvariant='normal'>C</mi></mrow> <mrow><mo>&#x2212;</mo></mrow> <mrow><mi mathvariant='normal'>H</mi></mrow> <mrow></mrow> <mo>+</mo> <mrow></mrow> <mrow><mi>Ca</mi></mrow> <mo stretchy='false'>(</mo> <mrow><mi>OH</mi></mrow> <mo stretchy='false'>)</mo> <msub> <mrow><mrow><mpadded width='0'><mphantom><mi>A</mi></mphantom></mpadded></mrow></mrow> <mrow><mrow><mpadded height='0'><mn>2</mn></mpadded></mrow></mrow> </msub> </mrow> </math>",
+  "ignored": false
+ }
+]

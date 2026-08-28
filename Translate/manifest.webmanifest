@@ -1,0 +1,13 @@
+{
+  "name": "Translate - braille in, text out",
+  "short_name": "Translate",
+  "description": "Six-key braille entry with live text and maths translation.",
+  "start_url": "/Translate/",
+  "scope": "/Translate/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#1f6feb",
+  "icons": [
+    { "src": "/web/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

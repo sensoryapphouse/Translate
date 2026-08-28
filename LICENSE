@@ -1,0 +1,59 @@
+Translate
+Copyright © 2026 Sensory App House Ltd
+
+This licence covers Sensory App House Ltd's own work in this repository.
+The third-party components listed at the foot are NOT relicensed.
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
+
+    Human-readable summary:  https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en
+    Full legal code:         https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+You are free to:
+  • Share  — copy and redistribute the material in any medium or format.
+  • Adapt  — remix, transform, and build upon the material.
+
+Under the following terms:
+  • Attribution   — You must give appropriate credit, provide a link to the
+                    licence, and indicate if changes were made. You may do so in
+                    any reasonable manner, but not in any way that suggests the
+                    licensor endorses you or your use.
+  • NonCommercial — You may not use the material for commercial purposes.
+  • ShareAlike    — If you remix, transform, or build upon the material, you must
+                    distribute your contributions under the same licence as the
+                    original.
+  • No additional restrictions — You may not apply legal terms or technological
+                    measures that legally restrict others from doing anything the
+                    licence permits.
+
+The above is a summary. The full, binding terms are the CC BY-NC-SA 4.0 legal
+code linked above.
+
+--------------------------------------------------------------------------------
+Third-party components
+
+The licence above applies to the original code and content authored by
+Sensory App House Ltd. Bundled third-party components are NOT relicensed and
+remain under their own licences:
+
+  • liblouis, and its translation tables — LGPL 2.1+ / GPL — © liblouis contributors
+  • MathCAT   — MIT — © Neil Soiffer / DAISY Consortium
+  • Temml     — MIT — the maths renderer in web/vendor/
+  • Inter     — SIL Open Font License 1.1 — © the Inter Project Authors;
+                the licence text travels beside the files as web/fonts/Inter-OFL.txt
+  • Nemeth and UEB test corpora in Translate/tools/corpus/ — extracted from
+                MathCAT's own test suite (MIT); provenance in that folder's NOTICE.md
+
+NOT INCLUDED IN THIS REPOSITORY, and why:
+  • APH Braille Shadows (the braille typeface) — APH agreed we may USE it; that
+    is not a grant to redistribute it, and APH publish it with no licence
+    statement at all. web/fonts/PROVENANCE.md records the whole position. The
+    braille pane falls back to Apple Braille / Segoe UI Symbol / monospace
+    without it.
+  • Rule summaries of the Nemeth 1972 code and the ICEB UEB Guidelines for
+    Technical Material, and the harvested APH / BANA / NFB / SQA / UEB Online /
+    UKAAF benchmark corpora. Those are other people's documents; the tools that
+    read them fetch them on demand and never redistribute them.
+
+Each such component is used under, and continues to be governed by, its own licence.

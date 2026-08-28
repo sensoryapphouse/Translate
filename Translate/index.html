@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Translate</title>
+<link rel="manifest" href="/Translate/manifest.webmanifest" />
+<meta name="theme-color" content="#1f6feb" />
+<style>
+  /* PAIGE BRAND PALETTE (PB, 2026-08-09), lifted from the Paige website's
+     Tailwind @theme block as plain values — Tailwind itself is not adopted, and
+     these apps stay build-free. Paige's own names are kept in the comments so
+     the mapping can be checked against the source rather than guessed at.
+
+     WHERE A PAIGE COLOUR IS NOT USED, IT IS DELIBERATE. Dark mode has no
+     candidate in the palette (it is a light-background brand), so the dark
+     surfaces keep their tested values and only the ACCENT takes a brand colour
+     that stays legible on them. Contrast matters more than fidelity in an app
+     for readers with low vision. */
+  :root { --line:#eaebec;              /* paigelightgrey */
+          --bg:#f3f4fc;                /* paigesuperlightblue */
+          --bg-grad: linear-gradient(135deg, #ffffff 0%, #f3f4fc 100%);
+          --pane-bg: rgba(255,255,255,0.7);
+          --ink:#171d1c;               /* paigedarkgrey */
+          --muted:#5c6462;             /* darkened paigedarkgrey: 7:1 on white */
+          --accent:#2a7de1;            /* primary — UI only: 4.1:1, which passes
+                                          the 3:1 for non-text but NOT the 4.5:1
+                                          body text needs */
+          --accent-text:#0e2f7f;       /* paigedarkblue, 12.4:1 — brand blue for
+                                          anything actually READ */
+          --link:#fdf1cc;              /* paigelightyellow — the word highlight */
+          --linkb:#f5b700;             /* paigeyellow */
+          --head-bg: #fff; --pill-bg: #fff; --sb-bg: #fff; }
+  .dark { --line:#30363d; --bg:#0d1117; --bg-grad: linear-gradient(135deg, #0d1117 0%, #161b22 100%); --pane-bg: rgba(22,27,34,0.7); --ink:#e6edf3; --muted:#8b949e;
+          --accent:#d4e5f9;            /* paigelightblue — the only palette blue legible on dark */
+          --accent-text:#d4e5f9;
+          --head-bg: #161b22; --pill-bg: #21262d; --sb-bg: #161b22; }
+
+  /* APHfont — APH Braille Shadows, the braille face Paige uses. A TEACHING face:
+     unraised dots are drawn as faint shadows, so a learner sees the whole cell
+     and not only the dots that are up.
+     INCLUDED BY PERMISSION — APH agreed we may use it, confirmed by Greg
+     Hargraves via PB on 2026-08-09. It is third-party and not covered by this
+     repository's licence; web/fonts/PROVENANCE.md records the authority, and why
+     it had to be asked for rather than inferred.
+     COVERAGE WAS VERIFIED BEFORE WIRING: many braille fonts are ASCII-mapped and
+     would render nothing against real Unicode braille. This one maps all 256 of
+     U+2800–U+28FF, the complete 8-dot range. The old stack stays behind it, so
+     the pane still renders if the file is ever missing. */
+  /* INTER TRAVELS WITH THE APP (PB, 2026-08-11).
+     It used to come from fonts.googleapis.com, which cost two things this app
+     cannot afford. The help promises Translate "keeps working with no internet
+     connection", and that was true of everything except its typeface: offline,
+     or on a school network that blocks Google, the interface quietly changed
+     face. And every single page load told Google the IP address of the machine
+     a child was working on — a third-party request that a school's data
+     protection officer is entitled to ask about, and that a German court found
+     breached GDPR in 2022.
+     Inter is under the SIL Open Font License, which expressly permits
+     redistribution; the licence travels beside the files as Inter-OFL.txt.
+     All seven Unicode subsets are shipped, not just latin: this app back-
+     translates 142 braille codes, so its print pane can legitimately contain
+     Greek, Cyrillic and Vietnamese, and a font that covered only latin would
+     drop those readers back to a system fallback. 224 KB, precached. */
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-cyrillic-ext.woff2') format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-cyrillic.woff2') format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-greek-ext.woff2') format('woff2');
+    unicode-range: U+1F00-1FFF;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-greek.woff2') format('woff2');
+    unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-vietnamese.woff2') format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/web/fonts/inter-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  @font-face {
+    font-family: "APHfont";
+    src: url("/web/fonts/APH_Braille_Shadows.woff2") format("woff2"),
+         url("/web/fonts/APH_Braille_Shadows.woff") format("woff"),
+         url("/web/fonts/APH_Braille_Shadows.ttf") format("truetype");
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body { margin:0; font:15px/1.6 'Inter', -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+         color:var(--ink); background:var(--bg-grad);
+         display:flex; flex-direction:column; overflow:hidden; transition: background 0.3s ease, color 0.3s ease; }
+
+  header { padding:12px 18px; background:var(--head-bg); border-bottom:1px solid var(--line); flex:0 0 auto; transition: background 0.3s ease; }
+  /* WRAPS ON NARROW SCREENS (PB, 2026-08-12): head-right carries a lot —
+     the maths switch, six pill buttons, a settings icon — and never fit
+     375px on one line even before that count changed. flex-wrap lets it
+     drop to as many rows as it needs, rather than clipping or forcing the
+     window to scroll sideways; gap supplies the row spacing wrapping needs
+     as well as the column spacing it already had. */
+  .head-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .app-logo { width:46px; height:46px; border-radius:11px; flex-shrink:0; display:block; }
+  .app-logo-link { display:inline-flex; flex-shrink:0; border-radius:11px; line-height:0; }
+  .app-logo-link:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .app-logo-link:hover .app-logo { opacity:.85; }
+  h1 { margin:0; font-size:1.05rem; }
+  .sub { margin:0; font-size:.82rem; color:var(--muted); }
+  .head-right { margin-left:auto; display:flex; align-items:center; gap:12px;
+                 position:relative; flex-wrap:wrap; justify-content:flex-end; }
+  .modes label { display:flex; gap:6px; align-items:center; font-size:.9rem; cursor:pointer; }
+  /* display:flex above beats the UA's [hidden]{display:none}, so the hidden
+     label needs it restated */
+  .modes label[hidden] { display:none; }
+  .menu-wrap { position:relative; display:inline-block; }
+  .menu { position:absolute; top:calc(100% + 4px); right:0; z-index:40; min-width:220px;
+          background:var(--pane-bg, #fff); border:1px solid var(--line); border-radius:10px;
+          box-shadow:0 8px 32px rgba(0,0,0,.12); padding:4px; }
+  .menu button { display:block; width:100%; text-align:left; padding:8px 10px; border:0;
+                 border-radius:7px; background:none; font:inherit; color:inherit; cursor:pointer; }
+  .menu button:hover, .menu button:focus { background:var(--link); outline:none; }
+  /* THE ONLY <kbd> IN THE LIVE UI (PB, 2026-08-12) — it used to sit inside a
+     block-level .kbd-hint span of its own; now it sits inline right after
+     the "Maths" label text, so the badge look (border, background) is on
+     the element itself rather than a wrapper that no longer exists. */
+  kbd { font:inherit; font-size:.75em; color:var(--muted); border:1px solid var(--line);
+        border-bottom-width:2px; border-radius:4px; padding:0 4px; background:#fafbfc; }
+
+  .icon-btn { width:38px; height:38px; border:1px solid var(--line); background:var(--pill-bg);
+              border-radius:8px; cursor:pointer; font-size:1.45rem; line-height:1;
+              display:inline-flex; align-items:center; justify-content:center; transition: all 0.2s ease; color: var(--ink); }
+  .icon-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+  /* Visually hidden, still read by screen readers / braille displays. */
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+             overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); border:0;
+             white-space:nowrap; }
+  .pane-body:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+  .pill-btn { height:34px; padding:0 12px; border:1px solid var(--line); background:var(--pill-bg);
+              border-radius:8px; cursor:pointer; font:inherit; font-size:.88rem; transition: all 0.2s ease; color: var(--ink); }
+  .pill-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .pill-btn.danger { color:#a11; border-color:#e6bcbc; }
+  .pill-btn.danger:hover { background:#fdf0f0; }
+
+  /* Per-bar replay: ‹ bar N › as one visual unit, so it reads as a single
+     control rather than three loose buttons. The arrows are deliberately the
+     same height and hit-area as any other pill - a child stepping through
+     bars uses them far more than the play buttons themselves. */
+  .bar-replay { display:inline-flex; align-items:center; gap:2px; margin-right:6px; }
+  .bar-replay .bar-replay-step { padding:0 9px; font-size:1rem; line-height:1; }
+  .bar-replay .bar-replay-play { min-width:5.6em; }
+
+  /* Settings dropdown */
+  /* The panel grew — a braille-code picker, three speech options, the maths
+     radios — and on a short window its foot went off screen with no way to
+     reach it. It scrolls now, bounded by the space actually below the header
+     rather than a guessed height, so it fits whatever the window is. */
+  .panel { position:absolute; top:40px; right:0; z-index:20; width:300px; background:var(--head-bg);
+           border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 32px rgba(0,0,0,.15);
+           padding:12px; color: var(--ink);
+           max-height:calc(100vh - 80px); overflow-y:auto; overscroll-behavior:contain; }
+  /* ON A PHONE, 100vh IS NOT THE SCREEN (PB, 2026-08-20: "the settings panel
+     should be able to scroll if it doesn't all fit"). Mobile Safari measures
+     vh against the viewport WITHOUT its address bar, so a panel capped at
+     100vh - 80px is taller than what the user can actually see: the bottom
+     settings sit off-screen and the panel's own scrollbar never engages,
+     because as far as it is concerned everything fits. dvh is the height that
+     is really there. The vh line above stays as the fallback for browsers that
+     do not know dvh. */
+  .panel { max-height:calc(100dvh - 80px); }
+  /* A <select> holding 142 codes must not become a full-height wall of options. */
+  .panel select { max-height:50vh; }
+  .panel[hidden] { display:none; }
+  .panel h3 { margin:0 0 8px; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em;
+              color:var(--muted); }
+  /* No top margin is right for the FIRST section heading and wrong for every one
+     after it: with a second section the heading sat straight against the
+     preceding note, reading as part of it. */
+  .panel h3:not(:first-child) { margin-top:16px; }
+  .panel label { display:flex; gap:8px; align-items:flex-start; font-size:.88rem;
+                 margin:8px 0; cursor:pointer; }
+  .panel select { width:100%; padding:5px; border:1px solid var(--line); border-radius:6px; background: var(--pill-bg); color: var(--ink); }
+  .panel .note { font-size:.75rem; color:var(--muted); margin:6px 0 0; }
+  /* A WAY OUT THAT IS VISIBLE (PB, 2026-08-21). The gear toggles the panel and
+     Escape closes it, but neither is discoverable: a teacher who opened it by
+     clicking had nothing to click to finish. */
+  .settings-done { display:block; width:100%; margin:16px 0 0; padding:8px 12px;
+                   border:1px solid var(--line); border-radius:8px;
+                   background:var(--pill-bg); color:var(--ink);
+                   font:inherit; font-weight:600; cursor:pointer; }
+  .settings-done:hover { border-color:var(--accent); color:var(--accent-text); }
+  .settings-done:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* Panes fill the window and scroll */
+  .panes { flex:1 1 auto; min-height:0; display:flex; gap:14px; padding:14px; }
+  /* STACKED LAYOUT (PB, 2026-08-09). A braille line is 40 cells, and the pane
+     scales its font so 40 fit. On a narrow window that font would shrink past
+     legibility — so instead of shrinking further, the panes go one above the
+     other, which hands the braille the FULL window width and buys back several
+     points of font size. Reading the braille matters more than seeing both
+     panes at once. */
+  .panes.stacked { flex-direction:column; }
+  /* Stacked, each pane takes the FULL window width — which is the entire point
+     of stacking. Without this the panes keep the flex sizing that made sense
+     side by side and sit narrower than the window they were given. */
+  .panes.stacked .pane { width:100%; flex:1 1 auto; }
+  .pane { flex:1 1 0; min-width:0; min-height:0; background:var(--pane-bg); border:1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+          border-radius:16px; display:flex; flex-direction:column; overflow:hidden; }
+  /* NOT UPPERCASED (PB, 2026-08-11). These two headings name the panes, and the
+     right-hand one changes as the mode does — Text, Maths — Nemeth, Maths — UEB.
+     Capitals are also read differently by some screen readers, which can spell a
+     short all-caps word letter by letter, and these are the landmarks a blind
+     user moves between. The size, weight and colour still mark them as headings
+     without shouting. */
+  .pane-h { margin:0; padding:10px 14px; font-size:.8rem; font-weight: 600;
+            letter-spacing:.02em; color:var(--muted); background:transparent;
+            border-bottom:1px solid var(--line); flex:0 0 auto; }
+  .pane-body { flex:1 1 auto; min-height:0; overflow:auto; padding:14px; }
+
+  /* THE TEXT PANE'S HEADING GREW A BUTTON (focus mode, PB, 2026-08-12). The
+     Braille pane's heading has no button and keeps the plain rule above,
+     untouched; this one lays the heading text and the button out side by
+     side in the same slim strip, and resets the h2's own UA styling back to
+     what .pane-h already gave it, so the two headings still match. */
+  .pane-h-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .pane-h-row h2 { margin:0; padding:0; font:inherit; letter-spacing:inherit; color:inherit; }
+  .pane-h-row .icon-btn { width:26px; height:26px; font-size:1rem; flex:0 0 auto; }
+
+  /* FOCUS MODE (PB, 2026-08-12): a fullscreen, LIVE view of the print output,
+     for a child who types braille while a helper — or the child themselves,
+     with low vision — watches large print rather than the normal two-pane
+     interface. Fixed and inset:0 so it sits above the panes regardless of
+     scroll position; the highest z-index elsewhere in this file is the
+     export menu's 40, so 50 clears everything. #out is MOVED in here (see
+     translate.mjs) and picks up its size from the rule below; nothing about
+     #out itself changes, so the renderer that targets it by id keeps working
+     unmodified.
+     display:flex is restated on [hidden] because it beats the UA's own
+     [hidden]{display:none} at equal specificity — the same trap noted above
+     on .modes label[hidden].
+     COLOR IS SET HERE, NOT LEFT TO INHERIT (PB, 2026-08-12): body's own
+     color:var(--ink) resolves ONCE, against body's own (never-dark) --ink,
+     and that RESOLVED value is what inherits — a custom property re-reads
+     live at whichever element references it, but a plain property like
+     color does not re-read it further down. Without this, ticking "Focus
+     mode in dark colours" darkened the background but left the text at
+     body's ordinary dark ink, near-invisible on the new dark background
+     (measured: rgb(23,29,28) text on rgb(13,17,23) — this rule is what
+     makes color:var(--ink) resolve AGAINST #focusOverlay's own --ink,
+     which IS the dark-mode value whenever .dark is the class on THIS
+     element specifically. */
+  #focusOverlay { position:fixed; inset:0; z-index:50; background:var(--bg);
+                  color:var(--ink);
+                  display:flex; flex-direction:column; overflow:auto; }
+  #focusOverlay[hidden] { display:none; }
+  .focus-bar { flex:0 0 auto; display:flex; justify-content:flex-end; padding:14px 18px; }
+  /* Larger base type than the normal #out (17px) — this pane exists so the
+     print can be read from across a room. Maths is scaled by the same ratio
+     (22px → 34px) rather than left at its normal size, or an equation would
+     read smaller than the prose around it. */
+  #focusOverlay #out { flex:1 1 auto; font-size:26px; padding:0 32px 32px; }
+  #focusOverlay #out math { font-size:34px; }
+
+  /* The stack is the positioning context for the overlay pair. It grows with
+     the render, and the pane body scrolls it — which is why no scroll-sync code
+     exists: there is only one scroller. */
+  #brlStack { position:relative; min-height:100%; }
+  /* ASCII MODE MUST NOT USE THE BRAILLE FACE (PB, 2026-08-11).
+     APH Braille Shadows is ASCII-MAPPED: its glyphs for 0x20-0x7E are braille
+     cell shapes, not letters. So switching the pane to BRF ASCII changed the
+     characters and the font drew them straight back as dots — the setting
+     looked broken while working perfectly. Both layers switch together, and
+     both to the SAME monospace family, or the caret would stop lining up with
+     the cells it sits between. */
+  body.ascii-braille #braille,
+  body.ascii-braille #brlInput {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Courier New", monospace;
+  }
+  /* A mid-line maths run sits IN the sentence, not on a row of its own. */
+  .mathrow.inline-math { display:inline-block; vertical-align:middle; margin:0 2px; }
+  .switch-sign { opacity:0.55; }
+  /* Every property that affects where a glyph lands must be IDENTICAL in both
+     layers, or the caret drifts from the cells it claims to sit between. Font,
+     size, line-height, wrapping and padding are therefore set on both, and the
+     font SIZE is written to both by fitBrailleLine from one variable. */
+  /* top AND bottom pinned, height auto: the field is exactly as tall as
+     #brlStack (which grows with the render), maintained by the browser. It was
+     sized by a per-render JS style write, and changing the FOCUSED element's
+     geometry is what made VoiceOver re-read the whole pane whenever a line
+     boundary was crossed — see the note in syncField(). min-height on
+     #brlStack keeps an empty document a full page you can click into. */
+  #brlInput { position:absolute; top:0; bottom:0; left:0; width:100%; height:auto;
+              margin:0; padding:0; border:0; outline:none; resize:none;
+              overflow:hidden; background:transparent;
+              color:transparent; caret-color:var(--accent);
+              /* 1.25, down from 1.6 (PB, 2026-08-18): the native caret is drawn
+                 at full line-height wherever there is no glyph run to size it
+                 against — the end of the content, which is the last line, which
+                 is where a child is always typing. Safari does this in even
+                 more positions than Chrome. The line-height IS the ceiling on
+                 that caret, so a tighter one shrinks the tall-caret anomaly;
+                 both layers change together or the caret drifts. */
+              font-size:30px; line-height:1.25; word-break:break-all;
+              white-space:pre-wrap;
+              /* SAFARI MAY RESIZE TEXT BEHIND OUR BACK. With text-size-adjust
+                 left at `auto`, mobile Safari inflates the type in a block by a
+                 factor it works out PER ELEMENT from that element's own width
+                 and content. Two elements holding identical text at identical
+                 widths can therefore be given different factors - and these two
+                 are stacked one on the other, with the caret in one and the
+                 cells in the other, so any difference at all puts the caret
+                 between the wrong cells. Nothing here wants inflating anyway:
+                 fitBrailleLine has already chosen the size that fits 40 cells.
+                 Measured identical in Chrome before and after (which does not
+                 autosize on desktop, and is why this never showed up here). */
+              -webkit-text-size-adjust:100%; text-size-adjust:100%;
+              font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace; }
+  /* Selection must stay visible even though the text is not: a braille user
+     selecting a run needs the sighted helper to see what is selected. */
+  #brlInput::selection { background:var(--link); color:transparent; }
+  #braille { font-size:30px; line-height:1.25; margin:0; word-break:break-all;
+           overflow-wrap:break-word;
+             white-space:pre-wrap;
+             /* Both layers, same rule — see #brlInput above. */
+             -webkit-text-size-adjust:100%; text-size-adjust:100%;
+             /* APHfont first; the previous stack remains the fallback, so this
+                renders exactly as before until the licensed file is in place. */
+             font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace; }
+
+  /* The caret marks where the writing has reached. Sized in em so it matches
+     whichever pane it is in — the braille pane is 30px, the text pane 17px, and
+     a fixed height would look wrong in one of them. */
+  .caret { display:inline-block; width:2px; height:1em; margin-left:1px;
+           vertical-align:text-bottom; background:var(--accent);
+           animation:caret-blink 1.1s step-end infinite; }
+  @keyframes caret-blink { 50% { opacity:0; } }
+  /* A blinking element is a genuine problem for some readers — vestibular
+     sensitivity, and anyone who finds movement hard to ignore. Honour the
+     system setting: still visible, just still. */
+  @media (prefers-reduced-motion: reduce) { .caret { animation:none; } }
+  #braille .chord { opacity:.42; }
+  /* font-size is a fixed fallback for BEFORE fitBrailleLine's first run, and
+     is then overwritten by inline style (set on #out itself) every time the
+     braille size changes — see PRINT_RATIO in translate.mjs (PB, 2026-08-18):
+     print was a flat 17px next to braille ranging 20-40+px, and looked much
+     smaller than it by comparison at most widths. */
+  #out { font-size:17px; margin:0; }
+  /* A word that hasn't had its Space yet is still real, committed braille -
+     it must look exactly like the rest. (Only the un-released chord is dimmed.) */
+  /* --print-math-size is set alongside #out's own inline font-size, on :root
+     so it reaches math NODES CREATED LATER too — a plain per-element inline
+     style set once would miss any #out math the translator renders after
+     (PB, 2026-08-18). Fallback 22px matches the old fixed value. */
+  #out math { font-size: var(--print-math-size, 22px); }
+  .mathrow { padding:4px 0; }
+  /* A partly-read expression is marked, never shown as if it were correct. */
+  .mathrow.partial { background:#fff8e5; border:1px solid #f0e0b0; border-left:4px solid #e0a800;
+                     border-radius:6px; padding:8px 10px; margin:6px 0; }
+  .partial-msg { font-size:.82rem; color:#8a5b00; margin-bottom:6px; }
+  /* The display-fault banner. It had NO rule at all, so the one message that
+     must never be missed rendered as ordinary body text. Same amber family as
+     the other warnings, bolder: this one says the PANE is wrong, not the sum. */
+  #warn { color:#8a5b00; font-weight:600; font-size:.9rem; padding:4px 0; }
+  .dark #warn { color:#f2c94c; }
+  /* In focus mode the banner travels with the print (translate.mjs moves it),
+     shown at the top - the person this view exists for is across the room. */
+  #focusOverlay #warn { font-size:20px; padding:0 32px 8px; }
+  /* Read cleanly, but translating it back does not reproduce the braille.
+     Deliberately calmer than .partial: we understood it, we are just not sure
+     it is right. */
+  /* "It may have been meant as…" - only ever shown under a line we could NOT
+     read, so it adds information without contradicting a good reading. */
+  .repair { margin-top:8px; padding-top:8px; border-top:1px dashed #e0cf9a; }
+  .repair-lead { font-size:.78rem; color:#8a5b00; margin-bottom:4px; }
+  .repair-item { font-size:.95rem; margin:3px 0; }
+  .repair-how { color:var(--muted); font-size:.82rem; }
+  /* Genuine ambiguity: the braille legitimately reads more than one way, and
+     the TEACHER decides (GTM 15.5 - flag, never guess). Hidden while the line
+     is still being typed, same as repairs. */
+  .ambig { margin-top:6px; padding:6px 8px; border-left:3px solid #b8860b; background:#fdf6e3; font-size:.82rem; }
+  .ambig-lead { color:#8a5b00; margin-bottom:2px; }
+  .ambig-cells { font-family:inherit; margin-right:6px; }
+  .mathrow[data-typing] .ambig { display:none; }
+  /* the last net: a clean reading whose round-trip differs - calm, not alarming */
+  .unverified { margin-top:6px; padding:6px 8px; border-left:3px solid #c9a227;
+                background:#fbf7ea; font-size:.82rem; color:#7a6410; }
+  .mathrow[data-typing] .unverified { display:none; }
+  .partial-brl { font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace; font-size:24px;
+                 line-height:1.5; word-break:break-all; }
+  .partial-brl .badcell { background:#ffd4d4; box-shadow:0 0 0 1px #d33 inset; border-radius:3px; }
+  /* DARK-ADAPTED WARNING SURFACES (PB, 2026-08-19). These boxes are the only
+     content #focusOverlay draws that still had hardcoded LIGHT colours: their
+     text is var(--ink), which .dark flips to a near-white #e6edf3, but the
+     boxes' own backgrounds stayed pale amber/pink - measured #e6edf3 ink on
+     the unchanged .mathrow.partial background #fff8e5 comes out at 1.11:1,
+     effectively invisible. Same amber-still-means-caution, red-still-means-
+     error meaning, darkened backgrounds and brightened text/border so every
+     text pair clears the 4.5:1 AA minimum for normal text - computed, not
+     eyeballed:
+       .partial-msg / .repair-lead   #f2c94c on #32240a  =  9.51:1
+       .repair-item/.repair-how      #8b949e on #32240a  =  4.90:1 (var(--muted), already dark-adapted; only the box needed darkening further)
+       .ambig-lead                   #f2c94c on #302209  =  9.74:1
+       .ambig-cells / item text      #e6edf3 on #302209  = 13.08:1 (var(--ink))
+       .unverified (own text)        #e3c37a on #2e2008  =  9.31:1
+       badcell glyph                 #e6edf3 on #4a1414  = 12.68:1 (var(--ink)) */
+  .dark .mathrow.partial { background:#32240a; border:1px solid #5c4415; border-left:4px solid #e3ab26; }
+  .dark .partial-msg { color:#f2c94c; }
+  .dark .repair { border-top:1px dashed #5c4415; }
+  .dark .repair-lead { color:#f2c94c; }
+  .dark .ambig { border-left:3px solid #c99a2e; background:#302209; }
+  .dark .ambig-lead { color:#f2c94c; }
+  .dark .unverified { border-left:3px solid #c9a227; background:#2e2008; color:#e3c37a; }
+  .dark .partial-brl .badcell { background:#4a1414; box-shadow:0 0 0 1px #ff6b6b inset; }
+  .partial-math { margin-top:6px; opacity:.75; }
+  .line { min-height:1.6em; }
+  /* THE MIN-HEIGHT IS THE PITCH, so it must equal the pane's line-height or
+     the layers drift one line-div at a time (PB, 2026-08-18: at 1.25 vs a
+     1.6em min-height, the caret sat two rows above its cell by line eight —
+     an error a single-paragraph test cannot see, because soft-wrapped rows
+     share one div and only HARD newlines make new divs). The text pane keeps
+     the 1.6em rule above: its print rhythm is still 1.6. */
+  #braille .line { min-height:1.25em; }
+
+  /* Click-to-link highlight (both panes) */
+  .word { cursor:pointer; border-radius:3px; padding:0 1px; }
+  /* THE BRAILLE PANE'S WORDS MUST NOT BE PADDED (PB, 2026-08-11).
+     That pane is an OVERLAY beneath a real textarea, and the textarea draws the
+     caret from its own text metrics. A textarea cannot pad individual
+     characters, so every padded span puts the two layers 2px out of step, and
+     the error ACCUMULATES: measured 20-24px by the end of a line, where a cell
+     is about 19px — the caret ends up more than a whole cell from the cell it
+     belongs to. Worse, the padding is per SPAN, so the error per character
+     depends on how the line happens to be grouped, which is why the caret looked
+     displaced by a different amount in different places.
+     Measured with this rule: maximum drift 0px on every line.
+     The maths pane keeps its padding — no caret there to disagree with. */
+  #braille .word { padding: 0; }
+  .word:hover { background:#eef3fb; }
+  .word.linked { background:var(--link); box-shadow:0 0 0 1px var(--linkb) inset; }
+  /* the same word's glyphs inside a rendered equation */
+  .mlink { background:var(--link) !important; box-shadow:0 0 0 1px var(--linkb) inset !important; border-radius:4px; display: inline-block !important; color: #b36b00 !important; text-shadow: 0 0 1px var(--linkb) !important; }
+  /* NEVER FORCE A DISPLAY TYPE INSIDE MathML (PB, 2026-08-11).
+     The highlight above sets display:inline-block so a background and inset
+     ring draw properly on an inline span. Temml renders NATIVE MathML, and the
+     elements that carry the anchors are mfrac/mo/mphantom, whose display is
+     `block math`. Overriding that stops an <mfrac> being laid out as a fraction
+     and ITS BAR DISAPPEARS — measured, 37.16px tall collapsing to 29.58px.
+     `revert` returns each element to its user-agent display; the colours and
+     the ring still apply, so the highlight looks the same and the maths stays
+     maths. */
+  math .mlink, math.mlink { display: revert !important; }
+  /* NOR IN THE BRAILLE PANE, AND FOR THE SAME REASON (PB, 2026-08-12).
+     inline-block makes the span an ATOMIC box: the render can no longer break a
+     line inside the clicked word, while the textarea above it still can. So the
+     moment a word straddling the 40-cell boundary was clicked, the render moved
+     it whole to the next row and every row below shifted — measured, row starts
+     [0,40,80,120] becoming [0,36,76,116] on one click, eleven consecutive rows
+     displaced in a 479-cell document and the pane a whole row taller. The caret
+     stayed where the textarea put it, which is what "the cursor is not where it
+     is" was. The word must stay a non-atomic inline box; a highlight that splits
+     across the boundary is CORRECT — the word really is split there. */
+  #braille .mlink { display: inline !important; }
+  .mathrow [class*="bw-"] { cursor:pointer; }
+
+
+  #helpDialog::backdrop { background:rgba(0,0,0,.35); backdrop-filter: blur(4px); }
+  .help-head { display:flex; align-items:center; justify-content:space-between;
+               padding:14px 18px; border-bottom:1px solid var(--line); position:sticky;
+               top:0; background:var(--head-bg); border-radius:16px 16px 0 0; }
+  .help-head h2 { margin:0; font-size:1.1rem; }
+  .help-body { padding:4px 18px 20px; max-height:70vh; overflow:auto; }
+  /* The one thing in Help you DO rather than read, so it looks like a control
+     and not like a heading. */
+  .help-body .try-it { display:flex; gap:12px; align-items:flex-start; margin:14px 0 4px;
+                       padding:12px; background:var(--pill-bg); border:1px solid var(--line);
+                       border-radius:10px; }
+  .help-body .try-it button { flex:0 0 auto; padding:7px 14px; border-radius:8px;
+                              border:1px solid var(--line); background:var(--head-bg);
+                              color:var(--ink); font:inherit; font-weight:600; cursor:pointer; }
+  .help-body .try-it button:hover { border-color:var(--accent); color:var(--accent-text); }
+  .help-body .try-it button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .help-body .try-it .note { margin:0; font-size:.82rem; color:var(--muted); }
+  /* The contents list. Buttons rather than links: no address to change, and a
+     screen reader announces them as the controls they are. */
+  .help-toc { margin:16px 0 4px; padding:12px; border:1px solid var(--line);
+              border-radius:10px; background:var(--pill-bg); }
+  .help-toc-title { margin:0 0 8px; font-size:.8rem; color:var(--muted); }
+  .help-toc-item { display:block; width:100%; text-align:left; margin:0 0 4px;
+                   padding:6px 8px; border:1px solid transparent; border-radius:6px;
+                   background:none; color:var(--accent-text); font:inherit;
+                   font-size:.86rem; cursor:pointer; }
+  .help-toc-item:hover { border-color:var(--line); background:var(--head-bg); }
+  .help-toc-item:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .help-body h3:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .help-body h3 { margin:18px 0 4px; font-size:.95rem; color:var(--accent-text); }
+  .help-body p, .help-body li { font-size:.9rem; line-height:1.55; }
+  .help-body ul { margin:4px 0; padding-left:20px; }
+  .help-body .note { color:var(--muted); font-size:.84rem; }
+  .help-body .credit { margin-top:20px; padding-top:12px; border-top:1px solid var(--line);
+                       color:var(--muted); font-size:.8rem; }
+  .help-body .eg { font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace; font-size:1.2em; }
+  table.keys { border-collapse:collapse; margin:8px 0; }
+  table.keys th { text-align:right; padding:3px 10px 3px 0; color:var(--muted);
+                  font-size:.78rem; font-weight:600; }
+  table.keys td { padding:3px 9px; text-align:center; border:1px solid var(--line);
+                  border-radius:5px; font-size:.86rem; }
+  table.keys td.gap { border:0; width:14px; }
+
+  /* Status bar: which braille rules produced the clicked word */
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* THE BAR IS RESIZABLE, AND ITS CONTENTS SCALE WITH IT (PB, 2026-08-19).
+     One variable drives both: --sb-h is the height the user dragged to, and
+     --sb-scale is that height as a multiple of the default, applied to the
+     font. Everything inside is already sized in em against this font —
+     .sb-brl is 1.35em, the rule and segment chips inherit — so the braille and
+     the explanation grow together without a second measurement. */
+  #statusBar { flex:0 0 auto; background:var(--sb-bg); border:1px solid var(--line); margin: 0 14px 14px; border-radius: 99px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+               padding:8px 24px; font-size:calc(.9rem * var(--sb-scale, 1));
+               min-height:var(--sb-h, 48px);
+               display:flex; align-items:center; gap:10px; flex-wrap:wrap; animation: slideUp 0.3s ease forwards; }
+  /* The handle CANNOT live inside the bar: explainWord replaces the bar's
+     innerHTML on every click, which would delete it. It sits on a zero-height
+     rail just above, positioned over the bar's top edge. */
+  .sb-grab-rail { position:relative; height:0; flex:0 0 auto; }
+  .sb-grab { position:absolute; left:50%; transform:translateX(-50%); bottom:-9px;
+             width:64px; height:18px; display:flex; align-items:center; justify-content:center;
+             padding:0; border:0; background:none; cursor:ns-resize; touch-action:none; z-index:3; }
+  .sb-grab::before { content:''; display:block; width:42px; height:4px; border-radius:2px;
+                     background:var(--line); transition: background .15s ease; }
+  .sb-grab:hover::before, .sb-grab:focus-visible::before { background:var(--accent); }
+  .sb-grab:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+  /* NO ROOM, NO BAR (PB, 2026-08-20: "two screenshots of mobile use which are a
+     bit cluttered - maybe remove the status bar if the screen/window
+     resolution is too small"). On a phone the explanation bar took nearly half
+     the screen and still could not fit its own contents, pushing the braille
+     and the print - the actual work - into a sliver. It is an EXPLANATION of
+     something already on screen, so it is the right thing to drop when the
+     screen is the scarce resource. Speech is unaffected: announcements go out
+     through the live region, not through this bar. The drag handle goes with
+     it, since there is nothing left to resize. */
+  @media (max-width: 700px), (max-height: 520px) {
+    #statusBar, .sb-grab-rail { display:none; }
+    /* AND THE SETTINGS PANEL IS ANCHORED TO BOTH EDGES, so its height is
+       whatever is actually left rather than a sum of guesses. Capping it at
+       "viewport minus 80" assumed where the panel starts; the header pushes it
+       to 112, so on a 420-tall window its last 32px hung off the bottom even
+       though it was scrolling correctly inside. Giving top AND bottom lets the
+       browser do that arithmetic, and it cannot be wrong. */
+    .panel { position:fixed; top:56px; bottom:10px; right:8px; max-height:none; }
+  }
+  #statusBar .sb-hint { color:var(--muted); }
+  #statusBar .sb-brl { font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace;
+                       font-size:1.35em; vertical-align:-2px; }
+  #statusBar .sb-word { font-weight:600; }
+  /* A CONTRACTION WAS AVAILABLE AND WAS NOT USED (PB, 2026-08-19). Marked in
+     both panes and named in the bar. UNDERLINE ONLY in the panes: it is
+     painted, not measured, so it cannot shift a glyph — the braille pane sits
+     under a transparent textarea whose caret must stay with the cells, which
+     is what rules out padding, borders and display changes here. */
+  /* WHERE THE MATHS IS (PB, task 6). A wash of colour behind the cells, so a
+     glance says which part of the line is a sum - the switch signs sit OUTSIDE
+     it and bracket the tint. BACKGROUND ONLY: this pane lies under a
+     transparent textarea whose caret must stay between the right cells, so
+     padding, borders and display changes are all ruled out here. Kept pale
+     enough that the dots keep their contrast against it. */
+  .brl-maths { background: rgba(99, 102, 241, 0.10); border-radius: 3px; }
+  .dark .brl-maths, #focusOverlay.dark .brl-maths { background: rgba(129, 140, 248, 0.20); }
+
+  .missed { text-decoration: underline dotted var(--accent);
+                 text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  #statusBar .sb-missed { color:var(--accent-text); }
+  #statusBar .sb-arrow { color:var(--muted); }
+  #statusBar .sb-note { color:var(--muted); }
+  #statusBar .sb-rule { background:#eef3fb; border:1px solid #d3e0f5; border-radius:99px;
+                        padding:2px 10px; color: #15181d; }
+  /* THE CELLS IN A RULE CHIP ARE BRAILLE AND MUST LOOK LIKE IT (feedback,
+     2026-08-19: "a mixture of braille fonts used in explanation"). The chip
+     reads "⠹ = open fraction", so the face cannot go on the whole chip: APH
+     Braille Shadows is ASCII-MAPPED, and its name would come out as dots. The
+     cells carry .sb-brl of their own instead, which is where that face already
+     lives. Slightly smaller here than in the headline braille, so a chip stays
+     a chip. */
+  #statusBar .sb-rule .sb-brl { font-size:1.15em; }
+  /* Colour-matched cell ↔ character groups. Colour is an extra cue only - the
+     same information is in the "⠿ = for" chips and the screen-reader text. */
+  #statusBar .sb-seg { border-radius:99px; padding:2px 6px; color: #15181d; font-weight: 500; }
+  .dark #statusBar .sb-rule, .dark #statusBar .sb-seg { border-color: rgba(0,0,0,0.1); }
+  #statusBar .sb-seg.c0 { background:#ffe9a8; }
+  #statusBar .sb-seg.c1 { background:#c9e7ff; }
+  #statusBar .sb-seg.c2 { background:#d7f5cf; }
+  #statusBar .sb-seg.c3 { background:#ffd9d1; }
+  #statusBar .sb-seg.c4 { background:#e8dbff; }
+  #statusBar .sb-seg.c5 { background:#cff3f0; }
+  #statusBar .sb-seg.c6 { background:#f7d9ee; }
+  @media (max-width:820px) { .panes { flex-direction:column; } .pane { flex:1 1 0; } }
+</style>
+</head>
+<body>
+  <header>
+    <div class="head-row">
+      <!-- THE LOGO IS A LINK (PB, 2026-08-24), and it opens in a NEW TAB on
+           purpose: the document lives in this page and is not saved anywhere,
+           so replacing the page would throw away a child's work in one click.
+           As a real <a> it is keyboard-reachable and announces itself; the img
+           inside keeps alt="" so the name is said once, not twice. -->
+      <a class="app-logo-link" href="https://paigebraille.com"
+         target="_blank" rel="noopener noreferrer" tabindex="-1"
+         aria-label="Paige Braille website, opens in a new tab">
+        <img class="app-logo" src="/web/logo.svg" alt="" />
+      </a>
+      <div>
+        <h1>Translate</h1>
+      </div>
+      <div class="head-right">
+        <div class="modes">
+          <!-- ONE MATHS SWITCH (PB, 2026-08-09). WHICH maths code — Nemeth or
+               UEB Technical — is a property of the reader, not of the moment,
+               so it belongs in Settings and is chosen once. What changes line
+               by line is only whether this line IS maths, and that is this
+               checkbox and Ctrl+I/M.
+               uebMaths and nemethMaths stay as HIDDEN inputs because they are
+               the state the rest of the app reads (currentMode, modeOf, the
+               per-line modes, save and load). Rewriting all of that to a new
+               shape would risk the parts that work in order to move a control;
+               driving them from here does not. -->
+          <label title="Ticked whenever the caret is inside maths. Click it (or press Ctrl+M or Ctrl+I) to switch to maths at the caret — which code, Nemeth or UEB Technical, is set in Settings.">
+            <input type="checkbox" id="mathsMode" /> Maths <kbd>Ctrl+M</kbd>
+          </label>
+          <input type="checkbox" id="uebMaths" hidden />
+          <input type="checkbox" id="nemethMaths" hidden />
+        </div>
+        <button type="button" class="pill-btn" id="helpBtn" title="What this is and how to use it">Help</button>
+        <!-- Save writes eBraille (PB, 2026-08-09) because it is the only format
+             that remembers which lines are text, UEB maths or Nemeth.
+             BRF cannot, so BRF moved to Export — still there, still exactly what
+             embossers and notetakers read, just no longer the thing that
+             quietly loses your modes when you reopen your own work. -->
+        <button type="button" class="pill-btn" id="saveBtn"
+                title="Save as eBraille (.ebrl) — keeps which lines are text and which are maths">Save</button>
+        <!-- EXPORT IS TWO DIFFERENT THINGS and it is worth making the user choose.
+             The braille side goes to embossers; the print side goes to a
+             teacher who has to mark it. A menu BUTTON, not a <select>: these are
+             actions, not a setting, and a select would report a value the app
+             does not keep. -->
+        <div class="menu-wrap">
+          <button type="button" class="pill-btn" id="exportBtn"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="exportMenu"
+                  title="Export the braille, or the print side">Export ▾</button>
+          <div class="menu" id="exportMenu" role="menu" aria-labelledby="exportBtn" hidden>
+            <button type="button" role="menuitem" id="exportBrfItem"
+                    title="ASCII braille for embossers and braille notetakers">Export braille (BRF)</button>
+            <button type="button" role="menuitem" id="exportDocxItem"
+                    title="The print side as a Word document, with the maths still editable">Export print (Word)</button>
+          </div>
+        </div>
+        <button type="button" class="pill-btn" id="loadBtn" title="Load braille from a file">Load</button>
+        <button type="button" class="pill-btn danger" id="clearBtn" title="Clear both panels">Clear</button>
+        <input type="file" id="loadInput" accept=".ebrl,.brf,.brl,.txt,text/plain" hidden />
+        <button type="button" class="icon-btn" id="settingsBtn"
+                aria-label="Settings" aria-expanded="false" title="Settings">⚙</button>
+
+        <div class="panel" id="settingsPanel" hidden role="dialog" aria-label="Settings">
+          <h3>Maths code</h3>
+          <label><input type="radio" name="mathsCode" id="mathsCodeNemeth" value="nem" />
+            Nemeth</label>
+          <label><input type="radio" name="mathsCode" id="mathsCodeUeb" value="ueb" />
+            UEB Technical</label>
+
+          <h3>Braille code</h3>
+          <select id="brailleCodeSel" aria-label="Braille code"></select>
+
+          <h3>Braille pane</h3>
+          <label><input type="checkbox" id="showAscii" />
+            Show ASCII braille instead of dots</label>
+
+          <label><input type="checkbox" id="sixKeyInput" checked />
+            Six-key entry on S D F&nbsp;/&nbsp;J K L</label>
+
+          <h3>Speech</h3>
+          <!-- "Speech output" was a second visible line under the "Speech" heading, which
+               read as a stutter and, having no `for` and wrapping nothing, named nothing:
+               the radios had no accessible group name at all. The name now rides on a real
+               radiogroup, so assistive technology announces the grouping while the panel
+               reads like every other section - heading, then choices. -->
+          <div role="radiogroup" aria-label="Speech output">
+            <label><input type="radio" name="speechOutput" id="speechOutputVoice" value="voice" />
+              App voice</label>
+            <label><input type="radio" name="speechOutput" id="speechOutputReader" value="reader" />
+              Screen reader</label>
+            <label><input type="radio" name="speechOutput" id="speechOutputOff" value="off" />
+              Off</label>
+          </div>
+          <label for="voiceSel" style="display:block; margin-bottom:4px;">Voice</label>
+          <select id="voiceSel"></select>
+          <label><input type="checkbox" id="speakLetter" /> Speak each letter as it is
+            typed or deleted</label>
+          <label><input type="checkbox" id="speakWord" /> Speak each word when finished</label>
+          <label><input type="checkbox" id="speakSentence" /> Speak the sentence when it
+            ends</label>
+          <label><input type="checkbox" id="speakCursor" /> Speak where the cursor
+            moves</label>
+          <p class="note">Turn this off if a screen reader is already reading the cursor -
+             otherwise the child hears every move twice.</p>
+
+          <h3>Focus mode</h3>
+          <label><input type="checkbox" id="focusDark" />
+            Focus mode in dark colours</label>
+
+          <button type="button" id="settingsDone" class="settings-done">Done</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="panes">
+    <section class="pane">
+      <h2 class="pane-h" id="brlHead">Braille</h2>
+      <!-- Accessible layer: the content is REAL Unicode braille cells as text, so a
+           braille display shows the dots directly (same approach as Emboss's editor,
+           whose visual pane is SVG dots and therefore needs this separately). -->
+      <div class="pane-body" id="braillePane" role="region"
+           aria-labelledby="brlHead" aria-describedby="brlHint">
+        <p class="sr-only" id="brlHint">
+          The braille you have entered, as Unicode braille cells. A braille display
+          shows these as dots. Chord dots on F D S and J K L; space ends a word.
+        </p>
+        <!-- THE INPUT IS A REAL TEXTAREA (PB, 2026-08-09). A drawn caret in a
+             non-editable div gave a braille display nothing to follow: no dots
+             7-8 cursor, no panning, and cursor-routing keys could not work at
+             all. A platform text field gives all three for free, because the
+             assistive technology follows a platform caret.
+             #braille stays exactly as it was and becomes PRESENTATION ONLY —
+             its word spans still drive click-to-explain and the
+             lighting. The textarea sits over it with transparent text and a
+             visible caret, so what you see is the render and what you drive is
+             the field. Both live in the same scrolling pane, so they scroll
+             together with no synchronising code.
+             #braille is aria-hidden (PB, 2026-08-12): it is decorative once the
+             textarea is the real accessible surface on top of it, and the
+             textarea keeps the labels above - a screen reader has exactly one
+             braille-pane element to meet, and a connected display follows the
+             textarea's own platform caret through the SAME real cells. -->
+        <div id="brlStack">
+          <div id="braille" aria-hidden="true"></div>
+          <textarea id="brlInput" spellcheck="false" autocapitalize="off"
+                    autocorrect="off" autocomplete="off" wrap="soft"
+                    aria-labelledby="brlHead" aria-describedby="brlHint"></textarea>
+        </div>
+      </div>
+    </section>
+    <section class="pane">
+      <div class="pane-h pane-h-row">
+        <h2 id="outHead">Text</h2>
+        <button type="button" class="icon-btn" id="focusModeBtn"
+                aria-label="Focus mode" aria-pressed="false"
+                title="Show the print full-screen, in large live type">⛶</button>
+      </div>
+      <!-- Plain text/maths: readable by speech and a braille display, and
+           browsable by a screen reader like any other region - NOT an
+           announcement channel any more (PB, 2026-08-12): it carried
+           aria-live="polite" aria-atomic="false" for that, but every app
+           announcement now goes through the speech router instead (speak()
+           and #announce), so a live region here would only double up on it. -->
+      <div class="pane-body" id="textPane" role="region" tabindex="0"
+           aria-labelledby="outHead">
+        <div id="out"></div><div id="warn" class="warn" hidden></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOCUS MODE (PB, 2026-08-12): see the CSS comment above #focusOverlay for
+       the shape of it. role="region", NOT role="dialog"/aria-modal — a real
+       modal would take the braille field out of the accessibility tree while
+       the child is still typing into it, and the field is deliberately never
+       moved in here: it stays focused and live for as long as this is open.
+       #out is moved into this element by translate.mjs on entry, and back to
+       its home in the Text pane on exit. -->
+  <div id="focusOverlay" role="region" aria-label="Focus view" hidden>
+    <div class="focus-bar">
+      <button type="button" class="icon-btn" id="focusModeBtnInner"
+              aria-label="Focus mode" aria-pressed="true"
+              title="Exit focus mode">⛶</button>
+    </div>
+  </div>
+
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="help-head">
+      <h2 id="helpTitle">About Translate</h2>
+      <button type="button" class="icon-btn" id="helpClose" aria-label="Close help">✕</button>
+    </div>
+    <div class="help-body">
+      <p><strong>Translate shows you what a braille user is writing, as they write it.</strong>
+         The child brailles on the left; the same words appear as ordinary print on the right.</p>
+
+      <p class="try-it">
+        <button type="button" id="helpExample">Open an example</button>
+        <span class="note">A short document that shows most of this off: braille turning into
+          print, a word you can click, a contraction that was missed, and two sums - one in UEB
+          maths, one in Nemeth. It replaces what is open, so save your work first.</span>
+      </p>
+
+      <h3>Who it is for</h3>
+      <p>Anyone who needs to follow braille but doesn't read it fluently -
+         <strong>sighted teachers, teaching assistants, parents,</strong> SEN staff, and
+         classmates. You don't need to know braille: you can see what the child is typing,
+         and check it with them.</p>
+      <p>It is equally usable by a braille reader: both panels work with a screen reader,
+         and the braille panel sends real braille cells to a braille display.</p>
+
+      <h3>How the child types</h3>
+      <p>Braille is entered the way a Perkins brailler works - press the dots for a
+         letter <em>together</em>, like a chord, then release.</p>
+      <table class="keys">
+        <tr><th>Dot</th><td>3</td><td>2</td><td>1</td><td class="gap"></td><td>4</td><td>5</td><td>6</td></tr>
+        <tr><th>Key</th><td>S</td><td>D</td><td>F</td><td class="gap"></td><td>J</td><td>K</td><td>L</td></tr>
+      </table>
+      <ul>
+        <li><strong>Space</strong> finishes a word - the print appears then.</li>
+        <li><strong>Enter</strong> starts a new line. <strong>Backspace</strong> rubs out a
+            cell and says which one went.</li>
+        <li><strong>Arrow keys, Home and End</strong> move around the braille. The child can
+            go back into anything already written and change it; the print keeps up.</li>
+        <li><strong>← and →</strong> say the cell they land on, and say it <em>as that word
+            uses it</em>. The same cell can mean different things in different places: ⠁ is
+            “a” in a word but “1” straight after a number sign, and ⠲ is a full stop in a
+            sentence but “4” inside a Nemeth sum.</li>
+        <li><strong>↑ and ↓</strong> read out the whole line you arrive on. A line of maths
+            is read as a sentence - “twelve point seven five times four equals fifty one”.</li>
+        <li><strong>Ctrl+← / Ctrl+→</strong> (on a Mac, <strong>Option+← / Option+→</strong>)
+            step along a line of maths <strong>one part at a time</strong> - each press moves
+            to the next number or sign and says it. On ordinary lines of words these keys
+            move word by word as usual.</li>
+        <li><strong>Ctrl+Shift+L</strong> reads the line the cursor is on. Press it
+            <strong>twice</strong> for a closer listen - words are spelt out cell by cell,
+            maths is said again more fully (see <em>Reading aloud</em>).</li>
+        <li><strong>Control</strong> on its own stops the speech, the same key that quietens
+            a screen reader. Useful when a long line is being read and the child has heard
+            enough.</li>
+      </ul>
+      <p class="note">Ordinary editing works as you would expect. Selecting some braille and
+         then brailling a new cell <strong>replaces</strong> what was selected, and
+         <strong>Ctrl+Z</strong> (Mac: <strong>Cmd+Z</strong>) undoes.</p>
+      <p class="note">A word only appears in print once it is finished, so half-written
+         words don't flash up and change.</p>
+      <p class="note">The braille panel is a real text box, not a picture of one. That is
+         what lets a <strong>braille display</strong> work with it properly - the cursor dots
+         show where the child is, the display follows them along the line, and its routing
+         keys move the cursor. A screen reader's own reading commands work here too.</p>
+
+      <h3>Six-key entry can be turned off</h3>
+      <p>Under <strong>⚙ Settings</strong>, <strong>six-key input</strong> can be switched off.
+         The S D F J K L keys then type normally instead of forming braille chords, which
+         suits anyone using a braille display's own keyboard, or pasting braille in.</p>
+      <p class="note">While six-key entry is <strong>on</strong>, the ordinary letter keys do
+         nothing - only S D F J K L make braille. Some braille displays type letters rather
+         than dots when they are plugged in; if a display's own keyboard seems dead, switch
+         six-key entry <strong>off</strong> in Settings and it will work.</p>
+
+      <h3>Seeing which braille made which letters</h3>
+      <p>Click any word in either panel. It is highlighted in both, and the bar along the
+         bottom explains it - how many cells, whether a <strong>contraction</strong> was used,
+         and what each cell stands for. Matching colours link each braille cell to the letters
+         it produced, e.g. <span class="eg">⠐⠺</span>&nbsp;=&nbsp;“work”.</p>
+      <p>This works inside sums too. Clicking a single sign in either panel highlights just
+         that sign in both, and reads the whole sum aloud so the child hears it in context.
+         Clicking a sum anywhere <em>other</em> than on a sign highlights the whole thing.</p>
+      <p><strong>The bar can be made bigger.</strong> There is a small handle on its top edge:
+         drag it upwards, or click it and use the <strong>↑ and ↓ arrows</strong>
+         (<strong>Home</strong> for normal size). The braille and the words inside grow
+         together, which helps when a child with some sight is reading it, or when a class is
+         looking at one screen.</p>
+
+      <h3>Contractions the child could have used</h3>
+      <p>Grade 2 braille has short forms - <span class="eg">⠮</span> for “the”,
+         <span class="eg">⠌</span> for “st”. When a child spells a word out in full where a
+         short form was available, Translate gives a <strong>small ding</strong> as they
+         finish the word, and <strong>underlines the letters</strong> that could have been
+         shortened - in both panels, so you can see it whether you read braille or print.
+         Clicking the word shows what was available: “could also be written ⠮, 1 cell”.</p>
+      <p class="note">This is a nudge, never a mark. Braille often allows more than one
+         correct spelling - proper names, and places where the rules forbid a short form -
+         so a word being underlined does not make it wrong. It is there to prompt a
+         conversation, not to score anything.</p>
+
+      <h3>Maths</h3>
+      <p>Choose which maths code you use - <strong>Nemeth</strong> or <strong>UEB maths</strong>
+         (⚙ Settings calls this one <strong>UEB Technical</strong>, its formal name)
+         - once, under <strong>⚙ Settings</strong>. Then <strong>Ctrl+M</strong> (or
+         <strong>Ctrl+I</strong>) switches between ordinary text and that code, and says which
+         you are in. The right-hand panel lays the maths out properly: real fractions, powers,
+         roots, matrices, even number lines drawn as pictures. Clicking an expression
+         explains the maths signs used.</p>
+      <p>The maths side covers a great deal - from simple sums through algebra, fractions and
+         roots to calculus, chemistry and number lines. Where it cannot read something with
+         confidence it <strong>says so and shows you which cell defeated it</strong>, rather
+         than guessing and presenting a wrong answer as if it were right. That is deliberate:
+         a wrong sum shown confidently is worse than no sum at all, because nobody knows to
+         check it.</p>
+      <p class="note">After <strong>Load</strong> (or Clear), choosing a mode applies to the
+         whole document - so you can load a saved file and then pick how to read it.
+         Once you start typing, modes stick to lines again.</p>
+      <p class="note">When you load a file, Translate also looks at the whole document:
+         if every line is clearly UEB maths (or clearly text) the boxes are set for you,
+         with a spoken and written note saying so - one click undoes it. If the file is
+         mixed or unclear, nothing is changed. Files saved here mark their Nemeth lines
+         with the switch indicators, so those describe themselves - and a file whose
+         lines are all switched ticks the Nemeth box for you.</p>
+      <p><strong>Maths starts where the cursor is, not at the start of the line.</strong>
+         Put the cursor where the sum belongs, press <strong>Ctrl+M</strong>, and a maths
+         group opens with the cursor inside it. Write the sum, press
+         <strong>Ctrl+M</strong> again and you step out to the right of it. The words you had
+         already written stay words - a sentence can carry a sum in the middle of it.</p>
+      <p class="note">In <strong>Nemeth</strong> the switch indicators are written into the
+         braille, because that is how Nemeth marks itself on paper and a reader needs to see
+         them. In <strong>UEB</strong> nothing is written at all: UEB maths <em>is</em> UEB,
+         so there is no switch sign to write, and inventing one would put cells in the
+         braille that the child never typed. The run is remembered instead, and an eBraille
+         file keeps that memory.</p>
+      <p class="note">The <strong>Maths</strong> box in the toolbar shows whether the cursor
+         is currently inside a sum, so it tells you where the child is rather than what was
+         last chosen. Clicking it does the same as Ctrl+M. Unticking it when the whole
+         document is set to maths turns that off and returns to ordinary writing.</p>
+
+      <h3>Marking maths that is already written</h3>
+      <p>The Maths box (and <kbd>Ctrl+M</kbd>) acts on <strong>what you have</strong>, so it
+         does the sensible thing in three different situations:</p>
+      <ul>
+        <li><strong>Something selected</strong> - that selection becomes maths. This is how
+            you repair a file that opened as ordinary text: select the sum and press. Press
+            again on marked braille to turn it back into words. A selection only
+            <em>partly</em> inside a sum is refused out loud, rather than leaving half a
+            marker behind.</li>
+        <li><strong>A file just opened, nothing written yet</strong> - the <em>whole</em>
+            document is read as maths. That is what you want when the file is a page of
+            sums: open it, press once, and every line is read properly.</li>
+        <li><strong>Otherwise</strong> - a sum starts where the cursor is, as above.</li>
+      </ul>
+      <p class="note">The moment the child writes anything, the third case takes over: modes
+         stick to lines again, so one press can never sweep up work already done.</p>
+      <p>When a file is opened, Translate also says if it <strong>suspects</strong> maths
+         without being sure - "some lines in this file look like UEB maths". It changes
+         nothing on a suspicion; it tells you, and one press does the rest. UEB is the harder
+         case to spot: Nemeth writes its switch signs into the braille and so declares
+         itself, while UEB maths <em>is</em> UEB and nothing in the cells sets it apart.</p>
+
+      <p class="note">The two maths codes are different, so only one can be on at a time.
+         Nemeth cannot be detected from the cells alone (its digits are the same cells as
+         ordinary punctuation), which is why you choose it - except when the braille
+         carries the explicit switch, which is unambiguous.</p>
+
+
+
+      <h3>Writing a sum</h3>
+      <p>Maths is written in the braille panel like everything else - the difference is
+         only that you tell Translate where the sum starts and stops.</p>
+      <ol>
+        <li>Put the cursor where the sum belongs and press <kbd>Ctrl+M</kbd>. Translate
+            says which code you are in and waits.</li>
+        <li>Braille the sum. In both codes a number is introduced by the
+            <strong>number sign</strong> <span class="eg">⠼</span>, and the <strong>fraction line</strong> is
+            dots 3-4, <span class="eg">⠌</span> - the same shape as the printed <strong>/</strong>. So a half
+            is <span class="eg">⠼⠁⠌⠃</span>: number sign, 1, fraction line, 2.</li>
+        <li>Press <kbd>Ctrl+M</kbd> again to step out to the right of the sum, and carry on
+            with your sentence.</li>
+      </ol>
+      <p>A whole line looks like this in UEB maths - <span class="eg">⠼⠁⠌⠃⠐⠖⠼⠁⠌⠉</span> and so on for
+         <em>1/2 + 1/3 = 5/6</em>, with <span class="eg">⠐⠖</span> for plus and <span class="eg">⠐⠶</span> for equals. The same sum
+         in Nemeth is wrapped in its own switch signs, <span class="eg">⠸⠩</span> to open and <span class="eg">⠸⠱</span> to
+         close, because that is how Nemeth marks itself on paper.</p>
+      <p><strong>You hear the sum, not the letters.</strong> Finish a word inside the maths and
+         Translate speaks it as arithmetic - "fraction 1 over 2", or for the whole line
+         "1 half plus 1 third, equals 5 sixths". The same cells outside a sum would be read as
+         ordinary braille, which is the point of marking where the maths is.</p>
+      <p><strong>The braille panel tints the sum</strong> with a wash of colour, so you can see
+         at a glance which part of a line is maths and which is words. In Nemeth the switch
+         signs sit just outside the tint, bracketing it.</p>
+      <p>In the print panel, clicking a term reads that term; clicking the row away from any
+         term reads the whole equation. Either way the explanation bar names the signs used.</p>
+
+      <h3>What you see, and how it is set</h3>
+      <ul>
+        <li><strong>Which braille code.</strong> Settings lists the codes Translate can read,
+            with your own language's first. Six travel with the app and work offline; the
+            rest are fetched the first time you choose them.</li>
+        <li><strong>Dots or ASCII.</strong> The braille panel normally draws real braille
+            cells. Switch on <strong>show ASCII braille</strong> and it shows the BRF letters
+            instead - the spelling a notetaker or embosser file uses - in a plain typeface so
+            they read as letters, not as dots.</li>
+        <li><strong>Forty cells to a line.</strong> The panel sizes its braille so a line
+            holds the forty cells a page does. If the window is too narrow for that to stay
+            readable, the two panels stack one above the other to win back the width rather
+            than shrink the braille further.</li>
+        <li><strong>Focus mode.</strong> The expand button on the Text panel fills the whole
+            window with the print, large and live - typing carries on working while it is
+            open, so a partially sighted reader can watch the words arrive. Press
+            <strong>Escape</strong> or the button again to come back. Under
+            <strong>⚙ Settings</strong>, focus mode can be set to light-on-dark colours.</li>
+      </ul>
+
+      <h3>The checks - what the coloured notes mean</h3>
+      <p>Translate never guesses silently. Under a maths line you may see:</p>
+      <ul>
+        <li><strong>A yellow warning</strong> - part of the line could not be read.
+            The unread cells are marked, and where one added or removed cell would fix it,
+            a “may have been meant as…” suggestion appears.</li>
+        <li><strong>“FYI - not an error: this braille can mean more than one
+            thing”</strong> - the braille legitimately has two readings (the codes
+            themselves say so). Both are shown; you and the child decide which was
+            meant.</li>
+        <li><strong>“Unverified - worth checking with the child”</strong> - the line read
+            cleanly, but translating the maths back into braille doesn’t reproduce what
+            was typed. Usually it is just an alternative braille spelling; occasionally
+            it is a real slip, which is why it earns a glance.</li>
+      </ul>
+      <p class="note">No note at all means the reading was verified: the maths shown
+         translates back to exactly the braille the child typed.</p>
+      <p class="note">In the print panel, a <strong>?</strong> stands for a cell that has no
+         letters in the braille code you are using - a stray dot, or a sign belonging to some
+         other code. Click it and Translate says so in words. The dots themselves are
+         untouched in the braille panel, so nothing is lost: the ? only marks the place where
+         we will not guess.</p>
+      <p class="note"><strong>“Display fault on line …”</strong> is different from all of
+         these and should never appear. It means the braille panel has drawn something other
+         than what the document holds, and it is reported rather than hidden because braille
+         you did not write is the one thing this app must never show you quietly. If you see
+         it, the panel cannot be trusted for that line - please report it.</p>
+
+      <h3>Reading aloud</h3>
+      <p>Under <strong>⚙ Settings</strong> you can pick a voice and choose what is spoken:
+         <strong>each letter</strong> as it is written, <strong>each finished word</strong>,
+         and <strong>each finished sentence</strong>. If several are on, only the later one
+         speaks, so nothing is said twice over. Any braille key stops the speech, and so does
+         <strong>Control</strong> on its own.</p>
+      <p>Two of those settings are worth knowing about in detail. <strong>Speak each letter</strong>
+         covers deleting as well as typing - taking a cell out is the same moment as putting
+         one in, and the child needs to hear which cell went. (If a whole selection is
+         deleted, Translate says so however this is set: losing a chunk of work quietly is a
+         different thing altogether.) <strong>Speak where the cursor moves</strong> is separate,
+         because moving about is not writing - it is the one to turn off if a screen reader
+         is already reading the cursor.</p>
+      <p><strong>While the child is typing, Translate names the cell, not the word.</strong>
+         That matters more than it sounds. <span class="eg">⠞</span> on its own is the short
+         form for “that”, but a child who has just pressed those dots has not decided yet
+         whether they are writing “that” or the start of “thing” - so Translate says
+         <em>“t”</em>, and waits for the space to say the finished word. Cells that stand for
+         a pair or group of letters are <strong>spelt out</strong>:
+         <span class="eg">⠌</span> is “s t”, <span class="eg">⠬</span> is “i n g”,
+         <span class="eg">⠮</span> is “t h e”. Spelling them keeps them clearly a report about
+         the braille, rather than sounding like more of the sentence.</p>
+      <p>The same three settings cover maths, so there is one rule to learn rather than two:
+         each cell as it is written, each finished part of the sum, each finished line.</p>
+      <p><strong>Ctrl+Shift+L</strong> reads the current line at any time. Press it
+         <strong>twice</strong> for a second, closer listen - and what that second listen
+         gives you depends on the kind of line, because the useful answer is different:</p>
+      <ul>
+        <li><strong>A line of words</strong> is <strong>spelt out</strong>, cell by cell -
+            “t h e, space, c, a, t”. Short-form cells are spelt out as the letters they
+            stand for, so a child hears what they actually wrote rather than a string of dot
+            numbers. This is the reading that answers “which cells did I really put down?”.</li>
+        <li><strong>A line of maths</strong> is said <strong>again, more fully</strong>.
+            Normally an equation is read in the shortest way that stays unambiguous -
+            “square root, 9” - which is what a child re-reading their own work wants.
+            The second press asks for the fuller wording - “the square root of 9” - naming
+            every structure instead of leaning on pauses. Spelling a fraction cell by cell
+            would tell a child almost nothing, which is why maths does not do that.</li>
+      </ul>
+      <p class="note">Both readings come from the same reading of the maths - only the
+         wording differs. If the short and the full reading seem to describe
+         <em>different sums</em>, that is worth a closer look at the braille rather than a
+         quirk of the setting.</p>
+      <p>The voice list starts with voices in the language you are working in; the rest are a
+         click away, and the joke voices some computers install are kept in a list of their
+         own so they do not crowd out the useful ones. Maths is read as a sentence rather
+         than a list of signs - “a half plus a third equals five sixths” - in English,
+         Spanish, French and ten more languages.</p>
+
+      <h3>Using Translate with a screen reader</h3>
+      <p>The braille panel is a real text box holding real braille, so a connected braille
+         display shows exactly the cells the child has written.</p>
+      <p><strong>Two voices are one too many.</strong> A screen reader reads out what is
+         typed, and so does Translate, so without a little setting up a child hears
+         everything twice - once as dot numbers from the screen reader, once as words from
+         Translate. The way to sort it out is to let each do the half it is good at: the
+         braille display shows the cells, and Translate does the talking.</p>
+      <p>On a Mac with VoiceOver, three settings do it:</p>
+      <ul>
+        <li><strong>Turn off the spoken hints.</strong> VoiceOver Utility → Verbosity → Hints.
+            This stops “you are currently on a text area” repeating.</li>
+        <li><strong>Stop it reading each keystroke.</strong> VoiceOver Utility → Verbosity →
+            Text → <em>While typing speak</em> → Nothing. If it still talks over you,
+            <strong>Control-Option-S</strong> silences VoiceOver's speech altogether - the
+            braille display keeps working, because speech and braille are separate.</li>
+        <li><strong>Leave Translate's own voice on</strong> (⚙ Settings → Speech →
+            “App voice”). It is the one that says useful things: the letter, the finished
+            word, the sum.</li>
+      </ul>
+      <p class="note">If you would rather have one voice doing everything, choose
+         <strong>Speech → “Screen reader”</strong> instead: Translate then passes its
+         announcements to the screen reader to say in its own voice, at the speed the child
+         is used to.</p>
+      <p class="note">These are settings on the computer, not in Translate, so a school may
+         want to set them up once on a pupil's machine.</p>
+
+      <h3>Saving</h3>
+      <p><strong>Save</strong> writes an <strong>eBraille</strong> file
+         (<code>.ebrl</code>) - the DAISY standard for braille documents. It keeps things a
+         BRF cannot: which lines are text and which are maths, and which code they were
+         written in, so a saved page opens back exactly as you left it.</p>
+      <p><strong>Export</strong> offers two, because the two sides of the app go to
+         different people:</p>
+      <ul>
+        <li><strong>Export braille (BRF)</strong> - Braille Ready Format, what embossers and
+            braille notetakers read. BRF has no way to record which lines were maths, so that
+            memory is the price of the wider compatibility.</li>
+        <li><strong>Export print (Word)</strong> - the right-hand panel as a
+            <code>.docx</code>, for a teacher who has to read and mark it. The maths is
+            written as <strong>real Word equations</strong>, not pictures of them: they can be
+            edited, and a screen reader reads them as maths. Anything the app could not read
+            is left out rather than guessed at, so what arrives is only what was understood.</li>
+      </ul>
+      <p><strong>Load</strong> opens either of those, and also a <code>.brl</code> file (braille
+         saved as dot patterns) or a <code>.txt</code> holding braille. It works out which from
+         the file itself rather than its name - so a file renamed by an email program still opens. A file with no braille
+         in it is refused, and says so, rather than quietly emptying the child's work.</p>
+      <p><strong>Clear</strong> empties both panels, asking first and reading the question
+         aloud, and starts the new page in ordinary text even if the last one was maths.</p>
+      <p>Translate keeps working with no internet connection, once it has been opened once on
+         that computer.</p>
+
+      <h3>Credits and licences</h3>
+      <p class="credit">Typefaces: the interface is set in <strong>Inter</strong>
+         (SIL Open Font License 1.1, © The Inter Project Authors); the braille pane uses
+         <strong>APH Braille Shadows</strong>, by permission of the American Printing House
+         for the Blind. Both travel with the app rather than being fetched from anywhere, so
+         nothing about your use of it is reported to a third party and it looks the same with
+         no internet connection.</p>
+      <p class="credit">Braille translation by <strong>liblouis</strong> (LGPL-2.1-or-later).
+         Maths layout by <strong>Temml</strong> (MIT) and <strong>MathCAT</strong>
+         (MIT, © Neil Soiffer / DAISY)..</p>
+      <p class="credit">© Sensory App House Ltd.<br>
+      Licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></p>
+    </div>
+  </dialog>
+
+  <!-- THE SPEECH ROUTER'S READER CHANNEL (PB, 2026-08-12). Settings → Speech
+       output → "Screen reader" sends every app announcement here instead of
+       to speechSynthesis - see speak() in translate.mjs. Visually hidden by
+       .sr-only, so a sighted user sees nothing; a screen reader announces
+       whatever text lands in it.
+
+       ASSERTIVE, NOT POLITE (PB, 2026-08-19). Polite means QUEUED: the app's
+       announcement waits for VoiceOver to finish whatever it is saying, so
+       while VoiceOver echoed a word cell by cell ("braille pattern dots one
+       four…") our "cat" arrived late, or never — a newer announcement
+       replaces the region's text before the old one is reached. Assertive
+       INTERRUPTS, which is what taking over the speech means in practice:
+       the app's word wins over the reader's echo of the cells.
+
+       The cost is real and is the reason polite was chosen first: assertive
+       interrupts everything, including announcements the user wanted, and
+       under fast typing each new one cuts off the last, so a cell can be
+       lost rather than merely delayed. PB is trying it on the alternate
+       deployment. If it proves too blunt, the alternatives in order are:
+       back to polite; or make it a setting ("interrupt the screen reader")
+       with polite as the default. role=alert carries assertive implicitly,
+       so the two agree rather than relying on the explicit attribute
+       overriding role=status's implicit polite. -->
+  <div id="announce" class="sr-only" aria-live="assertive" role="alert"></div>
+
+  <!-- A DISPLAY FAULT MUST REACH ASSISTIVE TECH WHATEVER settings.speechOutput
+       IS (PB, 2026-08-12) - it is the one announcement the speech router does
+       not gate, because 'off' silencing a genuine display fault would be the
+       one case where quiet is the wrong answer. render()'s own invariant
+       check (grep "display fault" in translate.mjs) writes straight into
+       this element - never through speak() - whenever the braille pane has
+       drawn something other than the document. aria-live="assertive" and
+       role="alert" so it interrupts, unlike #announce above. -->
+  <div id="announceAssert" class="sr-only" aria-live="assertive" role="alert"></div>
+
+  <!-- Which braille rules produced the clicked word. NOT a live region
+       (PB, 2026-08-12): it was one, from before the speech router existed,
+       when it was the only way a screen reader heard the click explanation.
+       Now every caret move rewrites this bar AND the router says the same
+       thing through #announce — two live regions meant every arrow key was
+       announced twice on top of the reader's own caret echo. Announcements
+       belong to the router's one polite channel; this bar is the VISUAL
+       record, and its plain-English sentence stays readable in browse mode
+       (the raw glyphs stay aria-hidden — they read poorly aloud). -->
+  <!-- ASKING A QUESTION THE APP CAN SPEAK (PB, 2026-08-19). The browser's own
+       confirm() is silent to a self-voicing user AND blocks the event loop, so
+       speech scheduled just before it cannot start until the dialog is
+       dismissed — the question could never be read aloud. A real dialog can be
+       spoken, focused and escaped. -->
+  <dialog id="confirmDialog" aria-labelledby="confirmText">
+    <div class="help-body">
+      <p id="confirmText"></p>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+        <button type="button" class="pill-btn" id="confirmNo">Cancel</button>
+        <button type="button" class="pill-btn" id="confirmYes">Clear</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Drag (or arrow-key) handle for the explanation bar. Outside the footer
+       because the footer's innerHTML is rewritten on every click. -->
+  <div class="sb-grab-rail">
+    <button type="button" class="sb-grab" id="sbGrab"
+            role="separator" aria-orientation="horizontal" tabindex="0"
+            aria-label="Resize the explanation bar"
+            title="Drag, or use the up and down arrow keys, to resize the explanation bar"></button>
+  </div>
+  <footer id="statusBar">
+    <span class="sb-hint">Click a word in either panel to see the braille rules used.</span>
+  </footer>
+
+  <script src="/engine/liblouis-wasm.js"></script>
+  <script src="/web/vendor/temml.min.js"></script>
+  <script>var module = { exports: {} }; var require = { main: null };</script>
+  <!-- Symbol table FIRST: nemeth-to-latex.js reads it from globalThis. It is
+       optional (the converter degrades to its built-in rules without it), but
+       loading it after would mean the first conversions ran without it. -->
+  <script src="/nemeth-symbol-table.js"></script>
+  <script src="/nemeth-to-latex.js"></script>
+  <script>window.NemethToLatex = module.exports;</script>
+  <script type="module" src="/Translate/translate.mjs?v=2"></script>
+  <script>
+    // Synchronize scrolling between the two panes
+    document.addEventListener('DOMContentLoaded', () => {
+      const bp = document.getElementById('braillePane');
+      const tp = document.getElementById('textPane');
+      let isSyncingLeftScroll = false;
+      let isSyncingRightScroll = false;
+
+      if (bp && tp) {
+        bp.addEventListener('scroll', () => {
+          if (!isSyncingLeftScroll) {
+            isSyncingRightScroll = true;
+            const percentage = bp.scrollTop / (bp.scrollHeight - bp.clientHeight || 1);
+            tp.scrollTop = percentage * (tp.scrollHeight - tp.clientHeight);
+          }
+          isSyncingLeftScroll = false;
+        });
+
+        tp.addEventListener('scroll', () => {
+          if (!isSyncingRightScroll) {
+            isSyncingLeftScroll = true;
+            const percentage = tp.scrollTop / (tp.scrollHeight - tp.clientHeight || 1);
+            bp.scrollTop = percentage * (bp.scrollHeight - bp.clientHeight);
+          }
+          isSyncingRightScroll = false;
+        });
+      }
+    });
+
+    // Offline support. Scope is /Translate/, so this can't affect Emboss's worker.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/Translate/sw.js', { scope: '/Translate/' })
+          .catch((err) => console.warn('[connector] service worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>

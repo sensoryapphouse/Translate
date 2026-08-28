@@ -1,0 +1,8 @@
+# Third-party corpora fetched on demand and NEVER redistributed.
+Translate/tools/external/cache/
+
+# Build output.
+dist-translate/
+
+node_modules/
+.DS_Store

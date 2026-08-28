@@ -1,0 +1,429 @@
+TRANSLATE - HELP
+Plain-text copy of the in-app help.
+https://brailletranslate.pages.dev
+
+Braille examples appear twice: first as Unicode braille (the dot patterns,
+which need a font that can draw them), then as ASCII braille (the plain
+characters an embosser or a BRF file uses for the same cells).
+
+Translate shows you what a braille user is writing, as they write it. The
+child brailles on the left; the same words appear as ordinary print on the
+right.
+
+[ Open an example ]   - a button in the Help window.
+
+Note: A short document that shows most of this off: braille turning into
+print, a word you can click, a contraction that was missed, and two sums - one
+in UEB maths, one in Nemeth. It replaces what is open, so save your work
+first.
+
+Who it is for
+-------------
+
+Anyone who needs to follow braille but doesn't read it fluently - sighted
+teachers, teaching assistants, parents, SEN staff, and classmates. You don't
+need to know braille: you can see what the child is typing, and check it with
+them.
+
+It is equally usable by a braille reader: both panels work with a screen
+reader, and the braille panel sends real braille cells to a braille display.
+
+How the child types
+-------------------
+
+Braille is entered the way a Perkins brailler works - press the dots for a
+letter together, like a chord, then release.
+
+- Space finishes a word - the print appears then.
+
+- Enter starts a new line. Backspace rubs out a cell and says which one went.
+
+- Arrow keys, Home and End move around the braille. The child can go back into
+  anything already written and change it; the print keeps up.
+
+- ← and → say the cell they land on, and say it as that word uses it. The same
+  cell can mean different things in different places: ⠁ (Unicode braille) / A
+  (ASCII braille) is “a” in a word but “1” straight after a number sign, and ⠲
+  (Unicode braille) / 4 (ASCII braille) is a full stop in a sentence but “4”
+  inside a Nemeth sum.
+
+- ↑ and ↓ read out the whole line you arrive on. A line of maths is read as a
+  sentence - “twelve point seven five times four equals fifty one”.
+
+- Ctrl+← / Ctrl+→ (on a Mac, Option+← / Option+→) step along a line of maths
+  one part at a time - each press moves to the next number or sign and says
+  it. On ordinary lines of words these keys move word by word as usual.
+
+- Ctrl+Shift+L reads the line the cursor is on. Press it twice for a closer
+  listen - words are spelt out cell by cell, maths is said again more fully
+  (see Reading aloud).
+
+- Control on its own stops the speech, the same key that quietens a screen
+  reader. Useful when a long line is being read and the child has heard
+  enough.
+
+Note: Ordinary editing works as you would expect. Selecting some braille and
+then brailling a new cell replaces what was selected, and Ctrl+Z (Mac: Cmd+Z)
+undoes.
+
+Note: A word only appears in print once it is finished, so half-written words
+don't flash up and change.
+
+Note: The braille panel is a real text box, not a picture of one. That is what
+lets a braille display work with it properly - the cursor dots show where the
+child is, the display follows them along the line, and its routing keys move
+the cursor. A screen reader's own reading commands work here too.
+
+Six-key entry can be turned off
+-------------------------------
+
+Under ⚙ Settings, six-key input can be switched off. The S D F J K L keys then
+type normally instead of forming braille chords, which suits anyone using a
+braille display's own keyboard, or pasting braille in.
+
+Note: While six-key entry is on, the ordinary letter keys do nothing - only S
+D F J K L make braille. Some braille displays type letters rather than dots
+when they are plugged in; if a display's own keyboard seems dead, switch
+six-key entry off in Settings and it will work.
+
+Seeing which braille made which letters
+---------------------------------------
+
+Click any word in either panel. It is highlighted in both, and the bar along
+the bottom explains it - how many cells, whether a contraction was used, and
+what each cell stands for. Matching colours link each braille cell to the
+letters it produced, e.g. ⠐⠺ (Unicode braille) / "W (ASCII braille) = “work”.
+
+This works inside sums too. Clicking a single sign in either panel highlights
+just that sign in both, and reads the whole sum aloud so the child hears it in
+context. Clicking a sum anywhere other than on a sign highlights the whole
+thing.
+
+The bar can be made bigger. There is a small handle on its top edge: drag it
+upwards, or click it and use the ↑ and ↓ arrows (Home for normal size). The
+braille and the words inside grow together, which helps when a child with some
+sight is reading it, or when a class is looking at one screen.
+
+Contractions the child could have used
+--------------------------------------
+
+Grade 2 braille has short forms - ⠮ (Unicode braille) / ! (ASCII braille) for
+“the”, ⠌ (Unicode braille) / / (ASCII braille) for “st”. When a child spells a
+word out in full where a short form was available, Translate gives a small
+ding as they finish the word, and underlines the letters that could have been
+shortened - in both panels, so you can see it whether you read braille or
+print. Clicking the word shows what was available: “could also be written ⠮
+(Unicode braille) / ! (ASCII braille), 1 cell”.
+
+Note: This is a nudge, never a mark. Braille often allows more than one
+correct spelling - proper names, and places where the rules forbid a short
+form - so a word being underlined does not make it wrong. It is there to
+prompt a conversation, not to score anything.
+
+Maths
+-----
+
+Choose which maths code you use - Nemeth or UEB maths (⚙ Settings calls this
+one UEB Technical, its formal name) - once, under ⚙ Settings. Then Ctrl+M (or
+Ctrl+I) switches between ordinary text and that code, and says which you are
+in. The right-hand panel lays the maths out properly: real fractions, powers,
+roots, matrices, even number lines drawn as pictures. Clicking an expression
+explains the maths signs used.
+
+The maths side covers a great deal - from simple sums through algebra,
+fractions and roots to calculus, chemistry and number lines. Where it cannot
+read something with confidence it says so and shows you which cell defeated
+it, rather than guessing and presenting a wrong answer as if it were right.
+That is deliberate: a wrong sum shown confidently is worse than no sum at all,
+because nobody knows to check it.
+
+Note: After Load (or Clear), choosing a mode applies to the whole document -
+so you can load a saved file and then pick how to read it. Once you start
+typing, modes stick to lines again.
+
+Note: When you load a file, Translate also looks at the whole document: if
+every line is clearly UEB maths (or clearly text) the boxes are set for you,
+with a spoken and written note saying so - one click undoes it. If the file is
+mixed or unclear, nothing is changed. Files saved here mark their Nemeth lines
+with the switch indicators, so those describe themselves - and a file whose
+lines are all switched ticks the Nemeth box for you.
+
+Maths starts where the cursor is, not at the start of the line. Put the cursor
+where the sum belongs, press Ctrl+M, and a maths group opens with the cursor
+inside it. Write the sum, press Ctrl+M again and you step out to the right of
+it. The words you had already written stay words - a sentence can carry a sum
+in the middle of it.
+
+Note: In Nemeth the switch indicators are written into the braille, because
+that is how Nemeth marks itself on paper and a reader needs to see them. In
+UEB nothing is written at all: UEB maths is UEB, so there is no switch sign to
+write, and inventing one would put cells in the braille that the child never
+typed. The run is remembered instead, and an eBraille file keeps that memory.
+
+Note: The Maths box in the toolbar shows whether the cursor is currently
+inside a sum, so it tells you where the child is rather than what was last
+chosen. Clicking it does the same as Ctrl+M. Unticking it when the whole
+document is set to maths turns that off and returns to ordinary writing.
+
+Marking maths that is already written
+-------------------------------------
+
+The Maths box (and Ctrl+M) acts on what you have, so it does the sensible
+thing in three different situations:
+
+- Something selected - that selection becomes maths. This is how you repair a
+  file that opened as ordinary text: select the sum and press. Press again on
+  marked braille to turn it back into words. A selection only partly inside a
+  sum is refused out loud, rather than leaving half a marker behind.
+
+- A file just opened, nothing written yet - the whole document is read as
+  maths. That is what you want when the file is a page of sums: open it, press
+  once, and every line is read properly.
+
+- Otherwise - a sum starts where the cursor is, as above.
+
+Note: The moment the child writes anything, the third case takes over: modes
+stick to lines again, so one press can never sweep up work already done.
+
+When a file is opened, Translate also says if it suspects maths without being
+sure - "some lines in this file look like UEB maths". It changes nothing on a
+suspicion; it tells you, and one press does the rest. UEB is the harder case
+to spot: Nemeth writes its switch signs into the braille and so declares
+itself, while UEB maths is UEB and nothing in the cells sets it apart.
+
+Note: The two maths codes are different, so only one can be on at a time.
+Nemeth cannot be detected from the cells alone (its digits are the same cells
+as ordinary punctuation), which is why you choose it - except when the braille
+carries the explicit switch, which is unambiguous.
+
+Writing a sum
+-------------
+
+Maths is written in the braille panel like everything else - the difference is
+only that you tell Translate where the sum starts and stops.
+
+- Put the cursor where the sum belongs and press Ctrl+M. Translate says which
+  code you are in and waits.
+
+- Braille the sum. In both codes a number is introduced by the number sign ⠼
+  (Unicode braille) / # (ASCII braille), and the fraction line is dots 3-4, ⠌
+  (Unicode braille) / / (ASCII braille) - the same shape as the printed /. So
+  a half is ⠼⠁⠌⠃ (Unicode braille) / #A/B (ASCII braille): number sign, 1,
+  fraction line, 2.
+
+- Press Ctrl+M again to step out to the right of the sum, and carry on with
+  your sentence.
+
+A whole line looks like this in UEB maths - ⠼⠁⠌⠃⠐⠖⠼⠁⠌⠉ (Unicode braille) /
+#A/B"6#A/C (ASCII braille) and so on for 1/2 + 1/3 = 5/6, with ⠐⠖ (Unicode
+braille) / "6 (ASCII braille) for plus and ⠐⠶ (Unicode braille) / "7 (ASCII
+braille) for equals. The same sum in Nemeth is wrapped in its own switch
+signs, ⠸⠩ (Unicode braille) / _% (ASCII braille) to open and ⠸⠱ (Unicode
+braille) / _: (ASCII braille) to close, because that is how Nemeth marks
+itself on paper.
+
+You hear the sum, not the letters. Finish a word inside the maths and
+Translate speaks it as arithmetic - "fraction 1 over 2", or for the whole line
+"1 half plus 1 third, equals 5 sixths". The same cells outside a sum would be
+read as ordinary braille, which is the point of marking where the maths is.
+
+The braille panel tints the sum with a wash of colour, so you can see at a
+glance which part of a line is maths and which is words. In Nemeth the switch
+signs sit just outside the tint, bracketing it.
+
+In the print panel, clicking a term reads that term; clicking the row away
+from any term reads the whole equation. Either way the explanation bar names
+the signs used.
+
+What you see, and how it is set
+-------------------------------
+
+- Which braille code. Settings lists the codes Translate can read, with your
+  own language's first. Six travel with the app and work offline; the rest are
+  fetched the first time you choose them.
+
+- Dots or ASCII. The braille panel normally draws real braille cells. Switch
+  on show ASCII braille and it shows the BRF letters instead - the spelling a
+  notetaker or embosser file uses - in a plain typeface so they read as
+  letters, not as dots.
+
+- Forty cells to a line. The panel sizes its braille so a line holds the forty
+  cells a page does. If the window is too narrow for that to stay readable,
+  the two panels stack one above the other to win back the width rather than
+  shrink the braille further.
+
+- Focus mode. The expand button on the Text panel fills the whole window with
+  the print, large and live - typing carries on working while it is open, so a
+  partially sighted reader can watch the words arrive. Press Escape or the
+  button again to come back. Under ⚙ Settings, focus mode can be set to
+  light-on-dark colours.
+
+The checks - what the coloured notes mean
+-----------------------------------------
+
+Translate never guesses silently. Under a maths line you may see:
+
+- A yellow warning - part of the line could not be read. The unread cells are
+  marked, and where one added or removed cell would fix it, a “may have been
+  meant as…” suggestion appears.
+
+- “FYI - not an error: this braille can mean more than one thing” - the
+  braille legitimately has two readings (the codes themselves say so). Both
+  are shown; you and the child decide which was meant.
+
+- “Unverified - worth checking with the child” - the line read cleanly, but
+  translating the maths back into braille doesn’t reproduce what was typed.
+  Usually it is just an alternative braille spelling; occasionally it is a
+  real slip, which is why it earns a glance.
+
+Note: No note at all means the reading was verified: the maths shown
+translates back to exactly the braille the child typed.
+
+Note: In the print panel, a ? stands for a cell that has no letters in the
+braille code you are using - a stray dot, or a sign belonging to some other
+code. Click it and Translate says so in words. The dots themselves are
+untouched in the braille panel, so nothing is lost: the ? only marks the place
+where we will not guess.
+
+Note: “Display fault on line …” is different from all of these and should
+never appear. It means the braille panel has drawn something other than what
+the document holds, and it is reported rather than hidden because braille you
+did not write is the one thing this app must never show you quietly. If you
+see it, the panel cannot be trusted for that line - please report it.
+
+Reading aloud
+-------------
+
+Under ⚙ Settings you can pick a voice and choose what is spoken: each letter
+as it is written, each finished word, and each finished sentence. If several
+are on, only the later one speaks, so nothing is said twice over. Any braille
+key stops the speech, and so does Control on its own.
+
+Two of those settings are worth knowing about in detail. Speak each letter
+covers deleting as well as typing - taking a cell out is the same moment as
+putting one in, and the child needs to hear which cell went. (If a whole
+selection is deleted, Translate says so however this is set: losing a chunk of
+work quietly is a different thing altogether.) Speak where the cursor moves is
+separate, because moving about is not writing - it is the one to turn off if a
+screen reader is already reading the cursor.
+
+While the child is typing, Translate names the cell, not the word. That
+matters more than it sounds. ⠞ (Unicode braille) / T (ASCII braille) on its
+own is the short form for “that”, but a child who has just pressed those dots
+has not decided yet whether they are writing “that” or the start of “thing” -
+so Translate says “t”, and waits for the space to say the finished word. Cells
+that stand for a pair or group of letters are spelt out: ⠌ (Unicode braille) /
+/ (ASCII braille) is “s t”, ⠬ (Unicode braille) / + (ASCII braille) is “i n
+g”, ⠮ (Unicode braille) / ! (ASCII braille) is “t h e”. Spelling them keeps
+them clearly a report about the braille, rather than sounding like more of the
+sentence.
+
+The same three settings cover maths, so there is one rule to learn rather than
+two: each cell as it is written, each finished part of the sum, each finished
+line.
+
+Ctrl+Shift+L reads the current line at any time. Press it twice for a second,
+closer listen - and what that second listen gives you depends on the kind of
+line, because the useful answer is different:
+
+- A line of words is spelt out, cell by cell - “t h e, space, c, a, t”.
+  Short-form cells are spelt out as the letters they stand for, so a child
+  hears what they actually wrote rather than a string of dot numbers. This is
+  the reading that answers “which cells did I really put down?”.
+
+- A line of maths is said again, more fully. Normally an equation is read in
+  the shortest way that stays unambiguous - “square root, 9” - which is what a
+  child re-reading their own work wants. The second press asks for the fuller
+  wording - “the square root of 9” - naming every structure instead of leaning
+  on pauses. Spelling a fraction cell by cell would tell a child almost
+  nothing, which is why maths does not do that.
+
+Note: Both readings come from the same reading of the maths - only the wording
+differs. If the short and the full reading seem to describe different sums,
+that is worth a closer look at the braille rather than a quirk of the setting.
+
+The voice list starts with voices in the language you are working in; the rest
+are a click away, and the joke voices some computers install are kept in a
+list of their own so they do not crowd out the useful ones. Maths is read as a
+sentence rather than a list of signs - “a half plus a third equals five
+sixths” - in English, Spanish, French and ten more languages.
+
+Using Translate with a screen reader
+------------------------------------
+
+The braille panel is a real text box holding real braille, so a connected
+braille display shows exactly the cells the child has written.
+
+Two voices are one too many. A screen reader reads out what is typed, and so
+does Translate, so without a little setting up a child hears everything twice
+- once as dot numbers from the screen reader, once as words from Translate.
+The way to sort it out is to let each do the half it is good at: the braille
+display shows the cells, and Translate does the talking.
+
+On a Mac with VoiceOver, three settings do it:
+
+- Turn off the spoken hints. VoiceOver Utility → Verbosity → Hints. This stops
+  “you are currently on a text area” repeating.
+
+- Stop it reading each keystroke. VoiceOver Utility → Verbosity → Text → While
+  typing speak → Nothing. If it still talks over you, Control-Option-S
+  silences VoiceOver's speech altogether - the braille display keeps working,
+  because speech and braille are separate.
+
+- Leave Translate's own voice on (⚙ Settings → Speech → “App voice”). It is
+  the one that says useful things: the letter, the finished word, the sum.
+
+Note: If you would rather have one voice doing everything, choose Speech →
+“Screen reader” instead: Translate then passes its announcements to the screen
+reader to say in its own voice, at the speed the child is used to.
+
+Note: These are settings on the computer, not in Translate, so a school may
+want to set them up once on a pupil's machine.
+
+Saving
+------
+
+Save writes an eBraille file (.ebrl) - the DAISY standard for braille
+documents. It keeps things a BRF cannot: which lines are text and which are
+maths, and which code they were written in, so a saved page opens back exactly
+as you left it.
+
+Export offers two, because the two sides of the app go to different people:
+
+- Export braille (BRF) - Braille Ready Format, what embossers and braille
+  notetakers read. BRF has no way to record which lines were maths, so that
+  memory is the price of the wider compatibility.
+
+- Export print (Word) - the right-hand panel as a .docx, for a teacher who has
+  to read and mark it. The maths is written as real Word equations, not
+  pictures of them: they can be edited, and a screen reader reads them as
+  maths. Anything the app could not read is left out rather than guessed at,
+  so what arrives is only what was understood.
+
+Load opens either of those, and also a .brl file (braille saved as dot
+patterns) or a .txt holding braille. It works out which from the file itself
+rather than its name - so a file renamed by an email program still opens. A
+file with no braille in it is refused, and says so, rather than quietly
+emptying the child's work.
+
+Clear empties both panels, asking first and reading the question aloud, and
+starts the new page in ordinary text even if the last one was maths.
+
+Translate keeps working with no internet connection, once it has been opened
+once on that computer.
+
+Credits and licences
+--------------------
+
+Typefaces: the interface is set in Inter (SIL Open Font License 1.1, © The
+Inter Project Authors); the braille pane uses APH Braille Shadows, by
+permission of the American Printing House for the Blind. Both travel with the
+app rather than being fetched from anywhere, so nothing about your use of it
+is reported to a third party and it looks the same with no internet
+connection.
+
+Braille translation by liblouis (LGPL-2.1-or-later). Maths layout by Temml
+(MIT) and MathCAT (MIT, © Neil Soiffer / DAISY)..
+
+© Sensory App House Ltd. Licensed under CC BY-NC-SA 4.0
+

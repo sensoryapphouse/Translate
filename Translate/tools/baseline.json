@@ -1,0 +1,85 @@
+{
+  "note": "Floor for connector/tools/check.mjs. Raise with --bless, never lower by accident.",
+  "scores": {
+    "UEB.clean": {
+      "n": 185,
+      "of": 189
+    },
+    "UEB.faithful": {
+      "n": 162,
+      "of": 189
+    },
+    "UEB.both": {
+      "n": 162,
+      "of": 189
+    },
+    "UEB.structure": {
+      "n": 66,
+      "of": 87
+    },
+    "Nemeth.clean": {
+      "n": 731,
+      "of": 735
+    },
+    "Nemeth.faithful": {
+      "n": 621,
+      "of": 735
+    },
+    "Nemeth.both": {
+      "n": 619,
+      "of": 735
+    },
+    "Nemeth.structure": {
+      "n": 182,
+      "of": 254
+    },
+    "UEB.school.readable": {
+      "n": 100,
+      "of": 100
+    },
+    "UEB.school.consistent": {
+      "n": 98,
+      "of": 100
+    },
+    "UEB.school.faithful": {
+      "n": 98,
+      "of": 100
+    },
+    "UEB.indep.readable": {
+      "n": 99,
+      "of": 100
+    },
+    "UEB.indep.consistent": {
+      "n": 94,
+      "of": 100
+    },
+    "UEB.indep.faithful": {
+      "n": 98,
+      "of": 100
+    },
+    "Nemeth.school.readable": {
+      "n": 100,
+      "of": 100
+    },
+    "Nemeth.school.consistent": {
+      "n": 98,
+      "of": 100
+    },
+    "Nemeth.school.faithful": {
+      "n": 98,
+      "of": 100
+    },
+    "Nemeth.indep.readable": {
+      "n": 100,
+      "of": 100
+    },
+    "Nemeth.indep.consistent": {
+      "n": 98,
+      "of": 100
+    },
+    "Nemeth.indep.faithful": {
+      "n": 98,
+      "of": 100
+    }
+  }
+}
