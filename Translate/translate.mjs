@@ -2316,7 +2316,7 @@ function showUnverified(row) {
   if (row.querySelector('.unverified') || row.querySelector('.ambig')) return;
   const box = document.createElement('div');
   box.className = 'unverified';
-  box.textContent = 'Unverified - this braille doesn’t match the usual spelling of the maths shown. Worth checking with the child.';
+  box.textContent = 'Unverified - this braille doesn’t match the usual spelling of the maths shown. Worth checking with the braille user.';
   row.appendChild(box);
 }
 
