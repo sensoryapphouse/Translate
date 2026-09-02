@@ -11,7 +11,13 @@
 //
 // Run:  node test-maths-button.mjs            (serves Translate itself)
 //       node test-maths-button.mjs --show     (headful, to watch it)
-import puppeteer from 'puppeteer';
+// DRIVEN BY PLAYWRIGHT, IN THE REAL CHROME ON THIS MACHINE (PB, 2026-09-02).
+// It used to launch puppeteer's own bundled Chromium, which is not the browser
+// anyone uses and behaves differently where it matters here - that build cannot
+// even load the MathCAT wasm, so speech measured through it was the fallback
+// speaker while looking like the real one. channel: 'chrome' drives the
+// installed browser; puppeteer is gone from this repository.
+import { chromium } from 'playwright';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -52,8 +58,23 @@ const check = (name, got, want) => {
 
 (async () => {
   await new Promise((r) => server.listen(PORT, r));
-  const browser = await puppeteer.launch({ headless: !process.argv.includes('--show'), args: ['--no-sandbox'] });
+  const browser = await chromium.launch({ channel: 'chrome', headless: !process.argv.includes('--show'), args: ['--no-sandbox'] });
   const page = await browser.newPage();
+
+  // WAIT FOR THE CONDITION, NOT THE CLOCK (2026-09-02, the audit). A fixed sleep
+  // is a guess about a machine: too short and the suite fails on a loaded
+  // laptop, too long and every run pays for it. Deliberate settle times - a
+  // pause that models a person stopping typing - stay as sleeps, because there
+  // the duration IS the thing being tested.
+  const waitFor = async (fn, what, ms = 8000) => {
+    const t0 = Date.now();
+    for (;;) {
+      if (await page.evaluate(fn)) return true;
+      if (Date.now() - t0 > ms) { failures.push(`timed out waiting for ${what}`); console.log(`FAIL  timed out waiting for ${what}`); return false; }
+      await new Promise((r) => setTimeout(r, 50));
+    }
+  };
+
   page.on('pageerror', (e) => failures.push('page error: ' + String(e).slice(0, 100)));
 
   const HELPERS = () => {
@@ -87,7 +108,8 @@ const check = (name, got, want) => {
     };
   };
   const fresh = async () => {
-    await page.goto(`http://localhost:${PORT}/Translate/`, { waitUntil: 'networkidle0' });
+    await page.goto(`http://localhost:${PORT}/Translate/`, { waitUntil: 'networkidle' });
+    await waitFor(() => !!document.getElementById('brlInput'), 'the app to finish booting');
     await page.evaluate(HELPERS);
     await page.evaluate(async () => {
       const h = window.__h;
@@ -100,7 +122,7 @@ const check = (name, got, want) => {
   for (const viaKey of [false, true]) {
     const how = viaKey ? 'Ctrl+M' : 'the checkbox';
     await fresh();
-    const r = await page.evaluate(async (SENTENCE, HALF, viaKey) => {
+    const r = await page.evaluate(async ({ SENTENCE, HALF, viaKey }) => {
       const h = window.__h;
       await h.clear();
       h.set('mathsCodeUeb', true); await h.sleep(180);
@@ -112,7 +134,7 @@ const check = (name, got, want) => {
       await h.select(at, at + HALF.length);
       const said2 = await h.press(viaKey);
       return { marked, unmarked: { said: said2, rows: h.rows() } };
-    }, SENTENCE, HALF, viaKey);
+    }, { SENTENCE, HALF, viaKey });
     check(`${how}: a selection is marked as maths`, r.marked.said, /marked as ueb maths/i);
     check(`${how}: and becomes one maths row`, r.marked.rows, 1);
     check(`${how}: without changing a single cell`, r.marked.cells, SENTENCE);
@@ -122,7 +144,7 @@ const check = (name, got, want) => {
 
   // ------------------------------- a selection half in a run is refused -----
   await fresh();
-  let r = await page.evaluate(async (SENTENCE, HALF) => {
+  let r = await page.evaluate(async ({ SENTENCE, HALF }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeUeb', true); await h.sleep(180);
@@ -134,13 +156,13 @@ const check = (name, got, want) => {
     await h.select(at - 2, at + HALF.length);   // now select INTO it from outside
     const said = await h.press(false);
     return { said, unchanged: h.$('brlInput').value === before.cells && h.rows() === before.rows };
-  }, SENTENCE, HALF);
+  }, { SENTENCE, HALF });
   check('a selection only partly in a run is refused', r.said, /partly maths already/i);
   check('and nothing changes when it is refused', r.unchanged, true);
 
   // ------------------------------------ a freshly loaded file, as a whole ---
   await fresh();
-  r = await page.evaluate(async (THE, CAT, HALF, DOG) => {
+  r = await page.evaluate(async ({ THE, CAT, HALF, DOG }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeUeb', true); await h.sleep(180);
@@ -149,14 +171,14 @@ const check = (name, got, want) => {
     const onLoad = await h.loadLines(lines);
     const said = await h.press(false);
     return { onLoad, said, rows: h.rows(), lines: lines.length };
-  }, THE, CAT, HALF, DOG);
+  }, { THE, CAT, HALF, DOG });
   check('a file it cannot call is mentioned, not silently opened as text', r.onLoad, /look like|maths/i);
   check('and ticking the box then reads the WHOLE document as maths', r.said, /whole document is now/i);
   check('every line becomes a maths row', r.rows, r.lines);
 
   // ------------------------------------------- otherwise, a run at the caret -
   await fresh();
-  r = await page.evaluate(async (THE, CAT) => {
+  r = await page.evaluate(async ({ THE, CAT }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeUeb', true); await h.sleep(180);
@@ -164,7 +186,7 @@ const check = (name, got, want) => {
     const ta = h.$('brlInput');
     await h.select(ta.value.length, ta.value.length);
     return { said: await h.press(false) };
-  }, THE, CAT);
+  }, { THE, CAT });
   check('after typing, it opens a run at the caret', r.said, /type the expression/i);
 
   await browser.close();

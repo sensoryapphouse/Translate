@@ -18,7 +18,9 @@
 //   parseUeb(brl)      → { latex, warnings } (the UEB maths parser)
 //   backTranslate(brl) → contracted-braille word → print text (liblouis)
 
-const NEM_OPEN = '⠸⠩', NEM_CLOSE = '⠸⠱';
+// ONE DEFINITION, IMPORTED (2026-09-02, the audit): these cells were typed here
+// and again in translate.mjs, so a change to one was invisible to the other.
+import { NEM_OPEN, NEM_CLOSE } from './nemeth-switch.mjs';
 
 // What a line holds OUTSIDE its Nemeth switch runs. An unclosed run swallows
 // the rest of the line, which is what the reader does with it too.
@@ -66,8 +68,27 @@ export function classifyDoc(rawLines, { parseUeb, backTranslate }) {
   const votable = content.filter((l) => !l.includes('⠸⠩'));
   if (votable.length < 3) return { call: 'abstain', why: 'thin' };
 
-  let maths = 0;
-  for (const brl of votable) {
+  // A VOTE DOES NOT NEED EVERY LINE (2026-09-02, the audit). The verdict is a
+  // SHARE of lines, and each line costs a full UEB parse plus a liblouis
+  // back-translation of every word: about 7,000 liblouis calls for a
+  // 1,000-line file, which is why opening a chapter-length BRF took ten to
+  // twenty seconds with nothing on screen. A systematic sample answers the
+  // same question, and where the sample lands anywhere near a threshold the
+  // whole file is counted after all, so no verdict rests on the sample alone.
+  const SAMPLE = 150;          // standard error on a share is about 0.03 here
+  const sampleOf = (all) => {
+    if (all.length <= SAMPLE) return all;
+    const step = all.length / SAMPLE, out = [];
+    for (let k = 0; k < SAMPLE; k++) out.push(all[Math.floor(k * step)]);
+    return out;
+  };
+  const countMaths = (lines2) => {
+    let maths = 0;
+    for (const brl of lines2) if (votesMaths(brl)) maths++;
+    return maths;
+  };
+
+  function votesMaths(brl) {
     let mathsClean = false;
     try {
       const r = parseUeb(brl);
@@ -85,10 +106,18 @@ export function classifyDoc(rawLines, { parseUeb, backTranslate }) {
     }
     const mathsScore = (mathsClean ? 1 : 0) + numeric * 0.5 + ops * 0.7 + (passage ? 1.5 : 0);
     const textScore = (tokens ? words / tokens : 0) * 3;
-    if (mathsScore > textScore) maths++;
+    return mathsScore > textScore;
   }
 
-  const f = maths / votable.length;
+  const sampled = sampleOf(votable);
+  let f = countMaths(sampled) / sampled.length;
+  // Near a threshold, or near enough that the sample could be on the wrong side
+  // of one, count the lot. Far from both - a file that is plainly a mixture -
+  // the answer is abstain either way, so the sample stands.
+  if (sampled.length < votable.length
+      && ((f > 0.02 && f < 0.12) || (f > 0.88 && f < 0.98))) {
+    f = countMaths(votable) / votable.length;
+  }
   if (f >= 0.95) {
     const all = votable.join('⠀');
     const nemSig = (all.match(/⠼[⠂⠆⠒⠢⠖⠶⠦⠔⠴]/gu) || []).length

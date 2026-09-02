@@ -163,51 +163,92 @@ const iso = (d) => new Date(d).toISOString().replace(/\.\d{3}Z$/, 'Z');
  *   sections: [{ mode:'text'|'ueb'|'nem'|'mus', lines:[cells…], mathml?:'<math…' }]
  * }
  */
-function buildOPF(doc, systems) {
-  const now = iso(doc.modified ?? Date.now());
-  const year = doc.copyrightYear ?? new Date(now).getUTCFullYear();
-  // dc:language MUST carry the Brai script subtag — en → en-Brai, en-US →
-  // en-Brai-US. Inserting it after the primary subtag is what the spec's own
-  // examples show.
-  const langParts = String(doc.language || 'en').split('-');
-  const lang = [langParts[0], 'Brai', ...langParts.slice(1)].join('-');
+// en → en-Brai, en-US → en-Brai-US: the script subtag sits after the primary
+// subtag, which is what the spec's own examples show (§5.3.3.5).
+const braiTag = (language) => {
+  const parts = String(language || 'en').split('-');
+  return [parts[0], 'Brai', ...parts.slice(1)].join('-');
+};
 
+// ONE PACKAGE BUILDER FOR EVERY APP (2026-09-02). Translate and BrlDuet write
+// sections of braille with modes; Emboss writes volumes of embosser pages with
+// tactile graphics beside them. They used to have two writers, and the second
+// was not eBraille at all (format/ebraille.mjs wrote an invented XML that the
+// DAISY checker rejects as "Corrupted EPUB ZIP header"). The container, the
+// package document and the entry page are the same for all of them, so they
+// are built here ONCE from a spec:
+//
+//   { title, titleBraille, creator, producer, language, identifier, modified,
+//     copyrightYear, systems: [registry strings], cellType: '6',
+//     completeTranscription: true, tactileGraphics: 'none' | 'SVG' | …,
+//     toc: [{ href, label }],                   // label in braille where possible
+//     documents: [{ href, body, mathml, svg }], // body = the inside of <body>
+//     resources: [{ href, mediaType, data }] }  // tactile graphics and the like
+//
+// writeEbraille() below is the mode-sections adapter over this; Emboss has its
+// own adapter in format/ebraille.mjs.
+function buildOPF(spec) {
+  const now = iso(spec.modified ?? Date.now());
+  const year = spec.copyrightYear ?? new Date(now).getUTCFullYear();
+  const langParts = String(spec.language || 'en').split('-');
+  const lang = braiTag(spec.language);
+  const docs = spec.documents ?? [];
+  const res = spec.resources ?? [];
+  const systems = (spec.systems && spec.systems.length) ? spec.systems : [SYSTEM_FOR.text];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="pub-id"
+         xml:lang="${esc(langParts[0])}"
          prefix="a11y: http://www.idpf.org/epub/vocab/package/a11y/# dcterms: http://purl.org/dc/terms/">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="pub-id">${esc(doc.identifier ?? 'urn:uuid:' + fallbackId(doc))}</dc:identifier>
-    <dc:title>${esc(doc.title || 'Braille document')}</dc:title>
+    <dc:identifier id="pub-id">${esc(spec.identifier ?? 'urn:uuid:' + stableUuid(spec.identitySeed ?? JSON.stringify(docs.map((d) => d.body))))}</dc:identifier>
+    <dc:title>${esc(spec.title || 'Braille document')}</dc:title>
     <dc:language>${esc(lang)}</dc:language>
-    <dc:creator>${esc(doc.creator || 'Unknown')}</dc:creator>
+    <dc:creator>${esc(spec.creator || 'Unknown')}</dc:creator>
+    <dc:publisher>${esc(spec.producer || 'Sensory App House Ltd')}</dc:publisher>
     <dc:date>${esc(now.slice(0, 10))}</dc:date>
     <dc:format>${EBRAILLE_VERSION}</dc:format>
     <meta property="dcterms:modified">${esc(now)}</meta>
     <meta property="dcterms:dateCopyrighted">${esc(String(year))}</meta>
-    <meta property="a11y:producer">${esc(doc.producer || 'Sensory App House Ltd')}</meta>
-    <meta property="a11y:brailleCellType">6</meta>
-${systems.map((s) => `    <meta property="a11y:brailleSystem">${esc(s)}</meta>`).join('\n')}
-    <meta property="a11y:completeTranscription">false</meta>
-    <meta property="a11y:tactileGraphics">none</meta>
+    <meta property="a11y:producer">${esc(spec.producer || 'Sensory App House Ltd')}</meta>
+    <meta property="a11y:brailleCellType">${esc(spec.cellType ?? '6')}</meta>
+${systems.map((sy) => `    <meta property="a11y:brailleSystem">${esc(sy)}</meta>`).join('\n')}
+    <meta property="a11y:completeTranscription">${spec.completeTranscription === false ? 'false' : 'true'}</meta>
+    <meta property="a11y:tactileGraphics">${esc(spec.tactileGraphics || 'none')}</meta>
   </metadata>
   <manifest>
-    <item id="index" href="index.html" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="nav" href="index.html" media-type="application/xhtml+xml" properties="nav"/>
+${docs.map((d, i) => { const props = [d.mathml && 'mathml', d.svg && 'svg'].filter(Boolean); return `    <item id="doc${i + 1}" href="${esc(d.href)}" media-type="application/xhtml+xml"${props.length ? ` properties="${props.join(' ')}"` : ''}/>`; }).join('\n')}
+${res.map((r, i) => `    <item id="res${i + 1}" href="${esc(r.href)}" media-type="${esc(r.mediaType)}"/>`).join('\n')}
   </manifest>
   <spine>
-    <itemref idref="index"/>
+${docs.map((d, i) => `    <itemref idref="doc${i + 1}"/>`).join('\n')}
   </spine>
 </package>
 `;
 }
 
-// A stable-enough identifier without pulling in a UUID dependency. Not a v4
-// UUID and does not pretend to be: the spec requires an identifier, not a UUID.
-function fallbackId(doc) {
-  let h = 2166136261;
-  for (const ch of JSON.stringify(doc.sections ?? [])) {
-    h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0;
+// A STABLE IDENTIFIER THAT IS ALSO A WELL-FORMED UUID (2026-09-02).
+//
+// The first version hashed the sections to 32 bits and wrote `urn:uuid:sah-…`
+// round it, on the reasoning that "the spec requires an identifier, not a
+// UUID". True — but a URN in the uuid namespace IS a claim to be a UUID, and
+// the DAISY checker said so on every file we had ever written (OPF-085: "marked
+// as a UUID, but is an invalid UUID"). The stability was the right instinct:
+// the same document saved twice is the same publication. So the hash is kept,
+// widened to 128 bits (four FNV-1a passes, distinct seeds) and laid out as RFC
+// 9562's version-8 UUID — the version reserved for exactly this, an identifier
+// whose bits mean something to its producer. No dependency, no randomness.
+function stableUuid(src) {
+  const words = [];
+  for (const seed of [0x811c9dc5, 0x1b873593, 0xcc9e2d51, 0xe6546b64]) {
+    let h = seed >>> 0;
+    for (let i = 0; i < src.length; i++) { h ^= src.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    words.push(h);
   }
-  return 'sah-' + h.toString(16).padStart(8, '0');
+  const hex = words.map((w) => w.toString(16).padStart(8, '0')).join('');   // 32 hex digits
+  // version nibble → 8 (custom), variant bits → 10xx
+  const variant = ((parseInt(hex[16], 16) & 0x3) | 0x8).toString(16);
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-8${hex.slice(13, 16)}-${variant}${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 }
 
 // A LINE MAY CHANGE MODE PART-WAY, and the format already has the way to say
@@ -227,8 +268,64 @@ function lineHtml(line) {
   }).join('');
 }
 
-function buildIndex(doc) {
-  const body = (doc.sections ?? []).map((sec) => {
+// THE ENTRY PAGE AND THE CONTENT ARE TWO FILES (2026-09-02).
+//
+// The first version wrote ONE index.html that was the navigation document, the
+// only content document, and the spine's only item. Every part of that is
+// something the spec says not to do, and the DAISY checker
+// (daisy/ebraille-checker 1.0.0-beta.1) said so on all ten files we had:
+//   • the primary entry page MUST carry <link rel="publication"> pointing at
+//     package.opf (§8.2, Example 46)                          — EBR-080
+//   • the table of contents nav MUST carry role="doc-toc" (§8.3, Example 48)
+//                                                              — EBR-084
+//   • the entry page should not be in the spine                — EBR-083
+//   • content text SHOULD be braille and whitespace only (§3), and the
+//     nav's link text was the PRINT title                      — EBR-030
+// So now index.html is the entry page and nothing else — the link to the
+// package, and a table of contents whose one entry points at the content —
+// and the braille lives in content.html, which is what the spine names. The
+// spec's own example writes the TOC heading in braille, so the caller may hand
+// over `titleBraille`; without it the print title is used and the checker will
+// still warn, which is the honest outcome — better a warned print title than a
+// silent empty heading.
+const CONTENT_DOC = 'content.html';
+
+const htmlHead = (doc, lang, extra = '') => `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="${esc(lang)}">
+<head>
+  <meta charset="utf-8"/>
+  <title>${esc(doc.title || 'Braille document')}</title>
+${extra}</head>
+`;
+
+function buildEntryPage(spec, lang) {
+  const shown = spec.titleBraille || spec.title || 'Braille document';
+  const toc = (spec.toc && spec.toc.length) ? spec.toc : [{ href: CONTENT_DOC, label: shown }];
+  return htmlHead(spec, lang,
+    '  <link rel="publication" href="package.opf" type="application/oebps-package+xml"/>\n') +
+`<body>
+  <nav epub:type="toc" role="doc-toc" aria-label="Table of contents">
+    <h2>${esc(shown)}</h2>
+    <ol>
+${toc.map((t) => `      <li><a href="${esc(t.href)}">${esc(t.label || shown)}</a></li>`).join('\n')}
+    </ol>
+  </nav>
+</body>
+</html>
+`;
+}
+
+const wrapContent = (spec, lang, body) => htmlHead(spec, lang) + `<body>
+${body}
+</body>
+</html>
+`;
+
+// The inside of <body> for a mode-sections document: one <section> per section,
+// its mode in a class, its MathML (if any) before its lines.
+function sectionsBody(doc) {
+  return (doc.sections ?? []).map((sec) => {
     const cls = MODE_CLASS[sec.mode] ?? MODE_CLASS.text;
     // MathML rides INSIDE the section, before the cells, where the spec permits
     // it. It is the source the braille was made from — not an instruction to a
@@ -237,20 +334,6 @@ function buildIndex(doc) {
     const lines = (sec.lines ?? []).map((l) => `    <p>${lineHtml(l)}</p>`).join('\n');
     return `  <section class="${cls}">\n${math}${lines}\n  </section>`;
   }).join('\n');
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
-<head>
-  <meta charset="utf-8"/>
-  <title>${esc(doc.title || 'Braille document')}</title>
-</head>
-<body>
-  <nav epub:type="toc" hidden="hidden"><ol><li><a href="index.html">${esc(doc.title || 'Braille document')}</a></li></ol></nav>
-${body}
-</body>
-</html>
-`;
 }
 
 const CONTAINER_XML = `<?xml version="1.0" encoding="UTF-8"?>
@@ -261,9 +344,25 @@ const CONTAINER_XML = `<?xml version="1.0" encoding="UTF-8"?>
 </container>
 `;
 
-/** Build a .ebrl file. Returns a Uint8Array. */
-export function writeEbraille(doc) {
+/** Build a .ebrl from a package SPEC (see buildOPF). Returns a Uint8Array. */
+export function packageEbraille(spec) {
   const enc = new TextEncoder();
+  const brai = braiTag(spec.language);
+  const docs = spec.documents ?? [];
+  return zipStore([
+    // MIMETYPE FIRST AND STORED — OCF requires it, and a reader that checks
+    // will reject the archive outright if it is anywhere else.
+    { name: 'mimetype', data: enc.encode(EBRL_MEDIA_TYPE) },
+    { name: 'META-INF/container.xml', data: enc.encode(CONTAINER_XML) },
+    { name: 'package.opf', data: enc.encode(buildOPF(spec)) },
+    { name: 'index.html', data: enc.encode(buildEntryPage(spec, brai)) },
+    ...docs.map((d) => ({ name: d.href, data: enc.encode(wrapContent(spec, brai, d.body)) })),
+    ...(spec.resources ?? []).map((r) => ({ name: r.href, data: r.data })),
+  ]);
+}
+
+/** Build a .ebrl file from mode-sections (Translate, BrlDuet). Returns a Uint8Array. */
+export function writeEbraille(doc) {
   const modes = [...new Set((doc.sections ?? []).map((s) => s.mode))];
   // Declared in descending frequency, as the registry asks — and every system
   // PRESENT is declared, which is the honest publication-wide statement
@@ -304,14 +403,19 @@ export function writeEbraille(doc) {
   }
   if (!systems.length) systems.push(SYSTEM_FOR.text);
 
-  return zipStore([
-    // MIMETYPE FIRST AND STORED — OCF requires it, and a reader that checks
-    // will reject the archive outright if it is anywhere else.
-    { name: 'mimetype', data: enc.encode(EBRL_MEDIA_TYPE) },
-    { name: 'META-INF/container.xml', data: enc.encode(CONTAINER_XML) },
-    { name: 'package.opf', data: enc.encode(buildOPF(doc, systems)) },
-    { name: 'index.html', data: enc.encode(buildIndex(doc)) },
-  ]);
+  // A document AUTHORED in braille omits nothing from any original, because
+  // there is no original: it is the work itself. So it is a complete
+  // transcription (PB, 2026-09-02); it used to say false, which tells a reader
+  // "parts of this are missing".
+  return packageEbraille({
+    ...doc,
+    systems,
+    completeTranscription: doc.completeTranscription ?? true,
+    tactileGraphics: 'none',
+    identitySeed: JSON.stringify(doc.sections ?? []),
+    toc: [{ href: CONTENT_DOC, label: doc.titleBraille || doc.title || 'Braille document' }],
+    documents: [{ href: CONTENT_DOC, body: sectionsBody(doc), mathml: (doc.sections ?? []).some((sec) => sec.mathml) }],
+  });
 }
 
 /**
@@ -325,8 +429,23 @@ export async function readEbraille(buffer) {
   const get = (n) => { const d = files.get(n); return d ? dec.decode(d) : null; };
 
   const opf = get('package.opf');
-  const html = get('index.html');
-  if (!html) throw new Error('not an eBraille file: no index.html in the publication root');
+  if (!get('index.html')) throw new Error('not an eBraille file: no index.html in the publication root');
+  // THE CONTENT IS WHATEVER THE SPINE NAMES (2026-09-02). Files written before
+  // this date put their sections in index.html and listed it in the spine;
+  // files written since put them in content.html. Following the spine reads
+  // both without knowing which it has. A file whose spine cannot be resolved
+  // at all falls back to index.html, which is where a foreign producer's
+  // single-document publication would keep its sections too.
+  const manifest = {};
+  for (const m of (opf || '').matchAll(/<item\b[^>]*>/g)) {
+    const id = (m[0].match(/\bid="([^"]*)"/) || [])[1];
+    const href = (m[0].match(/\bhref="([^"]*)"/) || [])[1];
+    if (id && href) manifest[id] = decodeURIComponent(href);
+  }
+  const spine = [...(opf || '').matchAll(/<itemref\b[^>]*\bidref="([^"]*)"/g)]
+    .map((m) => manifest[m[1]]).filter(Boolean);
+  const docs = spine.map(get).filter((d) => d !== null);
+  const html = docs.length ? docs.join('\n') : get('index.html');
 
   const pick = (re) => { const m = opf && opf.match(re); return m ? m[1].trim() : ''; };
   const meta = {

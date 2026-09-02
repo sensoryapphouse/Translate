@@ -18,11 +18,18 @@
 // Run:  node test-mode-detect.mjs        (from Translate/)
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { classifyDoc } from './mode-detect.mjs';
 import { uebMathsToLatexV2 } from './ueb-rules.mjs';
 import { brfToUnicodeBraille } from '../engine/brf-ascii.mjs';
 
 const B = (ascii) => brfToUnicodeBraille(ascii.toUpperCase());
+
+// PATHS FROM THIS FILE, NOT FROM THE SHELL'S CURRENT DIRECTORY (2026-09-02).
+// The examples were read as './examples', so the suite ran only when started
+// from Translate/ and died with ENOENT anywhere else - which is why it was
+// never in the battery, though a wrong call here re-modes a child's document.
+const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 // The detector needs a back-translator to score "does this line read as words".
 // liblouis is a wasm/browser dependency, so this stands in with the plain letter
@@ -88,7 +95,7 @@ console.log('\n-- the verdict carries its evidence --');
   // Switch-wrapped lines are excluded from the vote (they declare themselves),
   // so a mixed-evidence file has to be built from lines that DO vote: real UEB
   // maths, which carries no switch signs, against real prose.
-  const uebRaw = fs.readFileSync(path.join('./examples', 'ueb-maths.brf'), 'utf8');
+  const uebRaw = fs.readFileSync(path.join(HERE, 'examples', 'ueb-maths.brf'), 'utf8');
   const uebLines = (cellRange.test(uebRaw) ? uebRaw : brfToUnicodeBraille(uebRaw.toUpperCase()))
     .split('\n').filter((l) => l.trim()).slice(0, 5);
   const v = classifyDoc([...uebLines, TEXT, TEXT, TEXT, TEXT, TEXT], opts);
@@ -106,7 +113,7 @@ const PINNED = {
   'nemeth-maths.brf': 'nemeth',     // its lines ARE switch-wrapped, so it is declared
 };
 console.log('\n-- shipped examples --');
-const dir = './examples';
+const dir = path.join(HERE, 'examples');
 for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.brf')).sort()) {
   const raw = fs.readFileSync(path.join(dir, f), 'utf8');
   const lines = (cellRange.test(raw) ? raw : brfToUnicodeBraille(raw.toUpperCase())).split('\n');

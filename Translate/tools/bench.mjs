@@ -44,14 +44,19 @@ try {
 }
 const load = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, 'corpus', f), 'utf8'));
 
+// The readers under test: the app's hybrid decision unless MATHS_IMPL says
+// otherwise (lib/readers.mjs). UEB_IMPL / NEMETH_IMPL still name a single
+// module file for an A/B of one reader against another.
+const { pickReaders } = await import('./lib/readers.mjs');
+const readers = await pickReaders();
 const CODES = [];
 if (!only || only === 'ueb') {
-  const mod = await import(process.env.UEB_IMPL || '../ueb-maths-to-latex.mjs');
-  CODES.push({ name: 'UEB', cases: load('ueb-mathcat.json'), convert: mod.uebMathsToLatex });
+  const convert = process.env.UEB_IMPL ? (await import(process.env.UEB_IMPL)).uebMathsToLatex : readers.ueb;
+  CODES.push({ name: 'UEB', cases: load('ueb-mathcat.json'), convert });
 }
 if (!only || only === 'nemeth') {
-  const impl = process.env.NEMETH_IMPL || path.resolve(__dirname, '../../nemeth-to-latex.js');
-  CODES.push({ name: 'Nemeth', cases: load('nemeth-mathcat.json'), convert: require(impl).convert });
+  const convert = process.env.NEMETH_IMPL ? require(path.resolve(process.env.NEMETH_IMPL)).convert : readers.nemeth;
+  CODES.push({ name: 'Nemeth', cases: load('nemeth-mathcat.json'), convert });
 }
 
 export const scores = {};

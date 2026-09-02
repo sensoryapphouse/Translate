@@ -1,4 +1,4 @@
-// Connector — six-key braille in (left pane), text or maths out (right pane).
+// Translate — six-key braille in (left pane), text or maths out (right pane).
 //
 // Why only ONE checkbox:
 //   • Nemeth is a DIFFERENT code and it announces itself — a Nemeth passage
@@ -19,8 +19,18 @@ import { brfToUnicodeBraille, unicodeBrailleToBrf } from '/engine/brf-ascii.mjs'
 import { uebMathsToLatex, describeUebMaths } from '/Translate/ueb-maths-to-latex.mjs';
 import { uebMathsToLatexV2 } from '/Translate/ueb-rules.mjs';
 import { nemethMathsToLatexV2 } from '/Translate/nemeth-rules.mjs';
+import { uebHybrid, nemethHybrid, nemethV1Available } from '/Translate/maths-hybrid.mjs';
+import { NEM_OPEN, NEM_CLOSE } from '/Translate/nemeth-switch.mjs';
+
+// ONE PLACE SAYS WHICH READER (2026-09-02, the audit). The same expression -
+// "UEB? use uebHybrid; Nemeth? use nemethHybrid, if its classic script loaded"
+// - was retyped at four call sites, so a change to the rule had four places to
+// remember. readerFor(asUeb) is that rule, once.
+const readerFor = (asUeb) => (asUeb
+  ? uebHybrid
+  : (nemethV1Available() ? nemethHybrid : () => null));
 import { describeNemeth } from '/Translate/nemeth-symbols.mjs';
-import { speakAst } from '/Translate/math-speech.mjs?v=2';
+import { speakAst } from '/Translate/math-speech.mjs';
 import { startVerifier, suggestRepairs, verifyLine, speakLatex } from '/Translate/verify.mjs';
 import { buildDocx, mathmlToOmml } from '/Translate/docx.mjs';
 import { classifyDoc } from '/Translate/mode-detect.mjs';
@@ -77,6 +87,21 @@ const T_UEB_G1 = '/tables/unicode.dis,/tables/en-ueb-g1.ctb';   // uncontracted,
 // The code the USER picked, used for reading their braille back into words.
 const T_TEXT = () => codeById(settings.brailleCode).table;
 
+// THE PRINT PANE SAYS WHICH LANGUAGE IT IS IN (2026-09-02, the audit).
+// <html lang="en"> is static, and braille-codes.mjs carries a language for
+// every one of the 142 codes, but the DOM never received it: a screen reader
+// read Welsh, French or Vietnamese print with English pronunciation for the
+// whole session (WCAG 3.1.2). The braille pane is not marked - its content is
+// braille cells, not words in a language - and neither is the maths, which is
+// notation rather than prose.
+function applyPrintLang() {
+  const out = document.getElementById('out');
+  if (!out) return;
+  const lang = (codeById(settings.brailleCode) || {}).lang || 'en';
+  // #out is MOVED into the focus overlay and back, so it carries this with it.
+  out.setAttribute('lang', lang);
+}
+
 // THE UNCONTRACTED SIBLING of the user's code, when it has one. Used only to
 // line cells up with letters for a word that was SPELT OUT where a contraction
 // existed: the contracted table cannot reproduce those cells, so without this
@@ -100,66 +125,27 @@ const uncontractedSibling = (id = settings.brailleCode) => {
 // is turned back into what it actually means here: one cell we cannot put a
 // letter to. A question mark says that to a nine-year-old; the dots are still
 // on the braille side, unaltered, for anyone who wants to look.
+// NAMED, LIKE EVERY OTHER CONSTANT IN THIS FILE (2026-09-02). Two 700s and a
+// 1200 sat as bare numbers: how long a pause counts as "stopped typing" before
+// the expensive checks run, and how long after load before a focus change is
+// worth announcing.
+const IDLE_MS = 700;
+const ANNOUNCER_ARM_MS = 1200;
+const D6 = (str) => str.split(/\s+/).filter(Boolean)
+  .map((d) => String.fromCodePoint(0x2800 + [...d].reduce((m, ch) => m | (1 << (Number(ch) - 1)), 0))).join('');
 const LOUIS_ESCAPE = /\\\d+\//g;
 const UNREADABLE = '?';
 
-const uebHybrid = (s) => {
-  const r1 = uebMathsToLatex(s);
-  let r2 = null;
-  try {
-    r2 = uebMathsToLatexV2(s);
-  } catch (e) {}
-
-  if (r2 && (!r2.badCells || r2.badCells.length === 0)) {
-    if (r2.latex === r1.latex) {
-      return r2; // high confidence
-    } else {
-      r1.uncertain = true;
-      r1.v2_latex = r2.latex;
-    }
-  }
-  return r1;
-};
-
-const nemethHybrid = (s) => {
-  if (!globalThis.NemethToLatex) return null;
-  const padNemethSwitches = (str) => str.split('⠸⠩').join('  ').split('⠸⠱').join('  ');
-  let r1;
-  try {
-    r1 = globalThis.NemethToLatex.convert(padNemethSwitches(s));
-  } catch (e) {
-    r1 = { latex: null, spans: [] };
-  }
-
-  let r2 = null;
-  try {
-    r2 = nemethMathsToLatexV2(s);
-  } catch (e) {}
-
-  if (r2 && (!r2.badCells || r2.badCells.length === 0)) {
-    const normalizeLatex = (l) => l ? l.replace(/\\phantom\{\}/g, '').replace(/\s+/g, '') : '';
-    const r2LatexClean = normalizeLatex(r2.latex);
-    const r1LatexClean = normalizeLatex(r1.latex);
-    if (r2LatexClean === r1LatexClean || r1.latex === null) {
-      return r2;
-    } else {
-      r1.uncertain = true;
-      r1.v2_latex = r2.latex;
-    }
-  }
-
-  if (r1.latex === null) {
-    throw new Error('Syntax Error');
-  }
-
-  return r1;
-};
+// TWO READERS, ONE ANSWER - the hybrid decision lives in maths-hybrid.mjs (2026-09-02),
+// where the quality gate scores the same decision this app shows.
 
 const SK_DOT = { KeyF: 0x01, KeyD: 0x02, KeyS: 0x04, KeyJ: 0x08, KeyK: 0x10, KeyL: 0x20 };
 const cell = (dots) => String.fromCodePoint(0x2800 + (dots & 0x3f));
 
 // ---- Nemeth detection ----
-const NEM_OPEN = '⠸⠩', NEM_CLOSE = '⠸⠱';
+// The Nemeth code switches live in their own module, so this file and
+// mode-detect.mjs cannot drift apart (2026-09-02, the audit).
+export { NEM_OPEN, NEM_CLOSE };
 
 // Nemeth cannot be reliably guessed from the cells: it shares essentially its
 // whole repertoire with English braille. Its "dropped" digits ⠂⠆⠒⠲⠢⠖⠶⠦⠔⠴ are
@@ -352,7 +338,17 @@ let buf = '';
 // has to say what happens to the caret, and everything that REPLACES buf has to
 // reset it, or the caret ends up pointing past the text it belongs to.
 let caret = 0;
+// ONE WAY TO CHANGE THE DOCUMENT (2026-09-02, the audit). buf was assigned at
+// eleven sites and caret at thirteen, and clampCaret - written for exactly this
+// - was called from none of them, so every writer had to remember the rule that
+// a caret must not point past its text. setBuf does it once: give it the new
+// buffer and where the caret should be, and it clamps.
 const clampCaret = () => { caret = Math.max(0, Math.min(caret, buf.length)); };
+const setBuf = (next, where = caret) => {
+  buf = next;
+  caret = where;
+  clampCaret();
+};
 let chord = 0;
 const held = new Set();
 // The selection a chord began over, so the finished cell can replace it — see
@@ -414,7 +410,14 @@ function syncLineModes(count) {
 }
 
 // ---- settings ----
-const SKEY = 'connector.settings';
+// RENAMED, WITH NOTHING TO PRESERVE (PB, 2026-09-02). The audit found this key
+// still carrying the app's old name and said to migrate it rather than rename
+// it, because renaming a settings key resets everyone who has one. PB's answer
+// was that there is nobody to reset yet, so it is simply the right name now.
+// Anyone who did open the old build keeps a stale `connector.settings` entry in
+// their browser; it is never read again, and their settings come back as the
+// defaults. A migration would be the answer once the app has users.
+const SKEY = 'translate.settings';
 const settings = Object.assign(
   { voiceURI: '', speakWord: false, speakSentence: false,
     // DEFAULTS ON: it names what the app has always said out loud, and a new
@@ -862,7 +865,9 @@ function describeCell(ch) {
 //              speech "off": there was no such setting before, so nothing
 //              gated it - now everything, delete included, is gated here.
 //   'reader' - hand the text to the user's OWN screen reader instead, via
-//              #announce (aria-live="polite", role="status"). textContent is
+//              #announce (aria-live="assertive", role="alert" - it interrupts,
+//              deliberately; the markup and this note agree since 2026-09-02).
+//              textContent is
 //              REPLACED, never appended - a same-value assignment still tears
 //              down and rebuilds the text node, which is what makes a
 //              repeated identical announcement retrigger. speechSynthesis is
@@ -870,8 +875,25 @@ function describeCell(ch) {
 //   'voice'  - the app's own speech, exactly as before this setting existed.
 //
 // Cancel first so a new utterance can never overlap the previous one.
+// SAY THE POINT (PB, 2026-09-02: "12.75 x 4 = 51 does not read the point").
+// The text was right - the app announces "12.75 times 4 equals 51", and so does
+// MathCAT - but a numeral is handed to the voice as digits, and most voices read
+// 12.75 as "twelve seventy-five". A child checking their decimal point hears
+// nothing where the point is. Saying it in words takes the decision away from
+// whichever voice happens to be installed.
+//
+// AND THE DIGITS AFTER IT ONE BY ONE (PB: "12.75 should be pronounced: 12 point
+// 7 5"). That is how the number is read in maths, and it is the half a child is
+// checking: "seventy-five" hides whether they wrote 7 then 5.
+//
+// Only BETWEEN digits: a sentence's full stop, an ellipsis, a file extension
+// and a version number are all left alone.
+const sayThePoint = (t) => String(t).replace(/(\d)\.(\d+)/g,
+  (_, whole, frac) => `${whole} point ${[...frac].join(' ')}`);
+
 function speak(text) {
   if (settings.speechOutput === 'off') return;
+  text = sayThePoint(text);
   if (settings.speechOutput === 'reader') {
     if (text && text.trim()) $('announce').textContent = text;
     return;
@@ -944,10 +966,25 @@ function lastSentence(text) {
 const endsSentence = (s) => /[.!?]["')\]]*$/.test(s.trim());
 
 // ---- translation helpers ----
+// BACK-TRANSLATION IS A PURE FUNCTION OF THE CELLS AND THE TABLE, so it is
+// worth remembering (2026-09-02, the audit). Every keystroke re-rendered the
+// whole document and re-translated every word in it: 129 ms of blocked main
+// thread at 251 lines, rising with the document, which a child typing fast
+// feels and the speech queue falls behind. The words of a document repeat, so
+// this cache is small and hits almost always. It is cleared wherever the
+// TABLE changes - a different code translates the same cells differently.
+const btCache = new Map();
 const bt = (brailleWord) => {
   if (!ready || !brailleWord.trim()) return '';
-  try { return louis.backTranslate(brailleWord, T_TEXT()).replace(LOUIS_ESCAPE, UNREADABLE).trim(); }
-  catch { return ''; }
+  const hit = btCache.get(brailleWord);
+  if (hit !== undefined) return hit;
+  let out = '';
+  try { out = louis.backTranslate(brailleWord, T_TEXT()).replace(LOUIS_ESCAPE, UNREADABLE).trim(); }
+  catch { out = ''; }
+  // a vocabulary, not a leak: a very long document still has few distinct words
+  if (btCache.size > 20000) btCache.clear();
+  btCache.set(brailleWord, out);
+  return out;
 };
 
 // Split the buffer into lines of words, marking the word still being brailled.
@@ -1072,7 +1109,17 @@ function drawGroupedLine(bLine, i, text, wordGroups, raw) {
 }
 
 function render() {
+  // WHAT THIS FUNCTION DOES, IN ORDER (2026-09-02, the audit asked for section
+  // markers before anything is split):
+  //   1. the model            - buf becomes lines of words, with their modes
+  //   2. cross-line grouping  - matrices and continuations join, once
+  //   3. the braille pane     - every line drawn cell by cell, clickable
+  //   4. the print pane       - prose translated, maths read and rendered
+  //   5. the field            - the transparent textarea synced to the cells
+  // Each step below carries a banner naming it. The steps are ordered, not
+  // independent: 2 decides what 3 and 4 draw, and 5 must run after both.
   syncSpans();
+  // ==== 1. THE MODEL: the buffer becomes lines of words ===========================
   const src = buf + (chord ? cell(chord) : '');
   const lines = model(src);
   syncLineModes(lines.length);
@@ -1101,6 +1148,7 @@ function render() {
   // that are each exactly one row coalesce into a single matrix in the maths
   // pane; the braille pane keeps them line-by-line exactly as typed. The line
   // still being typed never joins a group, so nothing jumps mid-word.
+  // ==== 2. CROSS-LINE GROUPING: matrices and continued lines join =================
   const rowRe = ueb ? /^⠠[⠐⠨⠸][⠣⠳].*⠠[⠐⠨⠸][⠜⠳]$/u : /^⠠⠷.*⠠⠾$/u;
   const groups = new Map(); const skipIdx = new Set();
   // LINE CONTINUATION (GTM 1.4.3 / Nemeth §12): a finished line ending with
@@ -1147,26 +1195,17 @@ function render() {
   }
 
   {
-    // CONSECUTIVE MUSIC LINES ARE ONE PIECE: braille music is written over
-    // several lines (a heading, then body lines); the reader re-joins them
-    // and the stave renders on the run's first line.
-    for (let i = 0; i < lines.length; ) {
-      if (!skipIdx.has(i) && !lines[i].pending && modeOf(i) === 'mus' && lines[i].raw.trim()) {
-        let j = i + 1;
-        while (j < lines.length && !lines[j].pending && !skipIdx.has(j)
-               && modeOf(j) === 'mus' && lines[j].raw.trim()) j++;
-        if (j - i >= 2) {
-          groups.set(i, lines.slice(i, j).map((l) => l.raw).join('\n'));
-          for (let k = i + 1; k < j; k++) skipIdx.add(k);
-        }
-        i = j;
-      } else i++;
-    }
+    // MUSIC RUNS ARE NO LONGER JOINED (PB, 2026-09-02). Consecutive music lines
+    // used to be gathered into one run so a stave could be engraved on the
+    // first of them - and the rest were marked absorbed. With music gone from
+    // Translate nothing draws that stave, so the print pane simply LOST every
+    // line of a run after the first: a three-line piece showed one. Each line
+    // now renders as itself. The 'mus' mode stays in the vocabulary, because a
+    // file saved elsewhere can carry music sections and must load and save
+    // again unharmed.
   }
 
-  // Parse each music run once: the BRAILLE pane needs the note↔cell map to
-  // draw clickable spans, and the music pane needs the same model to engrave.
-
+  // ==== 3 and 4. THE TWO PANES, line by line ======================================
   lines.forEach((ln, i) => {
     // --- left pane: braille, word by word ---
     const bLine = document.createElement('div');
@@ -1606,6 +1645,9 @@ function syncField() {
   suppressCaretSpeech = true;
   setTimeout(() => { suppressCaretSpeech = false; }, 0);
   const want = shown(buf);
+  // Characters. A line of braille is 40 cells, so this is a few lines: past it
+  // the edit is a paste or a load, not typing.
+  const BULK_EDIT = 400;
   // INCREMENTAL, NEVER WHOLESALE (PB, 2026-08-12). `ta.value = want` replaces
   // the field's entire content, and assistive technology believes it: every
   // keystroke read as a brand-new document is why VoiceOver re-read the
@@ -1649,6 +1691,16 @@ function syncField() {
         // load, a mode change while a button has focus) has no caret to move
         // and no screen-reader cursor to disturb, so the plain write is right.
         ta.setRangeText(replacement, p, hEnd, 'preserve');
+      } else if (replacement.length > BULK_EDIT) {
+        // A BOOK IS NOT A KEYSTROKE (2026-09-02, the audit). execCommand is the
+        // right tool for an edit a person just made - assistive technology hears
+        // it as typing, and undo survives - but it costs per character: pasting
+        // a 1,001-line document into the focused field took 60 seconds against
+        // 23 through Load. Above a paragraph's worth of change nobody is
+        // tracking a caret through it, so the plain write is used and the
+        // change is announced once instead.
+        ta.setRangeText(replacement, p, hEnd, 'preserve');
+        speak(`${replacement.split('\n').length} lines inserted`);
       } else {
         ta.setSelectionRange(p, hEnd);            // select exactly what changes
         if (replacement) document.execCommand('insertText', false, replacement);
@@ -1806,8 +1858,7 @@ function afterNativeEdit(p) {
     const textToSpeak = settings.speakSentence ? buf.split('\n').pop() : finished;
     const asNem = fMode === 'nem' || hasNemethSwitch(textToSpeak);
     const asUeb = !asNem && fMode === 'ueb';
-    const parseRes = asUeb ? uebMathsToLatexV2(textToSpeak) : nemethMathsToLatexV2(textToSpeak);
-    const speechText = speakMaths(parseRes,
+    const speechText = speakMathsFor(textToSpeak, asUeb,
       asUeb ? describeUebMaths(textToSpeak) : describeNemeth(textToSpeak));
     if (speechText) speak(speechText);
     return;
@@ -1816,6 +1867,9 @@ function afterNativeEdit(p) {
   if (missedContraction(finished)) ding();
   maybeSpeak(finished, finishedIsWord);
 }
+
+let drewThisTask = false;
+let burstTimer = 0;
 
 function onFieldInput() {
   const ta = $('brlInput');
@@ -1835,9 +1889,35 @@ function onFieldInput() {
   modeAppliesToAll = false;
   // Convert the PREFIX separately: dropping an unmappable character shortens the
   // text, so a caret carried over as a raw offset would land in the wrong place.
-  caret = toCells(ta.value.slice(0, ta.selectionStart)).length;
-  buf = toCells(ta.value);
+  setBuf(toCells(ta.value), toCells(ta.value.slice(0, ta.selectionStart)).length);
   suppressCaretSpeech = true;
+  // A PASTE ARRIVES AS A BURST OF INPUT EVENTS, NOT ONE (2026-09-02, the audit).
+  // Chrome splits a multi-line insertion into an event per line, and each one
+  // re-rendered the whole document: pasting 300 lines took 56 seconds, against
+  // 1.5 for the same insertion into a plain textarea, so 55 of them were ours.
+  // Events closer together than any human typing are one edit; only the last
+  // one draws. A keystroke - tens of milliseconds apart at the very fastest -
+  // is never caught by this and still draws at once.
+  // Measured by the GAP between events this fails, because the work itself
+  // widens the gap: at 45 ms a render, no two events are ever close together.
+  // The burst is one TASK - execCommand dispatches every event synchronously -
+  // so the test is "have I already drawn in this task", reset by a microtask,
+  // which runs when the task ends.
+  const inBurst = drewThisTask;
+  if (!drewThisTask) {
+    drewThisTask = true;
+    queueMicrotask(() => { drewThisTask = false; });
+  }
+  if (inBurst) {
+    clearTimeout(burstTimer);
+    burstTimer = setTimeout(() => {
+      burstTimer = 0;
+      render();
+      if (pendingEdit) { const p = pendingEdit; pendingEdit = null; afterNativeEdit(p); }
+    }, 0);
+    return;
+  }
+  if (burstTimer) { clearTimeout(burstTimer); burstTimer = 0; }
   render();
   if (pendingEdit) { const p = pendingEdit; pendingEdit = null; afterNativeEdit(p); }
 }
@@ -1905,11 +1985,16 @@ function onFieldSelection() {
   // too on maths words and the later utterance is the one that survives the
   // barge-in. Before this reordering, stepping through an equation spoke the
   // whole term over every cell.
-  explainAtCaret();
+  const enteredWord = explainAtCaret();
   // The cell under the cursor, and the line when the cursor changes line: the
   // reading a screen reader duplicates as you arrow about, and so the one a
   // user of one can switch off here.
-  if (speechOk && !suppressCaretSpeech && settings.speakCursor) {
+  //
+  // NOT OVER A WORD SUMMARY. Speech barges in, so the later utterance wins;
+  // when the caret has just entered a new word, explainAtCaret has spoken the
+  // summary and the cell name would cut it off after a syllable. Stepping
+  // WITHIN a word is where the cell is the answer, and that is unchanged.
+  if (speechOk && !suppressCaretSpeech && settings.speakCursor && !enteredWord) {
     speak(describeCellInContext(pos));
   }
 }
@@ -2123,6 +2208,11 @@ let applyingSync = false;
 // the feature within reach of the people the app is for. It hit-tests the
 // character offset against the overlay spans that already carry the word keys —
 // no second index to keep in step.
+// The word the caret last explained, so entering a word speaks and stepping
+// through its cells does not. Cleared wherever the document is (see the
+// explainWord('') calls), because the same key then means a different word.
+let lastExplainedKey = '';
+
 function explainAtCaret() {
   const pane = $('braille');
   if (!pane) return;
@@ -2151,7 +2241,20 @@ function explainAtCaret() {
     // maths speech hangs off that parse — said nothing either.
     const key = w.dataset.w;
     linkWord(key);
-    explainWord(wordBraille.get(key) || toCells(w.textContent), key, { silent: !settings.speakCursor });
+    // THE EXPLANATION IS THE TEACHING, NOT AN ECHO (2026-09-02, the audit).
+    // It used to be silenced by "Speak where the cursor moves", which the help
+    // tells screen-reader users to turn OFF because their reader already reads
+    // the cursor: so the app's central feature - what this word is made of,
+    // which contraction was missed - was visual-only for exactly the readers
+    // it was built for, the status bar being deliberately not a live region.
+    // It is spoken on ENTERING a word, never on every cell within one: that
+    // repetition is what made the maths terms unbearable (see the caret
+    // handler's note on barge-in), and the per-cell echo below is still the
+    // switch's business.
+    const isNewWord = key !== lastExplainedKey;
+    lastExplainedKey = key;
+    explainWord(wordBraille.get(key) || toCells(w.textContent), key, { silent: !isNewWord });
+    return isNewWord;
   };
 
   let seen = 0;
@@ -2164,7 +2267,7 @@ function explainAtCaret() {
     if (w && w.dataset.w) {
       // Half-open: the caret sits BEFORE a character, so a boundary belongs to the
       // word that follows it, not the one that ends there.
-      if (target >= seen && target < seen + len) { explain(w); return; }
+      if (target >= seen && target < seen + len) return explain(w);
       groups.push({ w, start: seen, end: seen + len });
     }
     seen += len;
@@ -2179,7 +2282,7 @@ function explainAtCaret() {
     const dist = target < g.start ? g.start - target : target - g.end + 1;
     if (dist < bestDist) { bestDist = dist; nearest = g.w; }
   }
-  if (nearest) explain(nearest);
+  return nearest ? explain(nearest) : false;
 }
 
 // When maths braille will not read, by far the commonest cause is that it is in
@@ -2190,7 +2293,7 @@ function explainAtCaret() {
 function wrongCodeHint(lines, ueb, nem) {
   if (!ueb && !nem) return '';
   const other = ueb
-    ? { name: 'Nemeth', run: (s) => (globalThis.NemethToLatex ? nemethHybrid(s) : null) }
+    ? { name: 'Nemeth', run: readerFor(false) }
     : { name: 'UEB Maths', run: (s) => uebHybrid(s) };
 
   let mine = 0, theirs = 0, n = 0;
@@ -2198,8 +2301,7 @@ function wrongCodeHint(lines, ueb, nem) {
     const raw = ln.raw.trim();
     if (!raw) continue;
     n++;
-    const a = ueb ? safeConv(() => uebHybrid(raw))
-                  : safeConv(() => (globalThis.NemethToLatex ? nemethHybrid(raw) : null));
+    const a = safeConv(() => readerFor(ueb)(raw));
     const b = safeConv(() => other.run(raw));
     if (a) mine++;
     if (b) theirs++;
@@ -2260,14 +2362,14 @@ function offerRepairs(out, fallbackCode) {
       for (const { row, key, code } of pending) {
         const read = code === 'UEB'
           ? (b) => uebHybrid(b)
-          : (b) => (globalThis.NemethToLatex ? nemethHybrid(b) : null);
+          : readerFor(false);
         let s = [];
         try { s = suggestRepairs(row.dataset.repairExpr, code, read, 2); } catch { /* leave it */ }
         repairCache.set(key, s);
         if (s.length && row.isConnected) showRepairs(row, s);
       }
     });
-  }, 700);
+  }, IDLE_MS);
 }
 
 // THE LAST NET — for the reading that parses cleanly, renders plausibly, and
@@ -2307,9 +2409,55 @@ function offerVerify(out, fallbackCode) {
         if (!v.checked) continue;              // tool unavailable ≠ a problem with the work
         verifyCache.set(key, !!v.ok);
         if (!v.ok && row.isConnected) showUnverified(row);
+        // THE OTHER READING IS ONLY A READING IF IT FITS THE CELLS. A row whose
+        // two readers disagreed carries the rival on it; ask the same oracle
+        // about that one, and speak up only when BOTH reproduce the braille.
+        // A rival that does not is a mistake, and showing a mistake as an
+        // alternative is worse than saying nothing (PB, 2026-09-02).
+        const other = row.dataset.disputedLatex;
+        const otherErr = row.dataset.disputedError;
+        if (row.isConnected && (other || otherErr)) {
+          if (otherErr) {
+            if (v.ok) showDisputed(row, '', otherErr);
+          } else if (v.ok) {
+            let w = { checked: false };
+            try { w = verifyLine(row.dataset.verifyExpr, other, code); } catch { /* */ }
+            if (w.checked && w.ok) showDisputed(row, other, '');
+          }
+        }
       }
     });
-  }, 700);
+  }, IDLE_MS);
+}
+
+// THE TWO-READINGS NOTE, SHOWN ONLY WHEN THE BRAILLE CANNOT DECIDE (2026-09-02).
+// Called from the verification pass, which has already asked MathCAT whether
+// each reading reproduces the cells that were typed.
+function showDisputed(row, otherLatex, otherError) {
+  if (row.querySelector('.disputed') || row.querySelector('.ambig')) return;
+  const box = document.createElement('div');
+  box.className = 'disputed';
+  const lead = document.createElement('div');
+  lead.className = 'disputed-lead';
+  lead.textContent = otherError
+    ? 'FYI - the newer reader could not read this line; the reading shown is the established one.'
+    : 'FYI - not an error: this braille can be read two ways and both fit the cells; the established reading is shown.';
+  box.appendChild(lead);
+  if (!otherError && otherLatex && globalThis.temml) {
+    try {
+      const a = globalThis.temml.renderToString(String(row.dataset.verifyLatex || ''));
+      const b = globalThis.temml.renderToString(String(otherLatex));
+      if (a !== b) {
+        const item = document.createElement('div');
+        item.appendChild(document.createTextNode('The other reading: '));
+        const alt = document.createElement('span');
+        alt.innerHTML = b;
+        item.appendChild(alt);
+        box.appendChild(item);
+      }
+    } catch { /* a reading that does not render is not worth a picture */ }
+  }
+  row.appendChild(box);
 }
 
 function showUnverified(row) {
@@ -2488,72 +2636,19 @@ const sentence = (s) => (/[.!?;:]$/.test(String(s).trim()) ? String(s).trim() : 
 
 
 
-// ---- Import MusicXML: teacher pastes print, gets braille back. Roadmap N3b. ----
-//
-// parseMusicXML -> per part, toWriterModel (the roundtrip.mjs shape, restated
-// for the browser — see musicxml-to-writer-model.mjs) -> writeBraille -> the
-// braille cells shown ARE writeBraille's return value verbatim, never a
-// reconstruction of it. To engrave and play that braille, it is re-parsed with
-// readBrailleMusic — the SAME tested reader a child's own typed music already
-// goes through — rather than inventing a second model shape for engraveInto
-// and musicRow to understand. A two-hand piece then joins both hands' reader
-// models with toKeyboardMusicXML, the same call the typed bar-over-bar path
-// feeds — but NOT via readBarOverBar's own text hand-detection: that earns its
-// keep by figuring out FROM TEXT which line is which hand (BANA 29.3(b), hand
-// sign at true line start), and writeBraille puts the signature before the
-// hand sign, so that detector never matches on this app's own output (found
-// on screen, not assumed — see the comment at the join site below). We
-// already know which model is which hand from the source MusicXML's clef, so
-// toKeyboardMusicXML is called directly with that pairing.
-//
-// Unwritten/ambiguous constructions and everything parseMusicXML declines are
-// shown as named notices — never dropped silently (WORKING-RULES rule 1's
-// spirit: a decline is incomplete, not wrong, but only if it is SEEN).
-
-// A renamed .mxl (or a paste of one) is binary zip data, not text — sniff the
-// zip magic bytes so that case gets ITS OWN named message rather than a
-// confusing "not valid XML" parse error.
-const looksLikeZip = (text) => text.slice(0, 2) === 'PK';
-
-// Which of exactly two parts is the right hand: the clef is the honest signal
-// when present (BANA/print convention: G clef treble = right, F clef bass =
-// left — the same convention toKeyboardMusicXML already assumes by index for
-// its own default clef), falling back to document order — first part right,
-// second left — exactly what toKeyboardMusicXML's DEFAULT_CLEF array assumes
-// when no clef is given. Never guessed beyond that: only ever used for
-// EXACTLY two parts, so an ensemble score (or a single line) is never
-// mis-paired into hands it never claimed to be.
-function assignHands(parts) {
-  if (parts.length !== 2) return null;
-  const [a, b] = parts;
-  const signOf = (p) => p.clef && p.clef.sign;
-  return (signOf(a) === 'F' && signOf(b) === 'G') ? { right: b, left: a } : { right: a, left: b };
-}
-
-
-
-
-
-
-
-// Say what a clicked note IS, in the words a teacher would use. Everything
-// here comes from the parsed model, so it describes what the app actually
-// read — not a guess from the cells.
-const NOTE_VALUE = [
-  [4, 'whole note (semibreve)'], [2, 'half note (minim)'], [1, 'quarter note (crotchet)'],
-  [0.5, 'eighth note (quaver)'], [0.25, '16th note (semiquaver)'],
-  [0.125, '32nd note (demisemiquaver)'], [0.0625, '64th note'], [0.03125, '128th note'],
-  [8, 'breve'],
-];
-const REST_VALUE = { 4: 'whole rest', 2: 'half rest', 1: 'quarter rest', 0.5: 'eighth rest',
-                     0.25: '16th rest', 0.125: '32nd rest', 8: 'breve rest' };
-const ORDINAL = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
-const ACC_WORD = { [-2]: ' double-flat', [-1]: ' flat', 0: '', 1: ' sharp', 2: ' double-sharp' };
-const INTERVAL_WORD = ['', 'unison', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'octave'];
-
+// MUSIC WAS REMOVED FROM TRANSLATE (PB, 2026-09-02). What stood here was the
+// design of a MusicXML import - fifty-odd lines of notes naming functions that
+// no longer exist - with two helpers nothing called (looksLikeZip, assignHands)
+// and the note, rest and interval word tables that only the music describer
+// used. Music lives in BrlDuet, which keeps its own copies of all of it.
 
 // One key lights BOTH panes: the braille span and the notehead(s) share it.
 
+// WHAT THIS FUNCTION DOES, IN ORDER: read the braille, render it (wrapped so
+// each glyph knows which cells made it), attach the clean copy assistive
+// technology reads, then add whatever notes the reading earned - an ambiguity,
+// a disagreement between the two readers, a repair suggestion, or the amber
+// round-trip warning. Banners below name each part.
 function mathRow(expr, convert, warnings, lineKey = null) {
   const row = document.createElement('div');
   row.className = 'mathrow';
@@ -2646,7 +2741,20 @@ function mathRow(expr, convert, warnings, lineKey = null) {
         else wrapped += inner;
       }
       try {
-        const out = globalThis.temml.renderToString(wrapped, { displayMode: true, trust: true });
+        // TRUST ONE COMMAND, NOT EVERY COMMAND (2026-09-02, the audit). This is
+        // the app's only trusted render, and it is trusted for exactly one
+        // reason: the \class{} wrappers above, which carry the click-to-word
+        // mapping. trust:true also enables \includegraphics and \href - probed
+        // against the vendored library, \includegraphics{https://…} produces a
+        // real <img src> - so a loaded file could have made the app fetch a
+        // stranger's URL the moment its maths was shown, the one thing the help
+        // promises never happens. No path reaches that today; this closes the
+        // class rather than the instance, and the shipped CSP forbids the fetch
+        // underneath it.
+        const out = globalThis.temml.renderToString(wrapped, {
+          displayMode: true,
+          trust: (ctx) => ctx.command === '\\class',
+        });
         rendered = out.includes('temml-error') ? null : out;
         if (rendered) {
           row.dataset.spans = JSON.stringify(spans);
@@ -2691,6 +2799,32 @@ function mathRow(expr, convert, warnings, lineKey = null) {
     // absolute value, "such that" and "given". The teacher can see the
     // workbook, so the reading is THEIRS to make, never ours to guess.
     // Deduplicated (both bars of |x| are one fact), hidden while typing.
+    // THE TWO READERS DISAGREED, OR ONE FAILED (2026-09-02). The hybrid has
+    // always recorded this on the row it returns (`uncertain`, `v2_latex`,
+    // `v2_error`) and nothing ever read it: a quarter of the corpus takes this
+    // path and looked exactly like a confident agreement. Said in the same quiet
+    // register as an ambiguity - it is information for the teacher, not an
+    // alarm - and hidden while the line is still being typed, like the rest.
+    // ...AND ONLY WHEN THE BRAILLE CANNOT DECIDE BETWEEN THEM (PB, 2026-09-02:
+    // "I don't think any are a problem"). Reading the shipped examples, almost
+    // every remaining note was a case where the newer reader was simply WRONG -
+    // it had lost the subscripts of x1 + x2, or mis-scoped an integral - and
+    // showing a wrong alternative as "the other reading" is worse than showing
+    // nothing: it asks a teacher to weigh an answer the app already knows is
+    // inconsistent with the cells.
+    //
+    // There is an oracle for exactly this. verify.mjs translates a reading BACK
+    // into braille through MathCAT; a reading that does not reproduce what was
+    // typed is not a rival reading, it is a mistake. So the note is deferred to
+    // the verification pass below, which runs when typing pauses, and appears
+    // only when BOTH readings reproduce the braille - which is what "the
+    // braille says two things" actually means. When MathCAT is not loaded there
+    // is no oracle and no note, which matches how the amber check already
+    // behaves: the tool being absent is not a finding about the child's work.
+    if (res && res.uncertain && !row.dataset.typing) {
+      row.dataset.disputedLatex = res.v2_latex || '';
+      row.dataset.disputedError = res.v2_error || '';
+    }
     const amb = (res && res.ambiguities) || [];
     if (amb.length) {
       const seen = new Set();
@@ -2748,7 +2882,14 @@ function mathRow(expr, convert, warnings, lineKey = null) {
   brl.className = 'partial-brl';
   cells.forEach((c, idx) => {
     const s = document.createElement('span');
-    if (bad.has(idx) || bad.has(idx + 1)) s.className = 'badcell';   // 0- and 1-based
+    if (bad.has(idx) || bad.has(idx + 1)) {
+      s.className = 'badcell';   // 0- and 1-based
+      // COLOUR IS NOT A MESSAGE (2026-09-02, the audit): a pink ground and a red
+      // ring were the whole marking, so a screen-reader or colour-blind user
+      // could not find the cell the app was pointing at. The index is known here.
+      s.setAttribute('aria-label', `cell ${idx + 1}, not recognised`);
+      s.title = `Cell ${idx + 1} was not recognised`;
+    }
     s.textContent = c;
     brl.appendChild(s);
   });
@@ -2927,19 +3068,31 @@ function linkWord(key) {
 // opts.silent: explain in the bar but do not say it. Used where the CURSOR
 // caused the explanation and the user has turned cursor speech off - a click,
 // which is a deliberate "tell me about this word", always speaks.
+// WHAT THIS FUNCTION DOES, IN ORDER: decide which code the word is in, then
+// either explain it as MATHS (the signs used, and the sentence to speak) or as
+// TEXT (the cells against the letters, whether it is contracted, and what
+// contraction was available). Banners below name each part.
 function explainWord(brl, key = '', opts = {}) {
   const maySpeak = speechOk && !opts.silent;
   const sb = $('statusBar');
   const hint = '<span class="sb-hint">Click a word in either panel to see the braille rules used.</span>';
   if (!brl || !ready) { sb.innerHTML = hint; return; }
 
-  const esc0 = (s) => String(s).replace(/[&<>"]/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc0 = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   // --- maths: explain the indicators instead of contractions ---
   // The LINE the word came from decides text-vs-maths, not the global
   // checkboxes - per-line modes made those diverge.
-  const lineIdx = key ? Number(key.split(':')[0]) : -1;
+  // A MATHS RUN INSIDE A TEXT LINE HAS A FRACTIONAL KEY (2026-09-02). An inline
+  // switch run is drawn as its own block and keyed "0.1" - line 0, second block -
+  // so Number() gave 0.1, and buf.split('\n')[0.1] is undefined: clicking a
+  // glyph in such a run threw "Cannot read properties of undefined (reading
+  // 'indexOf')" and the status bar stayed empty, on the commonest mixed line
+  // there is. Reproduced in Chrome before and after. The buffer, lineModes and
+  // the segmenter are all indexed by WHOLE lines, which is what the block
+  // belongs to.
+  const lineIdx = key ? Math.trunc(Number(key.split(':')[0])) : -1;
   const lineMode = lineIdx >= 0 && lineModes[lineIdx] ? lineModes[lineIdx] : currentMode();
   // THE SEGMENT OUTRANKS THE LINE STAMP, both ways - the same precedence the
   // render uses. A text line can carry an inline ⠸⠩…⠸⠱ run, and a word
@@ -3066,7 +3219,7 @@ function explainWord(brl, key = '', opts = {}) {
     let latex = '';
     try {
       latex = asUeb ? uebHybrid(brl).latex
-        : (globalThis.NemethToLatex ? nemethHybrid(brl).latex : '');
+        : (readerFor(false)(brl) || {}).latex || '';
     } catch { /* */ }
     const parts = asUeb ? describeUebMaths(brl) : describeNemeth(brl);
     // If the word's row carries provenance, show the word's fragment from the
@@ -3128,9 +3281,7 @@ function explainWord(brl, key = '', opts = {}) {
                       : (latex ? '' : ' Not recognised.')) + `</span>`;
                       
     if (maySpeak) {
-      // Use semantic math speech if possible by parsing the chunk
-      const parseRes = asUeb ? uebMathsToLatexV2(brl) : nemethMathsToLatexV2(brl);
-      const speechText = speakMaths(parseRes, parts);
+      const speechText = speakMathsFor(brl, asUeb, parts);
       if (speechText) speak(speechText);
     }
     return;
@@ -3177,8 +3328,8 @@ function explainWord(brl, key = '', opts = {}) {
   const contracted = isEnUeb ? g1cells > cells
     : (segs ? segs.some((sg) => sg.chars.length > 1) : null);
 
-  const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const plural = (n) => `${n} cell${n === 1 ? '' : 's'}`;
   // "works." is 5 letters + a full stop - call them characters, not letters.
   const chars = `${text.length} character${text.length === 1 ? '' : 's'}`;
@@ -3231,7 +3382,13 @@ function explainWord(brl, key = '', opts = {}) {
         `${plural(r.cell.length)} for “${r.meaning}”`).join(', ')) : '') + `.</span>`;
         
   if (maySpeak) {
-    speak(text);
+    // THE SUMMARY, NOT THE BARE WORD (2026-09-02, the audit). Speaking "cat"
+    // tells a blind reader what the print says, which their screen reader has
+    // already told them; the teaching is "cat: spelt out in 3 cells", and with
+    // a missed contraction, what it could have been. It is the same sentence
+    // the status bar carries for assistive technology, and the status bar is
+    // deliberately not a live region, so this is the only way it is heard.
+    speak(summary);
   }
 }
 
@@ -3373,8 +3530,8 @@ function markSelectionAsMaths(a, b) {
     mathSpans.push({ from: a, to: b, closed: true });
     caret = b;
   } else {
-    buf = buf.slice(0, a) + NEM_OPEN + buf.slice(a, b) + NEM_CLOSE + buf.slice(b);
-    caret = b + NEM_OPEN.length + NEM_CLOSE.length;
+    setBuf(buf.slice(0, a) + NEM_OPEN + buf.slice(a, b) + NEM_CLOSE + buf.slice(b),
+           b + NEM_OPEN.length + NEM_CLOSE.length);
   }
   render();
   speak(settings.mathsCode === 'ueb' ? 'Marked as UEB maths' : 'Marked as Nemeth');
@@ -3445,7 +3602,7 @@ function toggleMathsAtCaret() {
       if (idx >= 0) { caret = idx + NEM_CLOSE.length; render(); speak('out of maths'); return; }
       // A passage left open. Close it where we stand rather than walking the
       // caret to a sign that does not exist.
-      buf = buf.slice(0, caret) + NEM_CLOSE + buf.slice(caret);
+      setBuf(buf.slice(0, caret) + NEM_CLOSE + buf.slice(caret));
       caret += NEM_CLOSE.length;
       render();
       speak('out of maths');
@@ -3471,7 +3628,7 @@ function toggleMathsAtCaret() {
     return;
   }
 
-  buf = buf.slice(0, caret) + NEM_OPEN + NEM_CLOSE + buf.slice(caret);
+  setBuf(buf.slice(0, caret) + NEM_OPEN + NEM_CLOSE + buf.slice(caret));
   caret += NEM_OPEN.length;         // between the two signs, where the maths goes
   render();
   speak('Nemeth, type the expression');
@@ -3606,7 +3763,7 @@ document.addEventListener('keydown', (e) => {
     const hadSwitch = hasNemethSwitch(rawFinished);
     const finished = hadSwitch ? stripNemethSwitches(rawFinished) : rawFinished;
     const sep = e.code === 'Space' ? ' ' : '\n';
-    buf = buf.slice(0, caret) + sep + buf.slice(caret);
+    setBuf(buf.slice(0, caret) + sep + buf.slice(caret));
     caret += 1;
     render();
     const fMode = hadSwitch ? 'nem' : modeOfFinished(rawFinished);
@@ -3622,8 +3779,7 @@ document.addEventListener('keydown', (e) => {
       
       const asNem = fMode === 'nem' || hasNemethSwitch(textToSpeak);
       const asUeb = !asNem && fMode === 'ueb';
-      const parseRes = asUeb ? uebMathsToLatexV2(textToSpeak) : nemethMathsToLatexV2(textToSpeak);
-      const speechText = speakMaths(parseRes,
+      const speechText = speakMathsFor(textToSpeak, asUeb,
         asUeb ? describeUebMaths(textToSpeak) : describeNemeth(textToSpeak));
       if (speechText) speak(speechText);
     } else {
@@ -3647,7 +3803,7 @@ document.addEventListener('keydown', (e) => {
     stopSpeech();
     if (caret >= buf.length) { if (settings.speakLetter) speak('end'); return; }
     const gone = buf[caret];
-    buf = buf.slice(0, caret) + buf.slice(caret + 1);
+    setBuf(buf.slice(0, caret) + buf.slice(caret + 1));
     render();
     speak('delete ' + describeCell(gone));
     return;
@@ -3663,7 +3819,7 @@ document.addEventListener('keydown', (e) => {
     // letter of its own (a contraction, a prefix, a sign).
     if (caret === 0) { render(); return; }        // nothing to the left
     const gone = buf[caret - 1];
-    buf = buf.slice(0, caret - 1) + buf.slice(caret);
+    setBuf(buf.slice(0, caret - 1) + buf.slice(caret), caret - 1);
     caret -= 1;
     render();
     if (gone) speak('delete ' + describeCell(gone));
@@ -3683,6 +3839,26 @@ document.addEventListener('keydown', (e) => {
 //
 // Language follows the chosen voice, so the maths is spoken in the language the
 // rest of the app is speaking; verify.mjs maps anything unsupported to English.
+// WHAT IS SPOKEN IS WHAT IS SHOWN (PB, 2026-09-02). The four places that speak
+// a line of maths each called the V2 reader directly, so a child could SEE the
+// hybrid's answer and HEAR V2's - on the live site the quadratic formula
+// printed "2a" and spoke "2 cap A". And they called it bare: a reader that
+// threw took the speech with it, silently. Now every one of them comes here.
+// MathCAT is given the LaTeX the print pane decided on; the app's own fallback
+// speaker keeps the V2 syntax tree, which is the only tree there is; and if a
+// reader throws, the fallback is the list of sign names rather than nothing.
+function speakMathsFor(brl, asUeb, fallbackParts, verbosity) {
+  let shown = null, parsed = null;
+  try {
+    shown = asUeb ? uebHybrid(brl) : (globalThis.NemethToLatex ? nemethHybrid(brl) : null);
+  } catch (e) { console.warn('[translate] maths (print decision) failed:', e && e.message); }
+  try {
+    parsed = asUeb ? uebMathsToLatexV2(brl) : nemethMathsToLatexV2(brl);
+  } catch (e) { console.warn('[translate] maths reader threw while speaking:', e && e.message); }
+  const latex = (shown && shown.latex) || (parsed && parsed.latex) || '';
+  return speakMaths({ latex, ast: parsed && parsed.ast }, fallbackParts, verbosity);
+}
+
 function speakMaths(parseRes, fallbackParts, verbosity) {
   const latex = parseRes && parseRes.latex;
   const voice = voices.find((v) => v.voiceURI === settings.voiceURI);
@@ -3748,9 +3924,8 @@ function sayCurrentLine(fromCaretMove = false) {
   const asNem = mode === 'nem' || hasNemethSwitch(raw);
   const asUeb = !asNem && mode === 'ueb';
   if (asNem || asUeb) {
-    const parseRes = asUeb ? uebMathsToLatexV2(raw) : nemethMathsToLatexV2(raw);
     const parts = asUeb ? describeUebMaths(raw) : describeNemeth(raw);
-    const said = speakMaths(parseRes, parts, again ? 'Medium' : undefined);
+    const said = speakMathsFor(raw, asUeb, parts, again ? 'Medium' : undefined);
     if (said) { speak(said); return; }
     // Maths that could not be read falls through: spelling it is then the most
     // useful thing left, because the cells are all anyone can go on.
@@ -3783,8 +3958,7 @@ document.addEventListener('keyup', (e) => {
     const selA = chordSel ? chordSel.a : caret;
     const selB = chordSel ? chordSel.b : caret;
     chordSel = null;
-    buf = buf.slice(0, selA) + justTyped + buf.slice(selB);
-    caret = selA + justTyped.length;
+    setBuf(buf.slice(0, selA) + justTyped + buf.slice(selB), selA + justTyped.length);
     chord = 0; 
     // SPEAK EACH LETTER (PB, 2026-08-09), grade 1. Deliberately not gated on
     // the maths modes below: a child learning uncontracted braille wants to
@@ -3883,7 +4057,8 @@ $('helpExample').addEventListener('click', async () => {
       settings.brailleCode = 'en-ueb-g2';
       saveSettings();
       loadBrailleCodes();
-      missedCache.clear();
+      applyPrintLang();
+      missedCache.clear(); btCache.clear();
       cellNameCache.clear();
     }
     const res = await fetch('/Translate/examples/translate-tour.ebrl');
@@ -3914,8 +4089,12 @@ $('helpDialog').addEventListener('click', (e) => {
 // the app's own words, but the save and load paths interpolate err.message,
 // and an error thrown while parsing a hostile file can echo that file's own
 // content — which must never come back to life as markup here.
-const escMsg = (m) => String(m).replace(/[&<>"]/g,
-  (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// SINGLE QUOTES TOO (2026-09-02, the audit). Every use of this today lands in a
+// double-quoted attribute or in text, so leaving ' alone was safe - but safe by
+// the caller's habit, not by the escaper's rule. Escaping it costs nothing and
+// removes the day someone writes attr='...'.
+const escMsg = (m) => String(m).replace(/[&<>"']/g,
+  (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // ---- asking a question out loud ----
 // The browser's confirm() is silent to a self-voicing user and BLOCKS the event
@@ -4073,9 +4252,27 @@ $('saveBtn').addEventListener('click', () => {
   if (!hasBraille()) { nothingToWrite('save'); return; }
   const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
   try {
+    // THE TITLE IS BRAILLED FOR THE ENTRY PAGE (2026-09-02). eBraille content
+    // should be braille and whitespace (spec §3), and the table of contents on
+    // the entry page is content: its one entry names this document. The app
+    // has the translator loaded, so it can say the title in cells; the writer
+    // falls back to print if this ever fails, and the DAISY checker then warns
+    // rather than the file going out with an empty heading. (The title said
+    // "Connector document" until today - the app's old name, which every saved
+    // file carried, and which the checker quoted back at us: "found
+    // 'Connector docum(…)'".)
+    const title = `Translate document ${stamp}`;
+    let titleBraille = '';
+    try { titleBraille = louis.translate(title, T_TEXT()); } catch { /* print title, warned */ }
     const bytes = writeEbraille({
-      title: `Connector document ${stamp}`,
-      creator: (settings.authorName || '').trim() || 'Unknown',
+      title,
+      titleBraille,
+      // NO AUTHOR NAME IS KEPT (PB asked why we saved one, 2026-09-02, and the
+      // answer was that we did not: nothing in the app ever WROTE this setting.
+      // It was read here and nowhere else - a field left over from a build that
+      // had a name box. A shared school machine should not carry one child's
+      // name into the next child's file anyway, so the saved file says so.
+      creator: 'Unknown',
       producer: 'Sensory App House Ltd',
       language: navigator.language || 'en',
       sections: docSections(),
@@ -4243,7 +4440,7 @@ async function loadEbrailleFile(file) {
       loadedAt += line.length + 1;
     });
   }
-  buf = lines.join('\n');
+  setBuf(lines.join('\n'), Infinity);          // a loaded file opens at its end
   if (buf && !/[ \n]$/.test(buf)) buf += ' ';
   // THE SPANS ARE ALREADY IN THIS BUFFER'S COORDINATES (user file, 2026-08-19).
   // syncSpans() shifts every span by whatever changed between prevBuf and buf —
@@ -4252,10 +4449,9 @@ async function loadEbrailleFile(file) {
   // maths loaded as literary text (and loading the SAME file twice "fixed" it,
   // because the second load found buf === prevBuf and shifted nothing).
   prevBuf = buf;
-  caret = buf.length;                    // a loaded file opens at its end
   chord = 0; held.clear();
   modeAppliesToAll = false;
-  stopSpeech(); linkWord(''); explainWord('');
+  stopSpeech(); linkWord(''); explainWord(''); lastExplainedKey = '';
   // The mode boxes follow the LAST section — where the caret lands (a loaded
   // file opens at its end) and where typing resumes. They used to follow the
   // FIRST, which read nicely at the top of the document but clobbered the
@@ -4299,6 +4495,17 @@ async function loadFile(file) {
     // by a mail client is still an OCF container, and a .brf never begins PK\003\004.
     const head = await file.slice(0, 4).arrayBuffer();
     if (looksLikeEbraille(head)) { await loadEbrailleFile(file); return; }
+    // A ZIP THAT IS NOT AN eBRAILLE IS NOT BRAILLE EITHER (2026-09-02). Every
+    // Word document, spreadsheet and archive begins "PK", and those bytes are
+    // valid BRF ASCII: the loader transliterated them and replaced the open
+    // document with the word "pk". Found by the core-loop suite, whose junk
+    // file was a bare ZIP end-record.
+    if (new Uint8Array(head)[0] === 0x50 && new Uint8Array(head)[1] === 0x4b) {
+      const msg = 'That looks like a Word document or a zip file, not braille, so nothing was loaded.';
+      $('statusBar').innerHTML = `<span class="sb-hint">${escMsg(msg)}</span>`;
+      speak(msg);
+      return;
+    }
     const raw = await file.text();
     // Accept Unicode braille (old .brl saves); otherwise treat as BRF-ASCII —
     // what Save now writes and what braille files in the wild contain.
@@ -4327,16 +4534,15 @@ async function loadFile(file) {
       speak(msg);
       return;
     }
-    buf = cellsOnly;
+    setBuf(cellsOnly, Infinity);               // a loaded file opens at its end
     // Everything in a loaded file is finished writing, so terminate the last word —
     // otherwise it would be treated as still being brailled and stay hidden.
     if (buf && !/[ \n]$/.test(buf)) buf += ' ';
-    caret = buf.length;                  // a loaded file opens at its end
     chord = 0; held.clear();
     lineModes.length = 0;               // every loaded line takes the current mode
     modeAppliesToAll = true;            // …and the next mode choice re-modes them all
     stopSpeech(); linkWord('');
-    explainWord('');                    // a stale announcement must not outlive its file
+    explainWord(''); lastExplainedKey = '';   // a stale announcement must not outlive its file
     render();
     // WHOLE-FILE mode detection (mode-detect.mjs — measured before wiring:
     // 42/42 confident calls correct, 0 harmful, all mixed papers abstain;
@@ -4541,7 +4747,7 @@ let focusAnnouncerArmed = false;
 // the control and never learned where they had arrived. The opener suppresses
 // the announcer for that one focus and says both halves together.
 let skipNextFocusSpeech = false;
-setTimeout(() => { focusAnnouncerArmed = true; }, 1200);
+setTimeout(() => { focusAnnouncerArmed = true; }, ANNOUNCER_ARM_MS);
 document.addEventListener('focusin', (e) => {
   if (skipNextFocusSpeech) { skipNextFocusSpeech = false; return; }
   if (!focusAnnouncerArmed) return;
@@ -4635,13 +4841,14 @@ $('brailleCodeSel').addEventListener('change', async (e) => {
   }
   settings.brailleCode = choice;
   saveSettings();
+  applyPrintLang();
   // Fetch the uncontracted sibling too, quietly and without waiting: it is what
   // pairs cells with letters for a word the child spelt out. Failure is fine -
   // alignment simply stays off, exactly as it was before it existed - so this
   // must never delay or block adopting the code the user actually asked for.
   const sib = uncontractedSibling(choice);
   if (sib) louis.ensureTables(sib).catch(() => {});
-  missedCache.clear();   // a different code has different contractions
+  missedCache.clear(); btCache.clear();   // a different code has different contractions
   cellNameCache.clear();
   // The whole document is re-read under the new code — every word the user can
   // see was translated by the old one, so leaving them would show a page in two
@@ -4731,9 +4938,30 @@ document.addEventListener('keydown', (e) => {
   e.preventDefault();
   closeSettings();
 });
+// TAB STAYS INSIDE AN OPEN SETTINGS PANEL (2026-09-02, the audit). It calls
+// itself a dialog, and Help and Confirm are real <dialog>s with showModal(), but
+// this one let Tab walk out into the panes behind it - so a keyboard user was
+// operating the document underneath what looks like a modal. The panel's markup
+// now says aria-modal="true", and this is what makes that true.
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const p = $('settingsPanel');
+  if (p.hidden || !p.contains(document.activeElement)) return;
+  const items = [...p.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((el) => !el.disabled && el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
 document.addEventListener('click', (e) => {
   const p = $('settingsPanel');
-  if (!p.hidden && !p.contains(e.target) && e.target !== $('settingsBtn')) p.hidden = true;
+  // closeSettings(), not p.hidden = true (2026-09-02, the audit): hiding the
+  // panel by hand left aria-expanded="true" on the gear, so a screen reader
+  // went on saying the settings were open, and focus never came back to the
+  // braille field. The export menu's handler always called its own closer.
+  if (!p.hidden && !p.contains(e.target) && e.target !== $('settingsBtn')) closeSettings();
 });
 $('voiceSel').addEventListener('change', (e) => {
   const choice = e.target.value;          // loadVoices()/sel_focusVoice() below
@@ -4847,6 +5075,7 @@ $('focusDark').addEventListener('change', (e) => {
   $(settings.speechOutput === 'reader' ? 'speechOutputReader'
     : settings.speechOutput === 'off' ? 'speechOutputOff' : 'speechOutputVoice').checked = true;
   loadBrailleCodes();
+  applyPrintLang();            // the saved code decides the print pane's language
   // The cell width is meaningless until the font is loaded, so the first fit
   // waits for it; after that, every resize refits and so does every render.
   if (document.fonts && document.fonts.ready) {
@@ -4968,6 +5197,7 @@ $('focusDark').addEventListener('change', (e) => {
         settings.brailleCode = 'en-ueb-g2';
         saveSettings();
         loadBrailleCodes();
+        applyPrintLang();
         bootError = `${wanted} could not be loaded, so UEB grade 2 is being used. `
                   + 'Choose it again in Settings while online to try once more.';
       }
@@ -4975,4 +5205,11 @@ $('focusDark').addEventListener('change', (e) => {
   }
   catch (err) { bootError = 'liblouis failed to load: ' + err.message; }
   render();
+  // SAID, NOT ONLY SHOWN (2026-09-02, the audit). #out carries no live role -
+  // deliberately, it is content rather than an announcement channel - and every
+  // other error path in this file speaks. A blind user whose translator failed
+  // to load was typing into silence with the reason on screen. After render, so
+  // the words are on screen before they are spoken, and after a tick, so the
+  // voice list has had its chance to arrive.
+  if (bootError) setTimeout(() => speak(bootError), 0);
 })();

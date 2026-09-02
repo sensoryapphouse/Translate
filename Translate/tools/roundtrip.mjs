@@ -53,11 +53,14 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { sourceTokens } from './lib/score.mjs';
 import { loadTemml, compareStructure, toMathML } from './lib/structure.mjs';
-import { uebMathsToLatex } from '../ueb-maths-to-latex.mjs';
+import { pickReaders } from './lib/readers.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
-const { convert: nemethConvert } = require(path.resolve(__dirname, '../../nemeth-to-latex.js'));
+// the readers under test: the app's hybrid decision unless MATHS_IMPL says otherwise
+const readers = await pickReaders();
+const uebMathsToLatex = readers.ueb;
+const nemethConvert = readers.nemeth;
 const mathcat = require(path.resolve(__dirname, '../../engine/mathcat/pkg-nodejs/emboss_mathcat.js'));
 const temml = loadTemml(path.resolve(__dirname, '../../web/vendor/temml.min.js'));
 const normLeaf = (t) => sourceTokens(`<mo>${t}</mo>`);

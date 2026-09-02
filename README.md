@@ -50,8 +50,13 @@ the first time it was tried and the app deployed looking fine and doing nothing.
 ```
 node Translate/tools/decisions.test.mjs         # precedence decisions
 V2=1 node Translate/tools/decisions.test.mjs    # ... for the readers the app ships
-node Translate/tools/check.mjs                  # every suite; needs the corpora below
+npm install                                     # playwright, for the browser suites
+node Translate/tools/check.mjs                  # every suite this checkout can run
 ```
+
+`check.mjs` notices that this repository carries no corpora: it skips the suites
+that read them, and the scores, and says so before it starts. Everything else
+runs from a fresh clone.
 
 Two things worth knowing before you trust a number:
 
@@ -60,10 +65,12 @@ Two things worth knowing before you trust a number:
   and `Translate/ueb-rules.mjs` replaced them with ordered, standard-cited
   precedence. The app runs both and prefers the newer one when the two agree.
   `check.mjs` scores the older pair. That is why `V2=1` exists.
-- **The browser-driven tests need a real browser.** Some ship as puppeteer
-  harnesses, whose bundled Chromium is too old to load the MathCAT
-  WebAssembly — so any speech figure they print is the app's own fallback
-  speaker, not what a child hears.
+- **The browser-driven tests need a real browser.** They drive the Chrome that
+  is installed on the machine, through Playwright, so they run in the same
+  browser a child uses and MathCAT loads in them. They used to run on
+  puppeteer's bundled Chromium, which is too old to load that WebAssembly, so
+  every speech figure they printed was the app's fallback speaker rather than
+  what a child hears; puppeteer was removed on 2026-09-02.
 
 ## What is not here
 

@@ -26,7 +26,9 @@ export const Ident      = (text, at, len, upright)  => ({ k: 'ident', text, at, 
 export const Op         = (tex, at, len, spaced)    => ({ k: 'op', tex, at, len, spaced: !!spaced });
 export const Sym        = (tex, at, len)            => ({ k: 'sym', tex, at, len });
 export const Space      = (at)                      => ({ k: 'space', at, len: 1 });
-export const Frac       = (num, den, at, len)       => ({ k: 'frac', num, den, at, len });
+// `opts.binom` marks a vertical juxtaposition inside round brackets - "n choose
+// r" - which prints as \binom and is spoken as "n choose r" (2026-09-02).
+export const Frac       = (num, den, at, len, opts = {}) => ({ k: 'frac', num, den, at, len, ...opts });
 export const Root       = (radicand, index, at, len) => ({ k: 'root', radicand, index, at, len });
 export const Group      = (body, open, close, at, len) => ({ k: 'group', body, open, close, at, len });
 export const Table      = (rows, env, at, len)      => ({ k: 'table', rows, env, at, len });
@@ -82,7 +84,7 @@ function renderChunk(node) {
     case 'sym':   return [{ str: node.tex, n: node }];
     case 'space': return [{ str: ' ', n: node }];
     case 'frac':  return [
-      { str: '\\frac{', n: node }, ...renderChunk(node.num),
+      { str: node.binom ? '\\binom{' : '\\frac{', n: node }, ...renderChunk(node.num),
       { str: '}{', n: node }, ...renderChunk(node.den), { str: '}', n: node }
     ];
     case 'root':  return node.index

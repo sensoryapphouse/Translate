@@ -18,7 +18,7 @@
 // So nothing automatic protects THIS constant, and reading the old comment as
 // "deployment will hash it for me" is exactly how a cached asset goes stale for
 // a returning user. BrlDuet's worker hit that for real: see its own header.
-const CACHE = 'translate-v178';   // assets-sha256: 81a8e57c0ae0
+const CACHE = 'translate-v201';   // assets-sha256: 406c920af005
 
 const ASSETS = [
   // REPATHED 2026-08-09. Every entry here pointed at /connector/ — the V1 paths,
@@ -30,7 +30,12 @@ const ASSETS = [
   // apostrophe splits an entry in half.
   '/Translate/', '/Translate/index.html', '/Translate/translate.mjs',
   '/Translate/ueb-maths-to-latex.mjs', '/Translate/nemeth-symbols.mjs',
+  // ueb-symbols.mjs was MISSING until 2026-09-02 - imported by the UEB reader,
+  // never named here, so offline the whole module graph would have failed. The
+  // reachability check in BrlDuet/sw-cache-test.mjs now catches this class.
+  '/Translate/ueb-symbols.mjs', '/Translate/nemeth-switch.mjs',
   '/Translate/ueb-rules.mjs', '/Translate/nemeth-rules.mjs',
+  '/Translate/maths-hybrid.mjs',
   '/Translate/math-speech.mjs', '/Translate/mode-detect.mjs',
   '/Translate/verify.mjs', '/Translate/manifest.webmanifest',
   '/Translate/ebraille.mjs', '/Translate/braille-codes.mjs', '/Translate/unmxl.mjs',
@@ -42,13 +47,7 @@ const ASSETS = [
   // shared with Emboss — referenced in place, never duplicated
   '/nemeth-to-latex.js', '/nemeth-symbol-table.js',
   '/web/vendor/temml.min.js', '/web/logo.svg',
-  // APH Braille Shadows is NOT redistributed in this repository - APH agreed we
-  // may use the face, which is not a grant to hand it on (web/fonts/PROVENANCE.md).
-  // Its two entries are absent here BECAUSE caches.addAll() rejects the whole
-  // install if a single entry 404s: left in, the worker would never install and
-  // the app would silently lose offline. index.html still declares the @font-face,
-  // so dropping the files into web/fonts/ is all it takes to restore the face -
-  // put these two paths back on the same day.
+  '/web/fonts/APH_Braille_Shadows.woff2', '/web/fonts/APH_Braille_Shadows.woff',
   // Inter, self-hosted: without these the interface silently changes face offline.
   '/web/fonts/inter-latin.woff2', '/web/fonts/inter-latin-ext.woff2', '/web/fonts/inter-greek.woff2',
   '/web/fonts/inter-greek-ext.woff2', '/web/fonts/inter-cyrillic.woff2', '/web/fonts/inter-cyrillic-ext.woff2',

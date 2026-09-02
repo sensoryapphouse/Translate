@@ -1,0 +1,14 @@
+{
+  "name": "translate",
+  "version": "1.0.0",
+  "description": "Braille in, print out - a live braille-to-print editor.",
+  "license": "CC-BY-NC-SA-4.0",
+  "author": "Sensory App House Ltd",
+  "type": "commonjs",
+  "scripts": {
+    "test": "\"$npm_node_execpath\" Translate/tools/check.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  }
+}

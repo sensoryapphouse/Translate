@@ -22,7 +22,8 @@
           --bg-grad: linear-gradient(135deg, #ffffff 0%, #f3f4fc 100%);
           --pane-bg: rgba(255,255,255,0.7);
           --ink:#171d1c;               /* paigedarkgrey */
-          --muted:#5c6462;             /* darkened paigedarkgrey: 7:1 on white */
+          --muted:#5c6462;             /* darkened paigedarkgrey: 6.08:1 on white,
+                                          measured 2026-09-02 - the comment said 7:1 */
           --accent:#2a7de1;            /* primary — UI only: 4.1:1, which passes
                                           the 3:1 for non-text but NOT the 4.5:1
                                           body text needs */
@@ -158,7 +159,12 @@
           box-shadow:0 8px 32px rgba(0,0,0,.12); padding:4px; }
   .menu button { display:block; width:100%; text-align:left; padding:8px 10px; border:0;
                  border-radius:7px; background:none; font:inherit; color:inherit; cursor:pointer; }
-  .menu button:hover, .menu button:focus { background:var(--link); outline:none; }
+  .menu button:hover { background:var(--link); }
+  /* THE TINT WAS THE WHOLE INDICATOR (2026-09-02, the audit): white to #fdf1cc is
+     1.13:1, and outline:none removed the browser's own ring, so a keyboard user
+     could not see where they were. Every other control here uses this outline. */
+  .menu button:focus { background:var(--link); }
+  .menu button:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
   /* THE ONLY <kbd> IN THE LIVE UI (PB, 2026-08-12) — it used to sit inside a
      block-level .kbd-hint span of its own; now it sits inline right after
      the "Maths" label text, so the badge look (border, background) is on
@@ -329,6 +335,11 @@
      geometry is what made VoiceOver re-read the whole pane whenever a line
      boundary was crossed — see the note in syncField(). min-height on
      #brlStack keeps an empty document a full page you can click into. */
+  /* THE FIELD HIDES ITS OWN OUTLINE BY DESIGN - it sits transparent over the
+     drawn cells, and any box on it would land in the wrong place. So the STACK
+     shows the focus instead (2026-09-02, the audit): an outline paints without
+     affecting layout, which is what the alignment invariant forbids. */
+  #brlStack:focus-within { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
   #brlInput { position:absolute; top:0; bottom:0; left:0; width:100%; height:auto;
               margin:0; padding:0; border:0; outline:none; resize:none;
               overflow:hidden; background:transparent;
@@ -377,8 +388,18 @@
   /* A blinking element is a genuine problem for some readers — vestibular
      sensitivity, and anyone who finds movement hard to ignore. Honour the
      system setting: still visible, just still. */
-  @media (prefers-reduced-motion: reduce) { .caret { animation:none; } }
-  #braille .chord { opacity:.42; }
+  /* REDUCED MOTION MEANS ALL OF IT (2026-09-02, the audit): this covered the
+     caret alone, while the status bar still slid up and every button still
+     eased. Anyone who asks for less movement gets less movement. */
+  @media (prefers-reduced-motion: reduce) {
+    .caret { animation:none; }
+    *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important;
+                             transition-duration:.001ms !important; scroll-behavior:auto !important; }
+  }
+  /* A CHORD IN PROGRESS MUST STILL BE READABLE (2026-09-02, the audit): .42
+     put it at 2.63:1, below the 3:1 that non-text content needs. .62 keeps it
+     visibly unfinished at 4.6:1. */
+  #braille .chord { opacity:.62; }
   /* font-size is a fixed fallback for BEFORE fitBrailleLine's first run, and
      is then overwritten by inline style (set on #out itself) every time the
      braille size changes — see PRINT_RATIO in translate.mjs (PB, 2026-08-18):
@@ -418,7 +439,11 @@
      the TEACHER decides (GTM 15.5 - flag, never guess). Hidden while the line
      is still being typed, same as repairs. */
   .ambig { margin-top:6px; padding:6px 8px; border-left:3px solid #b8860b; background:#fdf6e3; font-size:.82rem; }
+
+  .disputed { margin-top:6px; padding:6px 8px; border-left:3px solid #b8860b; background:#fdf6e3; font-size:.82rem; }
   .ambig-lead { color:#8a5b00; margin-bottom:2px; }
+
+  .disputed-lead { color:#8a5b00; margin-bottom:2px; }
   .ambig-cells { font-family:inherit; margin-right:6px; }
   .mathrow[data-typing] .ambig { display:none; }
   /* the last net: a clean reading whose round-trip differs - calm, not alarming */
@@ -478,7 +503,14 @@
   .word:hover { background:#eef3fb; }
   .word.linked { background:var(--link); box-shadow:0 0 0 1px var(--linkb) inset; }
   /* the same word's glyphs inside a rendered equation */
-  .mlink { background:var(--link) !important; box-shadow:0 0 0 1px var(--linkb) inset !important; border-radius:4px; display: inline-block !important; color: #b36b00 !important; text-shadow: 0 0 1px var(--linkb) !important; }
+  /* NO COLOUR OVERRIDE ON THE HIGHLIGHT (2026-09-02, the audit). #b36b00 on the
+     highlight's own #fdf1cc is 3.71:1, below the 4.5:1 AA needs at this size,
+     and .mlink is the class every one of the eight highlight sites adds - in
+     both panes, prose and maths alike - so the one thing the app highlights was
+     the hardest thing on the page to read. The inherited ink passes at 15:1.
+     (.word.linked above was written with the same background and no colour
+     override; it is the shape this follows.) */
+  .mlink { background:var(--link) !important; box-shadow:0 0 0 1px var(--linkb) inset !important; border-radius:4px; display: inline-block !important; text-shadow: 0 0 1px var(--linkb) !important; }
   /* NEVER FORCE A DISPLAY TYPE INSIDE MathML (PB, 2026-08-11).
      The highlight above sets display:inline-block so a background and inset
      ring draw properly on an inline span. Temml renders NATIVE MathML, and the
@@ -562,8 +594,11 @@
      innerHTML on every click, which would delete it. It sits on a zero-height
      rail just above, positioned over the bar's top edge. */
   .sb-grab-rail { position:relative; height:0; flex:0 0 auto; }
-  .sb-grab { position:absolute; left:50%; transform:translateX(-50%); bottom:-9px;
-             width:64px; height:18px; display:flex; align-items:center; justify-content:center;
+  /* A TOUCH TARGET IS 24 px (2026-09-02, the audit): this was 18, below what
+     WCAG 2.2 asks for a control anyone has to grab on a touchscreen. The
+     visible rail is unchanged - only the area you can hit grows. */
+  .sb-grab { position:absolute; left:50%; transform:translateX(-50%); bottom:-12px;
+             width:64px; height:24px; display:flex; align-items:center; justify-content:center;
              padding:0; border:0; background:none; cursor:ns-resize; touch-action:none; z-index:3; }
   .sb-grab::before { content:''; display:block; width:42px; height:4px; border-radius:2px;
                      background:var(--line); transition: background .15s ease; }
@@ -699,7 +734,14 @@
         <button type="button" class="icon-btn" id="settingsBtn"
                 aria-label="Settings" aria-expanded="false" title="Settings">⚙</button>
 
-        <div class="panel" id="settingsPanel" hidden role="dialog" aria-label="Settings">
+        <div class="panel" id="settingsPanel" hidden role="dialog" aria-modal="true"
+             aria-labelledby="settingsHead">
+          <!-- A HEADING, SO THE LEVELS DO NOT SKIP (2026-09-02): the panel's
+               sections were h3 under the page's h1, with nothing between. It is
+               visually hidden because the panel is plainly the settings already;
+               a screen reader jumping by heading now lands on it. aria-modal is
+               true because the Tab trap in translate.mjs makes it true. -->
+          <h2 id="settingsHead" class="sr-only">Settings</h2>
           <h3>Maths code</h3>
           <label><input type="radio" name="mathsCode" id="mathsCodeNemeth" value="nem" />
             Nemeth</label>
@@ -740,7 +782,8 @@
           <label><input type="checkbox" id="speakCursor" /> Speak where the cursor
             moves</label>
           <p class="note">Turn this off if a screen reader is already reading the cursor -
-             otherwise the braille user hears every move twice.</p>
+             otherwise the braille user hears every move twice. Moving onto a word still
+             says what that word is made of; only the cell-by-cell echo stops.</p>
 
           <h3>Focus mode</h3>
           <label><input type="checkbox" id="focusDark" />
@@ -752,14 +795,21 @@
     </div>
   </header>
 
-  <div class="panes">
+  <!-- <main>, not a div (2026-09-02, the audit): the page had no main landmark
+       at all, so a screen-reader user jumping by landmark - a very common way to
+       move about a page - had nothing to land on, and the two pane headings sat
+       outside every landmark. The class stays, so the layout and the stacked
+       mode are untouched. -->
+  <main class="panes">
     <section class="pane">
       <h2 class="pane-h" id="brlHead">Braille</h2>
       <!-- Accessible layer: the content is REAL Unicode braille cells as text, so a
            braille display shows the dots directly (same approach as Emboss's editor,
            whose visual pane is SVG dots and therefore needs this separately). -->
-      <div class="pane-body" id="braillePane" role="region"
-           aria-labelledby="brlHead" aria-describedby="brlHint">
+      <!-- The REGION is labelled by the heading; the textarea inside it carries
+           its own label and description. Both carrying both made a screen
+           reader announce the same two strings twice on entry (2026-09-02). -->
+      <div class="pane-body" id="braillePane" role="region" aria-labelledby="brlHead">
         <p class="sr-only" id="brlHint">
           The braille you have entered, as Unicode braille cells. A braille display
           shows these as dots. Chord dots on F D S and J K L; space ends a word.
@@ -806,7 +856,7 @@
         <div id="out"></div><div id="warn" class="warn" hidden></div>
       </div>
     </section>
-  </div>
+  </main>
 
   <!-- FOCUS MODE (PB, 2026-08-12): see the CSS comment above #focusOverlay for
        the shape of it. role="region", NOT role="dialog"/aria-modal — a real
@@ -1048,7 +1098,8 @@
             thing”</strong> - the braille legitimately has two readings (the codes
             themselves say so). Both are shown; you and the braille user decide which was
             meant.</li>
-        <li><strong>“Unverified - worth checking with the braille user”</strong> - the line read
+        <li><strong>“Unverified - this braille doesn't match the usual spelling of the maths
+            shown…”</strong> - the line read
             cleanly, but translating the maths back into braille doesn’t reproduce what
             was typed. Usually it is just an alternative braille spelling; occasionally
             it is a real slip, which is why it earns a glance.</li>
@@ -1078,7 +1129,9 @@
          deleted, Translate says so however this is set: losing a chunk of work quietly is a
          different thing altogether.) <strong>Speak where the cursor moves</strong> is separate,
          because moving about is not writing - it is the one to turn off if a screen reader
-         is already reading the cursor.</p>
+         is already reading the cursor. It governs the cell-by-cell echo only: arriving on a
+         word always says what that word is made of, whichever way this is set, because that
+         is the teaching and no screen reader can say it for us.</p>
       <p><strong>While the braille user is typing, Translate names the cell, not the word.</strong>
          That matters more than it sounds. <span class="eg">⠞</span> on its own is the short
          form for “that”, but a braille user who has just pressed those dots has not decided yet
@@ -1135,6 +1188,20 @@
             “App voice”). It is the one that says useful things: the letter, the finished
             word, the sum.</li>
       </ul>
+      <p>On Windows with <strong>NVDA</strong>, the same three:</p>
+      <ul>
+        <li><strong>Stop it reading each keystroke.</strong> NVDA menu → Preferences →
+            Settings → Keyboard, and clear <em>Speak typed characters</em> and
+            <em>Speak typed words</em>. (NVDA-2 toggles typed characters on the fly.)</li>
+        <li><strong>Quieten the running commentary.</strong> Settings → Object presentation,
+            and turn off <em>Report object descriptions</em>; NVDA-S steps through speech
+            modes if you want it silent for a moment, and the braille display keeps working
+            in every one of them.</li>
+        <li><strong>Leave Translate's own voice on</strong>, as above.</li>
+      </ul>
+      <p class="note">JAWS has the same two switches - Settings Center → Typing Echo, set to
+         <em>None</em>, and Verbosity set to <em>Beginner</em> off - but the steps here have
+         not been tried with it, so treat them as a starting point rather than instructions.</p>
       <p class="note">If you would rather have one voice doing everything, choose
          <strong>Speech → “Screen reader”</strong> instead: Translate then passes its
          announcements to the screen reader to say in its own voice, at the speed the braille user
@@ -1159,14 +1226,21 @@
             edited, and a screen reader reads them as maths. Anything the app could not read
             is left out rather than guessed at, so what arrives is only what was understood.</li>
       </ul>
-      <p><strong>Load</strong> opens either of those, and also a <code>.brl</code> file (braille
-         saved as dot patterns) or a <code>.txt</code> holding braille. It works out which from
+      <p><strong>Load</strong> opens a saved eBraille file or an exported BRF, and also a
+         <code>.brl</code> file (braille saved as dot patterns) or a <code>.txt</code> holding
+         braille. <strong>Word is export only</strong>: a <code>.docx</code> holds print, and
+         the braille it came from is not in it, so there is nothing for Load to read back. It works out which from
          the file itself rather than its name - so a file renamed by an email program still opens. A file with no braille
          in it is refused, and says so, rather than quietly emptying the braille user's work.</p>
       <p><strong>Clear</strong> empties both panels, asking first and reading the question
          aloud, and starts the new page in ordinary text even if the last one was maths.</p>
       <p>Translate keeps working with no internet connection, once it has been opened once on
          that computer.</p>
+      <p class="note">That first visit downloads about 5.5 MB, and most of it - 3.7 MB - is the
+         maths engine, which reads equations aloud and checks them. It is fetched then rather
+         than the first time maths is used, so a braille user who opens the app on the school
+         network and takes the laptop home still has maths. On a metered connection that is
+         most of what the app costs, and it is downloaded once.</p>
 
       <h3>Credits and licences</h3>
       <p class="credit">Typefaces: the interface is set in <strong>Inter</strong>
@@ -1177,9 +1251,11 @@
          no internet connection.</p>
       <p class="credit">Braille translation by <strong>liblouis</strong> (LGPL-2.1-or-later).
          Maths layout by <strong>Temml</strong> (MIT) and <strong>MathCAT</strong>
-         (MIT, © Neil Soiffer / DAISY)..</p>
+         (MIT, © Neil Soiffer / DAISY). The full licence texts, the versions used and
+         where to get their source travel with the app:
+         <a href="/licences/" target="_blank" rel="noopener noreferrer">third-party licences<span class="sr-only"> (opens in a new tab)</span></a>.</p>
       <p class="credit">© Sensory App House Ltd.<br>
-      Licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></p>
+      Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></p>
     </div>
   </dialog>
 
@@ -1254,6 +1330,24 @@
     <span class="sb-hint">Click a word in either panel to see the braille rules used.</span>
   </footer>
 
+  <!-- FOUR CLASSIC SCRIPTS, IN AN ORDER THAT MATTERS (2026-09-02, the audit:
+       "verified working, would degrade silently if reordered"). They are not
+       modules, so they share one global scope, and each one below depends on
+       what the line above it left there:
+
+         1. liblouis-wasm.js   defines the translator the app waits for
+         2. temml.min.js       defines globalThis.temml, which the maths render
+                               and the round-trip verifier both call by name
+         3. the module shim    nemeth-to-latex.js is CommonJS and assigns to
+                               `module.exports`; without these two globals it
+                               throws on load and the Nemeth reader is absent
+         4. the symbol table   read from globalThis by the converter below it;
+                               optional, but loading it AFTER would mean the
+                               first conversions ran without it
+
+       Reordering any of them fails quietly - the app still boots, and maths
+       simply stops being read - so the order is deliberate and tested by the
+       core-loop suite, which reads maths after a real page load. -->
   <script src="/engine/liblouis-wasm.js"></script>
   <script src="/web/vendor/temml.min.js"></script>
   <script>var module = { exports: {} }; var require = { main: null };</script>
@@ -1263,7 +1357,7 @@
   <script src="/nemeth-symbol-table.js"></script>
   <script src="/nemeth-to-latex.js"></script>
   <script>window.NemethToLatex = module.exports;</script>
-  <script type="module" src="/Translate/translate.mjs?v=2"></script>
+  <script type="module" src="/Translate/translate.mjs"></script>
   <script>
     // Synchronize scrolling between the two panes
     document.addEventListener('DOMContentLoaded', () => {
@@ -1297,7 +1391,27 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/Translate/sw.js', { scope: '/Translate/' })
-          .catch((err) => console.warn('[connector] service worker registration failed:', err));
+          .catch((err) => console.warn('[translate] service worker registration failed:', err));
+        // A NEW VERSION TAKES OVER QUIETLY, AND SHOULD SAY SO (2026-09-02, the
+        // audit). The worker calls skipWaiting and claim, so a deploy captures
+        // tabs that are already open: from then on the page is running the
+        // modules it loaded while the worker serves newer ones. Reloading under
+        // a braille user would cost them their work - there is no autosave - so
+        // this says what happened and leaves the choice to them.
+        // ONLY A REPLACEMENT IS NEWS (2026-09-02, the live pass). This fires on
+        // a FIRST visit too: there is no controller yet, the worker installs and
+        // clients.claim() captures this page, and controllerchange fires. Said
+        // then, the message is untrue and alarming - a first-time user is told
+        // to save their work and reload a page they have only just opened. So
+        // remember whether a worker was already in charge; only being REPLACED
+        // means the page and the worker are now different versions.
+        let hadController = !!navigator.serviceWorker.controller;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!hadController) { hadController = true; return; }
+          const sb = document.getElementById('statusBar');
+          if (sb) sb.innerHTML = '<span class="sb-hint">A new version of Translate is ready. '
+            + 'Save your work, then reload the page to use it.</span>';
+        });
       });
     }
   </script>

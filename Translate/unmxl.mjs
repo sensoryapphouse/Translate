@@ -1,21 +1,49 @@
-// UNMXL — compressed MusicXML (.mxl) archive decoder.
+// UNZIP — the ZIP reader, in memory, with no dependencies.
 //
-// .mxl is a ZIP archive containing META-INF/container.xml pointing to the main
-// .xml or .musicxml score file. This module unpacks the archive in memory
-// using standard Web APIs (DecompressStream) with zero external dependencies.
+// It was written to open .mxl (compressed MusicXML) and is still named for
+// that. Translate uses it for eBraille, which is also a ZIP; BrlDuet keeps its
+// own copy and still reads music with it. The .mxl half - mxlToText, which
+// finds the score inside the container - was removed from Translate's copy on
+// 2026-09-02 when music left the app (PB). BrlDuet's copy is unchanged.
+
+// THE LIMITS. A ZIP can lie about its sizes and a deflate stream can expand a
+// thousandfold (200 MB of zeros deflates to 204 KB), so a .docx, .xlsx or
+// crafted .ebrl of a few megabytes could take the whole tab down - and the
+// app has no autosave (Translate audit, 2026-09-02). Every document these apps
+// read is text: a whole braille book is well under a megabyte, so the caps
+// are generous for real files and hopeless for a bomb. They are checked inside
+// the read loop, chunk by chunk, never from the sizes the header claims.
+export const ZIP_LIMITS = Object.freeze({
+  maxTotal: 64 * 1024 * 1024,   // bytes inflated across the whole archive
+  maxEntry: 32 * 1024 * 1024,   // bytes inflated for one entry
+  maxEntries: 4096,             // local file headers read
+  maxRatio: 200,                // inflated:compressed, applied once an entry passes ratioFloor
+  ratioFloor: 1024 * 1024,      // below this many inflated bytes the ratio is not judged
+});
+
+export class ZipLimitError extends Error {
+  constructor(message, entry) { super(message); this.name = 'ZipLimitError'; this.entry = entry; }
+}
 
 /**
  * Unpack a ZIP archive ArrayBuffer into a Map of filename -> Uint8Array data.
+ * `limits` overrides ZIP_LIMITS (tests use small ones); a breach throws a
+ * ZipLimitError naming the entry, and nothing partial is returned.
  */
-export async function unzip(buffer) {
+export async function unzip(buffer, limits = {}) {
+  const L = { ...ZIP_LIMITS, ...limits };
   const bytes = new Uint8Array(buffer);
   const view = new DataView(buffer);
   const files = new Map();
   let pos = 0;
+  let total = 0;
+  const mb = (n) => `${Math.round(n / 1048576)} MB`;
+  const refuse = (name, why) => { throw new ZipLimitError(`This file will not open: ${why} (entry "${name}").`, name); };
 
   while (pos + 30 <= bytes.length) {
     const sig = view.getUint32(pos, true);
     if (sig !== 0x04034b50) break; // End of local file headers / Central dir
+    if (files.size >= L.maxEntries) refuse('', `it holds more than ${L.maxEntries} entries`);
     const method = view.getUint16(pos + 8, true);
     const compSize = view.getUint32(pos + 18, true);
     const nameLen = view.getUint16(pos + 26, true);
@@ -25,9 +53,16 @@ export async function unzip(buffer) {
     const fileName = new TextDecoder().decode(nameBytes);
     const dataStart = pos + 30 + nameLen + extraLen;
     const compData = bytes.subarray(dataStart, dataStart + compSize);
+    // grown so far, this entry included: checked as each chunk arrives
+    const grow = (n) => {
+      if (n > L.maxEntry) refuse(fileName, `one part of it is larger than ${mb(L.maxEntry)}`);
+      if (total + n > L.maxTotal) refuse(fileName, `unpacked it is larger than ${mb(L.maxTotal)}`);
+      if (n > L.ratioFloor && n > compData.length * L.maxRatio) refuse(fileName, `it expands more than ${L.maxRatio} times when unpacked`);
+    };
 
     let decompressed;
     if (method === 0) {
+      grow(compData.length);
       decompressed = compData;
     } else if (method === 8) {
       // The API is DecompressionStream (Node 18+, all evergreen browsers).
@@ -39,16 +74,20 @@ export async function unzip(buffer) {
       if (typeof DecompressionStream !== 'undefined') {
         const ds = new DecompressionStream('deflate-raw');
         const writer = ds.writable.getWriter();
-        writer.write(compData);
-        writer.close();
+        // the writer's promises settle late; when the reader is cancelled below
+        // they reject, and an unhandled rejection would end a Node process
+        writer.write(compData).catch(() => {});
+        writer.close().catch(() => {});
         const reader = ds.readable.getReader();
         const chunks = [];
+        let totalLen = 0;
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
+          totalLen += value.length;
+          try { grow(totalLen); } catch (e) { reader.cancel().catch(() => {}); throw e; }
           chunks.push(value);
         }
-        let totalLen = chunks.reduce((acc, c) => acc + c.length, 0);
         decompressed = new Uint8Array(totalLen);
         let offset = 0;
         for (const chunk of chunks) {
@@ -62,45 +101,9 @@ export async function unzip(buffer) {
       throw new Error(`Unsupported ZIP compression method: ${method}`);
     }
 
+    total += decompressed.length;
     files.set(fileName, decompressed);
     pos = dataStart + compSize;
   }
   return files;
-}
-
-/**
- * Extract raw MusicXML text string from a .mxl ArrayBuffer.
- *
- * @param {ArrayBuffer} buffer  the raw bytes of the .mxl file
- * @returns {Promise<string>}  the decompressed MusicXML string
- */
-export async function mxlToText(buffer) {
-  const files = await unzip(buffer);
-  if (!files.size) throw new Error('Invalid or empty .mxl zip archive');
-
-  // Look for META-INF/container.xml
-  let rootPath = null;
-  const containerData = files.get('META-INF/container.xml') || files.get('meta-inf/container.xml');
-  if (containerData) {
-    const containerXml = new TextDecoder('utf-8').decode(containerData);
-    const match = /full-path\s*=\s*["']([^"']+)["']/i.exec(containerXml);
-    if (match) rootPath = match[1];
-  }
-
-  // Fallback: find first .xml or .musicxml file if container.xml is missing or path not found
-  if (!rootPath || !files.has(rootPath)) {
-    for (const fileName of files.keys()) {
-      if (/\.(xml|musicxml)$/i.test(fileName) && !/^META-INF/i.test(fileName)) {
-        rootPath = fileName;
-        break;
-      }
-    }
-  }
-
-  if (!rootPath || !files.has(rootPath)) {
-    throw new Error('No MusicXML root file found in .mxl archive');
-  }
-
-  const scoreBytes = files.get(rootPath);
-  return new TextDecoder('utf-8').decode(scoreBytes);
 }

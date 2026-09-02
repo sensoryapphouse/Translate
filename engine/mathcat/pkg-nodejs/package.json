@@ -1,0 +1,11 @@
+{
+  "name": "brlit_mathcat",
+  "version": "0.1.0",
+  "files": [
+    "brlit_mathcat_bg.wasm",
+    "brlit_mathcat.js",
+    "brlit_mathcat.d.ts"
+  ],
+  "main": "brlit_mathcat.js",
+  "types": "brlit_mathcat.d.ts"
+}

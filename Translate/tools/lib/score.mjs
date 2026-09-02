@@ -214,6 +214,13 @@ export function latexTokens(latex) {
       // \{ \} \| \% … — escaped punctuation. Braces are structural; the rest
       // are content and normalise like any other character.
       if ('{}'.includes(m[2])) continue;
+      // SPACING ESCAPES ARE LAYOUT, NOT CONTENT (2026-09-02). \  (thin space),
+      // \, \; \: \! set space and nothing else, yet each was scored: a thin
+      // space counted as an invented character, and \, counted as an invented
+      // COMMA. Three matrix rows of the independent set were marked unfaithful
+      // for spacing alone, which is how pointing the gate at the app's own
+      // reader looked like a regression when the two readings were identical.
+      if (' ,;:!'.includes(m[2])) continue;
       const t = norm(m[2]);
       if (t) toks.push(t);
     } else if (m[3]) {

@@ -298,6 +298,19 @@ export function uebMathsToLatex(input) {
   }
 
   // One token/atom (plus any trailing scripts).
+  // THE DISPATCH, IN THE ORDER IT MUST STAY (2026-09-02, the audit asked for
+  // markers before anything is split; the ORDER here is load-bearing and every
+  // branch says why, so this is a map rather than a reshuffle):
+  //
+  //   composite symbols (4 cells and longer)   they cannot be reassembled once
+  //                                            a structural branch has bitten
+  //   shapes, arrows, chemical bonds           grammars: opener, body, closer
+  //   grade-1 and typeform prefixes            mode, not content
+  //   Greek, capitals, capitalised words       before plain letters
+  //   scripts, roots, fractions, brackets      structure
+  //   function names                           before the letters they contain
+  //   numbers, letters, punctuation            the ordinary cases
+  //   the symbol table, then dot numbers       the last two resorts
   function parseOne(stop) {
     const c = peek();
     if (c === undefined) return null;
@@ -1223,9 +1236,9 @@ export function uebMathsToLatex(input) {
  * from the SAME constants the parser above uses, so an explanation can never
  * drift from what the converter actually did. Plain letters and digits are
  * skipped — only the constructs worth explaining are named. */
-const OPNAME5 = { '+': 'plus', '-': 'minus', '\\times ': 'times', '\\div ': 'divided by',
+const OPNAME5 = { '+': 'plus', '-': 'minus', '\\times ': 'times', '\\cdot ': 'times (dot product)', '\\div ': 'divided by',
                   '=': 'equals', '(': 'open bracket', ')': 'close bracket' };
-const OPNAME4 = { '<': 'less than', '>': 'greater than' };
+const OPNAME4 = { '<': 'less than', '>': 'greater than', '\\neq ': 'not equal to' };
 const OPNAME456 = { '\\le ': 'less than or equal to', '\\ge ': 'greater than or equal to' };
 // ⠸⠖ and ⠸⠤. The parser has always read these (OPS456); only the describer had
 // no name for them, so ± was announced as two unnamed cells.
@@ -1259,6 +1272,21 @@ export function describeUebMaths(input) {
     const carriedNumeric = numericHolds;
     numericHolds = false;
     if (c === '⠀') { i++; continue; }
+
+    // A TWO-CELL SIGN BEFORE ITS FIRST CELL (2026-09-02): percent is dots 46
+    // then 356, and the Greek-letter-sign branch below claimed the 46, so the
+    // status bar said "Greek letter sign, dots 3 5 6" for it.
+    {
+      const multi = symbolNameAt(cells, i, 2);
+      if (multi) { add(multi.cells, multi.name); i += multi.len; continue; }
+    }
+    if (c === PRE4 && at(1) === D('25') && at(2) === D('125')) { add(c + at(1) + at(2), 'hbar (reduced Planck constant)'); i += 3; continue; }
+    if (c === PRE4 && at(1) === D('145')) { add(c + at(1), 'partial derivative'); i += 2; continue; }
+    if (c === D('6') && at(1) === GREEKI && at(2) && GREEK_CAP_CELL[at(2)]) { add(c + at(1) + at(2), 'Greek capital ' + GREEK_CELL[at(2)].replace(/^\\/, '')); i += 3; continue; }
+    if (c === D('6') && at(1) && LETTERS[at(1)]) { add(c + at(1), 'capital ' + LETTERS[at(1)].toUpperCase()); i += 2; continue; }
+    if ((c === PRE5 || c === PRE4) && at(1) === D('156')) { add(c + at(1), 'hat accent'); i += 2; continue; }
+    if ((c === PRE5 || c === PRE4) && at(1) === D('25')) { add(c + at(1), 'bar accent'); i += 2; continue; }
+    if ((c === PRE5 || c === PRE4) && at(1) === D('256')) { add(c + at(1), 'vector arrow'); i += 2; continue; }
     if (c === G1 && at(1) === G1 && at(2) === SQRT_O) { add(c + at(1) + at(2), 'square-root sign'); i += 3; continue; }
     if (c === G1 && at(1) === G1)     { add(c + at(1), 'grade-1 mode'); i += 2; continue; }
     if (c === G1 && at(1) === SUP)    { add(c + at(1), 'superscript (raise what follows)'); i += 2; continue; }
@@ -1334,10 +1362,75 @@ export function describeUebMaths(input) {
       continue;
     }
 
+    // THE SYMBOL TABLE THE PARSER ALREADY CARRIES (2026-09-02, the audit). This
+    // describer named 12 of UEB_SYMBOLS' 202 entries, so the status bar spelt
+    // out dot numbers for percent, degree and every arrow - signs the reader
+    // itself knows. Longest match first, as the table is ordered.
+    {
+      const hit = symbolNameAt(cells, i);
+      if (hit) { add(hit.cells, hit.name); i += hit.len; continue; }
+    }
+
     add(c, dotsOf(c));
     i++;
   }
   return out;
+}
+
+// A WORD WHERE WE HAVE ONE, THE SIGN ITSELF WHERE WE DO NOT. Naming a symbol by
+// its own character is still an answer a child can act on; a dot list is not.
+const SYMBOL_WORD = {
+  '%': 'percent', '°': 'degrees', '′': 'prime', '″': 'double prime',
+  '×': 'times', '÷': 'divided by', '±': 'plus or minus', '∓': 'minus or plus',
+  '≠': 'not equal to', '≤': 'less than or equal to', '≥': 'greater than or equal to',
+  '≈': 'approximately equal to', '≡': 'is identical to', '∼': 'tilde (is similar to)',
+  '∈': 'is in (element of)', '∉': 'is not in', '∩': 'intersection', '∪': 'union',
+  '⊂': 'is a subset of', '⊃': 'contains', '∅': 'the empty set', '∞': 'infinity',
+  '√': 'square-root sign', '∑': 'sum sign', '∏': 'product sign', '∫': 'integral sign',
+  '∠': 'angle', '△': 'triangle', '□': 'square', '∴': 'therefore', '∵': 'because',
+  '→': 'right arrow', '←': 'left arrow', '↔': 'double arrow', '⇒': 'implies',
+  '∀': 'for all', '∃': 'there exists', '¬': 'not', '∧': 'and', '∨': 'or',
+  '·': 'times (dot)', '…': 'and so on (ellipsis)', '∂': 'partial derivative',
+  '∝': 'is proportional to', '⊥': 'perpendicular', '∥': 'parallel',
+};
+
+// 48 of the table's 202 entries hold LaTeX rather than a character ("\\%",
+// "^{\\circ}"), so a name is looked up under both spellings before falling back.
+const LATEX_WORD = {
+  '\\%': 'percent', '^{\\circ}': 'degrees', '\\times': 'times', '\\div': 'divided by',
+  '\\pm': 'plus or minus', '\\mp': 'minus or plus', '\\neq': 'not equal to',
+  '\\leq': 'less than or equal to', '\\geq': 'greater than or equal to',
+  '\\approx': 'approximately equal to', '\\equiv': 'is identical to',
+  '\\sim': 'tilde (is similar to)', '\\in': 'is in (element of)',
+  '\\notin': 'is not in', '\\cap': 'intersection', '\\cup': 'union',
+  '\\subset': 'is a subset of', '\\supset': 'contains', '\\emptyset': 'the empty set',
+  '\\infty': 'infinity', '\\sqrt': 'square-root sign', '\\sum': 'sum sign',
+  '\\prod': 'product sign', '\\int': 'integral sign', '\\angle': 'angle',
+  '\\triangle': 'triangle', '\\square': 'square', '\\therefore': 'therefore',
+  '\\because': 'because', '\\rightarrow': 'right arrow', '\\leftarrow': 'left arrow',
+  '\\leftrightarrow': 'double arrow', '\\Rightarrow': 'implies', '\\forall': 'for all',
+  '\\exists': 'there exists', '\\neg': 'not', '\\wedge': 'and', '\\vee': 'or',
+  '\\cdot': 'times (dot)', '\\ldots': 'and so on (ellipsis)', '\\partial': 'partial derivative',
+  '\\propto': 'is proportional to', '\\perp': 'perpendicular', '\\parallel': 'parallel',
+};
+const nameForSymbol = (sym) => {
+  const t = String(sym).trim();
+  if (SYMBOL_WORD[t]) return SYMBOL_WORD[t];
+  if (LATEX_WORD[t]) return LATEX_WORD[t];
+  const bare = t.replace(/[{}^_]/g, '').replace(/\\/g, '');
+  if (LATEX_WORD['\\' + bare]) return LATEX_WORD['\\' + bare];
+  if (SYMBOL_WORD[bare]) return SYMBOL_WORD[bare];
+  return /^[^a-zA-Z\\{}^_]$/.test(bare) ? `the sign ${bare}` : (bare ? `the sign for ${bare}` : null);
+};
+
+function symbolNameAt(cells, i, minCells = 1) {
+  for (const [seq, sym] of UEB_SYMBOLS) {
+    const n = [...seq].length;
+    if (n < minCells || cells.slice(i, i + n).join('') !== seq) continue;
+    const word = nameForSymbol(sym);
+    if (word) return { cells: seq, name: word, len: n };
+  }
+  return null;
 }
 
 // A CELL WE CANNOT NAME SAYS SO. This used to return a bare digit string -

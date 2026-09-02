@@ -14,7 +14,13 @@
 //
 // Run:  node test-speech-modes.mjs            (serves Translate itself)
 //       node test-speech-modes.mjs --show     (headful, to watch it)
-import puppeteer from 'puppeteer';
+// DRIVEN BY PLAYWRIGHT, IN THE REAL CHROME ON THIS MACHINE (PB, 2026-09-02).
+// It used to launch puppeteer's own bundled Chromium, which is not the browser
+// anyone uses and behaves differently where it matters here - that build cannot
+// even load the MathCAT wasm, so speech measured through it was the fallback
+// speaker while looking like the real one. channel: 'chrome' drives the
+// installed browser; puppeteer is gone from this repository.
+import { chromium } from 'playwright';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -65,11 +71,27 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
 
 (async () => {
   await new Promise((r) => server.listen(PORT, r));
-  const browser = await puppeteer.launch({
+  const browser = await chromium.launch({
+    channel: 'chrome',
     headless: !process.argv.includes('--show'),
     args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'],
   });
   const page = await browser.newPage();
+
+  // WAIT FOR THE CONDITION, NOT THE CLOCK (2026-09-02, the audit). A fixed sleep
+  // is a guess about a machine: too short and the suite fails on a loaded
+  // laptop, too long and every run pays for it. Deliberate settle times - a
+  // pause that models a person stopping typing - stay as sleeps, because there
+  // the duration IS the thing being tested.
+  const waitFor = async (fn, what, ms = 8000) => {
+    const t0 = Date.now();
+    for (;;) {
+      if (await page.evaluate(fn)) return true;
+      if (Date.now() - t0 > ms) { failures.push(`timed out waiting for ${what}`); console.log(`FAIL  timed out waiting for ${what}`); return false; }
+      await new Promise((r) => setTimeout(r, 50));
+    }
+  };
+
   page.on('pageerror', (e) => { failures.push({ name: 'page error', got: String(e) }); });
 
   // One helper set, injected once per page load.
@@ -99,7 +121,8 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
   // A fresh page per case: module state, spans and lineModes all start clean,
   // so one case cannot explain another's result.
   const fresh = async (setup) => {
-    await page.goto(`http://localhost:${PORT}/Translate/`, { waitUntil: 'networkidle0' });
+    await page.goto(`http://localhost:${PORT}/Translate/`, { waitUntil: 'networkidle' });
+    await waitFor(() => !!document.getElementById('brlInput'), 'the app to finish booting');
     await page.evaluate(HELPERS);
     await page.evaluate(async () => {
       const { set, sleep } = window.__h;
@@ -113,19 +136,19 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
 
   // ---------------------------------------------------------------- prose ---
   await fresh();
-  let r = await page.evaluate(async (CAT, SAT) => {
+  let r = await page.evaluate(async ({ CAT, SAT }) => {
     const h = window.__h;
     await h.clear();
     await h.type(CAT); const a = await h.listen(h.space);
     await h.type(SAT); const b = await h.listen(h.space);
     return { a, b };
-  }, CAT, SAT);
+  }, { CAT, SAT });
   check('prose: first word speaks', r.a, /cat/i, LITERARY_LEAK);
   check('prose: second word speaks', r.b, /sat/i);
 
   // ------------------------------------------- UEB maths span (Ctrl+M) ------
   await fresh();
-  r = await page.evaluate(async (HALF, DOG) => {
+  r = await page.evaluate(async ({ HALF, DOG }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeUeb', true); await h.sleep(200);
@@ -140,14 +163,14 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
     await h.type(DOG);
     const prose = await h.listen(h.space);
     return { sum, del, again, prose, field: window.__h.$('brlInput').value };
-  }, HALF, DOG);
+  }, { HALF, DOG });
   check('UEB span: sum speaks as maths', r.sum, /half|fraction|over/i, LITERARY_LEAK);
   check('UEB span: after delete + retype, STILL maths', r.again, /half|fraction|over/i, LITERARY_LEAK);
   check('UEB span: prose after leaving it speaks as a word', r.prose, /dog/i, LITERARY_LEAK);
 
   // ------------------------------------------------ Nemeth written run ------
   await fresh();
-  r = await page.evaluate(async (NEM_SUM, CAT) => {
+  r = await page.evaluate(async ({ NEM_SUM, CAT }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeNemeth', true); await h.sleep(200);
@@ -158,13 +181,13 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
     await h.type(' ' + CAT);          // a space after leaving the run, as a writer would
     const prose = await h.listen(h.space);
     return { sum, prose };
-  }, NEM_SUM, CAT);
+  }, { NEM_SUM, CAT });
   check('Nemeth run: sum speaks as maths', r.sum, /3|plus|2/i, LITERARY_LEAK);
   check('Nemeth run: prose after it speaks as a word', r.prose, /cat/i, LITERARY_LEAK);
 
   // -------------------------------------------- whole-document maths --------
   await fresh();
-  r = await page.evaluate(async (NEM_SUM, DOG) => {
+  r = await page.evaluate(async ({ NEM_SUM, DOG }) => {
     const h = window.__h;
     await h.clear();
     h.$('nemethMaths').checked = true; h.$('uebMaths').checked = false;
@@ -174,7 +197,7 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
     await h.type(DOG);
     const word = await h.listen(h.space);
     return { sum, word };
-  }, NEM_SUM, DOG);
+  }, { NEM_SUM, DOG });
   check('whole-document maths: sum speaks as maths', r.sum, /3|plus|2/i, LITERARY_LEAK);
   check('whole-document maths: a pure-letter word still speaks as a word', r.word, /dog/i);
 
@@ -182,7 +205,7 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
   // The "cap a" report: ⠨⠅ inside a Nemeth run is the equals sign, but read as
   // literary UEB it is Greek kappa, and a reader says that as "cap a".
   await fresh();
-  r = await page.evaluate(async (NEM_SUM) => {
+  r = await page.evaluate(async ({ NEM_SUM }) => {
     const h = window.__h;
     const EQ = String.fromCodePoint(0x2800 + 40) + String.fromCodePoint(0x2800 + 5); // dots 46, dots 13
     const FIVE = String.fromCodePoint(0x283C) + String.fromCodePoint(0x2822);        // # + dropped 5
@@ -202,7 +225,7 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
       said.push(h.$('announce').textContent.trim());
     }
     return { said };
-  }, NEM_SUM);
+  }, { NEM_SUM });
   check('cursor: first cell of the equals sign', r.said[0], /equal/i, /kappa|κ/);
   check('cursor: second cell of the equals sign', r.said[1], /equal/i, /kappa|κ/);
 
@@ -211,7 +234,7 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
   // the same for Nemeth. Deleting names the cell, and naming it literarily
   // inside a sum is the same fault as reading it literarily.
   await fresh();
-  r = await page.evaluate(async (HALF) => {
+  r = await page.evaluate(async ({ HALF }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeUeb', true); await h.sleep(200);
@@ -221,12 +244,12 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
     const two = await h.listen(h.back);     // the 2
     const slash = await h.listen(h.back);   // the FRACTION LINE
     return { two, slash };
-  }, HALF);
+  }, { HALF });
   check('UEB maths: deleting a digit', r.two, /2|two/i, /^delete (dots|blank)/i);
   check('UEB maths: deleting the fraction line', r.slash, /fraction|slash|line|st/i, /dots/i);
 
   await fresh();
-  r = await page.evaluate(async (NEM_SUM) => {
+  r = await page.evaluate(async ({ NEM_SUM }) => {
     const h = window.__h;
     await h.clear();
     h.set('mathsCodeNemeth', true); await h.sleep(200);
@@ -236,7 +259,7 @@ const LITERARY_LEAK = /of|sh|ing|with|;'|κ/;
     const digit = await h.listen(h.back);   // the trailing 2
     const plus = await h.listen(h.back);    // the PLUS
     return { digit, plus };
-  }, NEM_SUM);
+  }, { NEM_SUM });
   check('Nemeth: deleting a digit', r.digit, /2|two/i, /^delete (dots|blank)/i);
   check('Nemeth: deleting the plus', r.plus, /plus/i, /dots/i);
 

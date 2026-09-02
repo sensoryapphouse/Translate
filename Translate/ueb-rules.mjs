@@ -61,12 +61,15 @@ const LETTERS = {};
 });
 const DIGIT_OF = { a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9', j: '0' };
 
+// A LATEX COMMAND MUST NOT RUN INTO THE NEXT LETTER (2026-09-02): \pi followed
+// by r emitted "\pir", so A = pi r squared - the GCSE circle-area row - printed
+// as an unknown command. The capitals below always had the space; these did not.
 const GREEK_CELL = {
-  '⠁':'\\alpha', '⠃':'\\beta', '⠛':'\\gamma', '⠙':'\\delta', '⠑':'\\epsilon',
-  '⠵':'\\zeta', '⠱':'\\eta', '⠹':'\\theta', '⠊':'\\iota', '⠅':'\\kappa',
-  '⠇':'\\lambda', '⠍':'\\mu', '⠝':'\\nu', '⠭':'\\xi', '⠕':'\\omicron',
-  '⠏':'\\pi', '⠗':'\\rho', '⠎':'\\sigma', '⠞':'\\tau', '⠥':'\\upsilon',
-  '⠋':'\\phi', '⠯':'\\chi', '⠽':'\\psi', '⠺':'\\omega',
+  '⠁':'\\alpha ', '⠃':'\\beta ', '⠛':'\\gamma ', '⠙':'\\delta ', '⠑':'\\epsilon ',
+  '⠵':'\\zeta ', '⠱':'\\eta ', '⠹':'\\theta ', '⠊':'\\iota ', '⠅':'\\kappa ',
+  '⠇':'\\lambda ', '⠍':'\\mu ', '⠝':'\\nu ', '⠭':'\\xi ', '⠕':'\\omicron ',
+  '⠏':'\\pi ', '⠗':'\\rho ', '⠎':'\\sigma ', '⠞':'\\tau ', '⠥':'\\upsilon ',
+  '⠋':'\\phi ', '⠯':'\\chi ', '⠽':'\\psi ', '⠺':'\\omega ',
 };
 const GREEK_CAP_CELL = {
   '⠁':'A', '⠃':'B', '⠛':'\\Gamma ', '⠙':'\\Delta ', '⠑':'E', '⠵':'Z',
@@ -236,7 +239,22 @@ export function parseUeb(input) {
     { ref: 'GTM 3.6',  name: 'punctuation',       try: tryPunct },
   ];
 
-  function tryLiteralSpace() { if (at() !== C.SPACE) return null; const s = i; i++; return Space(s); }
+  function tryLiteralSpace() {
+    if (at() !== C.SPACE) return null;
+    if (grade1 === 'word') grade1 = 'none';   // a word indicator ends with its word
+    const s = i; i++; return Space(s);
+  }
+  // GRADE 1 SUSPENDS CONTRACTIONS, WHICH IS WHAT TELLS "sin" FROM "s SUPERSCRIPT"
+  // (2026-09-02, the audit). The contracted sin is the letter s followed by the
+  // "in" contraction - the same two cells as s with a superscript indicator -
+  // so "6 m s^-1" read as "6 m sin -1". When a grade-1 word or passage
+  // indicator has been seen, contractions are off and the cells are a script.
+  // ...AND IT REACHES ONLY AS FAR AS ITS OWN KIND SAYS: one grade-1 indicator
+  // covers the next symbol, two cover the word, three cover the passage until
+  // the terminator. Held for the whole line instead, it silenced the contracted
+  // sin in "x sin 60" - where the single indicator belonged to the x, two cells
+  // and a space earlier.
+  let grade1 = 'none';           // 'none' | 'word' | 'passage'
   function tryGrade1() {
     if (at() !== C.G1) return null;
     // grade-1 is a MODE marker, not content — but ⠰ also introduces a script,
@@ -245,7 +263,8 @@ export function parseUeb(input) {
     const s = i;
     // ⠰⠄ TERMINATES a grade-1 passage. Read as content it became a stray
     // apostrophe on the end of every passage-marked line.
-    if (at(1) === D('3')) { i += 2; return Seq([], s, 2); }
+    if (at(1) === D('3')) { grade1 = 'none'; i += 2; return Seq([], s, 2); }
+    grade1 = (at(1) === C.G1 && at(2) === C.G1) ? 'passage' : 'word';
     i += (at(1) === C.G1) ? 2 : 1;
     return Seq([], s, i - s);
   }
@@ -321,18 +340,25 @@ export function parseUeb(input) {
     const s = i; i += 2;
     return Ident(LETTERS[cells[s + 1]].toUpperCase(), s, 2);
   }
+  const CONTRACTED_SIN = D('234') + D('35');
   function tryFunction() {
+    // A CAPITALISED NAME IS STILL THE NAME: "Sin 30" was read as "S^{30}",
+    // because the capital indicator sat in front of every entry in the table.
+    const lead = (at() === C.CAP && LETTERS[at(1)] !== undefined) ? 1 : 0;
     for (const f of FUNCTIONS) {
       const n = f.cells.length;
-      if (cells.slice(i, i + n).join('') !== f.cells) continue;
-      const after = cells[i + n];
+      if (cells.slice(i + lead, i + lead + n).join('') !== f.cells) continue;
+      // in grade 1 the "in" contraction is not available, so these two cells
+      // are the letter s and a superscript indicator, not the word sin
+      if (grade1 !== 'none' && f.cells === CONTRACTED_SIN) continue;
+      const after = cells[i + lead + n];
       const isArg = after === undefined || after === C.SPACE
-        || matches(C.RND_O, i + n) || after === C.GRP_O
+        || matches(C.RND_O, i + lead + n) || after === C.GRP_O
         || after === C.SUB || after === C.SUP || after === C.NUM
         || after === D('46') || after === C.CAP || LETTERS[after] !== undefined;
       if (!isArg) continue;
       const s = i;
-      i += n;
+      i += lead + n;
       if (cells[i] === C.SPACE) i++;            // the space belongs to the name
       return Op(f.tex + ' ', s, i - s, false);
     }
@@ -410,10 +436,23 @@ export function parseUeb(input) {
     for (const [o, c, lo, lc] of BRACKETS) if (matches(o, p)) return { o, c, lo, lc };
     return null;
   }
+  // A BINOMIAL IS A ROUND BRACKET WITH A VERTICAL JUXTAPOSITION IN IT (GTM 14.3).
+  // The separator is dots 56 then 12456; the older reader has read this since
+  // its precedence table was written, and the newer one turned it into
+  // "(n [unreadable] r)" - so "n choose r" was unreadable AND unspeakable
+  // (2026-09-02, the audit).
+  const VJUX = D('56') + D('12456');
   function bracket(b) {
     const s = i;
     i += b.o.length;
-    const body = sequence(null, (p) => matches(b.c, p));
+    const body = sequence(null, (p) => matches(b.c, p) || matches(VJUX, p));
+    if (matches(VJUX) && b.o === C.RND_O) {
+      i += VJUX.length;
+      const bottom = sequence(null, (p) => matches(b.c, p));
+      if (matches(b.c)) i += b.c.length;
+      else warnings.push(`Unclosed binomial (missing ${b.c})`);
+      return Frac(body, bottom, s, i - s, { binom: true });
+    }
     if (matches(b.c)) i += b.c.length;
     else warnings.push(`Unclosed bracket (missing ${b.c})`);
     return Group(body, b.lo, b.lc, s, i - s);

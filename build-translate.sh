@@ -111,6 +111,67 @@ cat > "$OUT/index.html" <<'HTML'
 <p>Opening <a href="/Translate/">Translate</a>…</p>
 HTML
 
+# --- the licences of everything we ship ----------------------------------
+# EVERY DEPLOY DISTRIBUTES OTHER PEOPLE'S SOFTWARE (2026-09-02, the audit).
+# liblouis is LGPL and Temml, MathCAT and Inter are MIT/OFL; the build shipped
+# none of their texts, and the LGPL wants a source offer besides. The texts are
+# copied from ONE place each, so they cannot drift from what is shipped, and
+# licences/NOTICE.md is turned into a page the credits link to.
+mkdir -p "$OUT/licences"
+cp licences/NOTICE.md licences/Temml-MIT.txt licences/MathCAT-MIT.txt \
+   licences/liblouis-LGPL-2.1.txt licences/Inter-OFL-1.1.txt "$OUT/licences/"
+python3 - "$OUT" <<'PYEOF'
+import html, sys, os
+out = sys.argv[1]
+notice = open('licences/NOTICE.md', encoding='utf-8').read()
+files = sorted(f for f in os.listdir(os.path.join(out, 'licences')) if f.endswith('.txt'))
+links = '\n'.join(f'<li><a href="/licences/{f}">{html.escape(f)}</a></li>' for f in files)
+open(os.path.join(out, 'licences', 'index.html'), 'w', encoding='utf-8').write(f"""<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Translate - third-party licences</title>
+<style>body{{max-width:44rem;margin:2rem auto;padding:0 1rem;font:16px/1.55 system-ui,sans-serif;color:#171d1c}}
+pre{{white-space:pre-wrap;font:inherit}} a{{color:#0b5}} h1{{font-size:1.4rem}}</style>
+<h1>Third-party licences</h1>
+<pre>{html.escape(notice)}</pre>
+<h2>Full texts</h2>
+<ul>{links}</ul>
+<p><a href="/Translate/">Back to Translate</a></p>
+""")
+print('  licences/ - NOTICE plus %d full texts' % len(files))
+PYEOF
+
+# --- security headers, with the inline scripts HASHED --------------------
+# A CSP is the net under the escaping discipline for the day an escape is
+# missed (2026-09-02, the audit). script-src 'self' alone would break the app:
+# index.html carries three small inline scripts that bridge the two classic
+# libraries into module scope. Their hashes are computed HERE, from the file
+# being shipped, so the policy cannot go stale the way a typed hash would.
+python3 - "$OUT" <<'PYEOF'
+import base64, hashlib, re, sys, os
+out = sys.argv[1]
+src = open(os.path.join(out, 'Translate', 'index.html'), encoding='utf-8').read()
+inline = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', src, re.S)
+hashes = ' '.join("'sha256-%s'" % base64.b64encode(hashlib.sha256(b.encode('utf-8')).digest()).decode()
+                  for b in inline)
+policy = ("default-src 'self'; "
+          "script-src 'self' 'wasm-unsafe-eval' " + hashes + "; "
+          # Temml writes style attributes into the MathML it returns, and the
+          # app's own stylesheet is inline in index.html.
+          "style-src 'self' 'unsafe-inline'; "
+          "img-src 'self' data:; font-src 'self'; connect-src 'self'; "
+          "object-src 'none'; base-uri 'self'; form-action 'self'; "
+          "frame-ancestors 'none'")
+open(os.path.join(out, '_headers'), 'w', encoding='utf-8').write(f"""/*
+  Content-Security-Policy: {policy}
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+""")
+print('  _headers - CSP with %d inline-script hashes' % len(inline))
+PYEOF
+
 # The one asset that is fetched by the wasm loader rather than by a URL in the
 # source, so nothing else would notice it missing.
 for required in engine/mathcat/pkg-web/emboss_mathcat_bg.wasm engine/liblouis-wasm.wasm \
