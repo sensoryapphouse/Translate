@@ -31,6 +31,12 @@ pane can use it directly.
 **APH have agreed we may use this font.** Confirmed by Greg Hargraves and
 relayed by PB on 2026-08-09, which is the authority this inclusion rests on.
 
+The Translate audit of 2026-09-02 raised the gap between that and what the app
+does - permission to *use* a font is not obviously permission to *redistribute*
+it to every visitor of a public web app, which is what serving it as a webfont
+is. **PB confirmed the same day that this is fine**, so the app ships it. If APH
+ever put terms in writing, they belong in this file beside the sentence above.
+
 That confirmation was needed because it could not be established from public
 sources: APH's own downloads page (`aph.org/manuals-downloads`) publishes the
 font with **no licence, permission or restriction statement attached**, and the
