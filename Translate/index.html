@@ -188,7 +188,14 @@
                        display:flex; align-items:center; gap:12px;
                        justify-content:center; flex-wrap:wrap; }
   /* STACKED, THERE IS NO LEFT PANE to be over, so it rejoins the row. */
-  .panes-stacked .head-over-braille { position:static; width:auto; margin-left:auto; }
+  /* BACK INTO FLOW when the centred group would reach the buttons on the
+     right (tester, 17 Oct: "buttons overlap when resizing"). .panes-stacked
+     fires when the PANES stack; .head-inflow fires when the TOOLBAR would
+     collide, which happens much sooner - at about 880px, while the panes are
+     still side by side. translate.mjs measures it, because only the live
+     layout knows how wide the pane ended up. */
+  .panes-stacked .head-over-braille,
+  .head-inflow .head-over-braille { position:static; width:auto; margin-left:auto; }
   /* OUR OWN MARK (PB, 10 Oct: "use our Emboss logo, not the Paige one").
      Translate briefly wore Paige's outlined icon earlier the same day; this is
      the shared Sensory App House mark, a filled rounded square, so it is sized
@@ -607,10 +614,19 @@
 
   .disputed-lead { margin-bottom:2px; }
   .ambig-cells { font-family:inherit; margin-right:6px; }
-  .mathrow[data-typing] .ambig { display:none; }
+  /* HIDDEN WHILE TYPING, BUT ITS SPACE IS KEPT (tester, 17 Oct: "on a key down
+     in maths mode the equation jumps from being central to left justified and
+     returns to being central on a key up... the yellow warning box also
+     resizes"). Quietening a notice mid-word is right - it is about braille the
+     writer has not finished - but display:none took it OUT of the layout, so
+     the row collapsed on every key down and sprang back on every key up.
+     Measured: a row carrying "Unverified" went 446px -> 39px -> 446px for one
+     keystroke. visibility hides it just as completely and keeps the box, so
+     nothing moves. */
+  .mathrow[data-typing] .ambig { visibility:hidden; }
   /* the last net: a clean reading whose round-trip differs - calm, not alarming */
   .unverified { margin-top:6px; padding:6px 8px; background:#fcedbf; border-radius:6px; font-size:.82rem; color:#444444; }
-  .mathrow[data-typing] .unverified { display:none; }
+  .mathrow[data-typing] .unverified { visibility:hidden; }   /* see .ambig above */
   .partial-brl { font-family:"APHfont","Apple Braille","Segoe UI Symbol",monospace; font-size:24px;
                  line-height:1.5; word-break:break-all; }
   .partial-brl .badcell { background:#ffb0a2; border-radius:3px; }
@@ -1196,9 +1212,12 @@
       <p>It is equally usable by a braille reader: both panels work with a screen reader,
          and the braille panel sends real braille cells to a braille display.</p>
 
-      <h3>How the braille user types</h3>
+      <h3>Typing braille with six keys</h3>
       <p>Braille is entered the way a Perkins brailler works - press the dots for a
-         letter <em>together</em>, like a chord, then release.</p>
+         letter <em>together</em>, like a chord, then release. That is about how you
+         type, not how wide the line is: the braille panel holds the 40 cells of a
+         braille page, which is the width a transcribed page and a BRF file use,
+         whatever a particular machine's carriage can take.</p>
       <table class="keys">
         <tr><th>Dot</th><td>3</td><td>2</td><td>1</td><td class="gap"></td><td>4</td><td>5</td><td>6</td></tr>
         <tr><th>Key</th><td>S</td><td>D</td><td>F</td><td class="gap"></td><td>J</td><td>K</td><td>L</td></tr>
@@ -1236,7 +1255,7 @@
          show where the braille user is, the display follows them along the line, and its routing
          keys move the cursor. A screen reader's own reading commands work here too.</p>
 
-      <h3>Six-key input can be turned off</h3>
+      <h3>Using a braille display's own keyboard, or pasting braille in</h3>
       <p>Under <strong><svg class="icon icon-inline" aria-hidden="true"><use href="#icon-settings"/></svg> Settings</strong>, <strong>Six-key braille input (S&nbsp;D&nbsp;F&nbsp;J&nbsp;K&nbsp;L)</strong> can be switched off.
          The S D F J K L keys then type normally instead of forming braille chords, which
          suits anyone using a braille display's own keyboard, or pasting braille in.</p>
@@ -1245,7 +1264,7 @@
          than dots when they are plugged in; if a display's own keyboard seems dead, switch
          six-key input <strong>off</strong> in Settings and it will work.</p>
 
-      <h3>Seeing which braille made which letters</h3>
+      <h3>Finding out how a word was written</h3>
       <p>Click any word in either panel. It is highlighted in both, and the bar along the
          bottom explains it - how many cells, whether a <strong>contraction</strong> was used,
          and what each cell stands for. Matching colours link each braille cell to the letters
@@ -1324,6 +1343,16 @@
             sums: open it, press once, and every line is read properly.</li>
         <li><strong>Otherwise</strong> - a sum starts where the cursor is, as above.</li>
       </ul>
+      <p><strong>Without selecting anything</strong>, you can mark a range in two presses with
+         <kbd>Ctrl+Shift+M</kbd>: put the cursor where the maths starts and press, move to the
+         other end and press again. Everything between the two becomes maths. This is the same
+         job as selecting and pressing <kbd>Ctrl+M</kbd>, for anyone working from the keyboard
+         or a braille display, where dragging a selection is awkward.</p>
+      <p class="note">The order does not matter - mark the end first if that is where you are.
+         <kbd>Escape</kbd> cancels a mark you have started, and so does typing: the first press
+         remembers a place in the braille, and editing moves the braille out from under it.
+         A range that overlaps maths already marked is refused out loud, the same as a
+         selection that does.</p>
       <p class="note">The moment the braille user writes anything, the third case takes over: modes
          stick to lines again, so one press can never sweep up work already done.</p>
       <p>When a file is opened, Translate also says if it <strong>suspects</strong> maths
@@ -1366,7 +1395,7 @@
       <p>In the print panel, clicking a term reads that term; clicking the row away from any
          term reads the whole equation. Either way the explanation bar names the signs used.</p>
 
-      <h3>What you see, and how it is set</h3>
+      <h3>Choosing the braille code, the print size and what each panel shows</h3>
       <ul>
         <li><strong>Which braille code.</strong> Settings lists the codes Translate can read,
             with your own language's first. Six travel with the app and work offline; the
@@ -1420,7 +1449,7 @@
          you did not write is the one thing this app must never show you quietly. If you see
          it, the panel cannot be trusted for that line - please report it.</p>
 
-      <h3>Reading aloud</h3>
+      <h3>Having it read aloud</h3>
       <p>Under <strong><svg class="icon icon-inline" aria-hidden="true"><use href="#icon-settings"/></svg> Settings</strong> you can pick a voice and choose what is spoken:
          <strong>each letter</strong> as it is written, <strong>each finished word</strong>,
          and <strong>each finished sentence</strong>. If several are on, only the later one
@@ -1540,7 +1569,7 @@
       <p class="note">These are settings on the computer, not in Translate, so a school may
          want to set them up once on a pupil's machine.</p>
 
-      <h3>Saving</h3>
+      <h3>Saving work so it opens back as you left it</h3>
       <p><strong>Save</strong> writes an <strong>eBraille</strong> file
          (<code>.ebrl</code>) - the DAISY standard for braille documents. It keeps things a
          BRF cannot: which lines are text and which are maths, and which code they were

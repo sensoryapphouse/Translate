@@ -179,6 +179,10 @@ const SUITES = [
   // real backdrop - tints included - against the threshold WCAG asks for at
   // that size and weight, resting and hovered.
   ['contrast (Chrome)',     'Translate/test-contrast.mjs'],
+  // Do the header controls collide at any width (tester, 17 Oct)? Nothing
+  // measured the toolbar's geometry, so an overlap that hid Save behind Clear
+  // survived a full battery and a deploy.
+  ['layout (Chrome)',       'Translate/test-layout.mjs'],
   // TRANSLATE'S OWN CACHE-GRAPH CHECK (15 Oct audit, TR-18, which asked for
   // these "rather than relying on tests housed under another application").
   // The instrument lives under BrlDuet because both apps are measured by it,

@@ -47,6 +47,11 @@ const word = (...specs) => specs.map((s) => cell(...s)).join('');
 const CAT = word([1, 4], [1], [2, 3, 4, 5]);
 const SAT = word([2, 3, 4], [1], [2, 3, 4, 5]);
 const DOG = word([1, 4, 5], [1, 3, 5], [1, 2, 4, 5]);
+// UEB maths, for the chord-geometry check below. Same cells test-modes.mjs
+// uses, built from dot numbers like everything else here.
+const NUM = cell(3, 4, 5, 6);              // UEB numeral sign
+const ONE = cell(1), TWO = cell(1, 2);
+const PLUS = cell(5) + cell(2, 3, 5);      // UEB plus
 
 let pass = 0; const failures = [];
 const ok = (name, cond, got = '') => {
@@ -322,6 +327,192 @@ const ok = (name, cond, got = '') => {
      afterRelease.brailleDrawn === settledBefore.brailleDrawn + 1,
      { settledBefore, afterRelease });
 
+  // ---- ...AND THE EQUATION MUST NOT MOVE EITHER --------------------------
+  // The same report, a week on (tester, 17 Oct): "On a key down in maths mode
+  // the equation jumps from being central to left justified and returns to
+  // being central on a key up. This is visually distracting. The yellow
+  // warning box also resizes." The 10 Oct fix stopped the half-formed cell
+  // reaching the print TEXT, and the three checks above hold that - but text
+  // is not the only thing that moved. A maths row is laid out, not just
+  // written, so its GEOMETRY has to be held still as well, and nothing
+  // measured that.
+  {
+    const expr = NUM + ONE + PLUS + NUM + TWO;
+    await page.evaluate(async ({ e }) => {
+      const c = window.__c, f = c.$('brlInput');
+      await c.clear();
+      await c.type(`${e} `);
+      f.focus();
+      f.setSelectionRange(0, e.length);            // selecting is not an edit
+    }, { e: expr });
+    await page.keyboard.press('Control+m');        // marks the selection as maths
+    await page.waitForTimeout(700);
+
+    const geom = () => page.evaluate(() => {
+      const row = document.querySelector('#out .mathrow');
+      const warn = document.getElementById('warn');
+      const out = document.getElementById('out').getBoundingClientRect();
+      const box = (el) => {
+        if (!el || !el.getClientRects().length) return null;
+        const r = el.getBoundingClientRect();
+        return { left: Math.round(r.left - out.left), width: Math.round(r.width) };
+      };
+      return { row: box(row), warn: box(warn),
+               expr: row ? (row.dataset.verifyExpr || '') : '',
+               latex: row ? (row.dataset.verifyLatex || '') : '',
+               text: row ? row.textContent.replace(/\s+/g, ' ').trim().slice(0, 40) : '',
+               rows: document.querySelectorAll('#out .mathrow').length,
+               outText: document.getElementById('out').textContent.replace(/\s+/g,' ').trim().slice(0,50) };
+    });
+
+    const before = await geom();
+    ok('the selection became a maths row to measure', !!(before && before.row),
+       JSON.stringify(before));
+    if (before && before.row) {
+      await page.keyboard.down('KeyF');
+      await page.waitForTimeout(320);
+      const held = await geom();
+      await page.keyboard.down('KeyD');
+      await page.waitForTimeout(320);
+      const held2 = await geom();
+      await page.keyboard.up('KeyD'); await page.keyboard.up('KeyF');
+      await page.waitForTimeout(600);
+
+      const same = (a, b) => a && b && a.left === b.left && a.width === b.width;
+      ok('the equation does not move while a chord is held down',
+         same(before.row, held.row) && same(before.row, held2.row),
+         JSON.stringify({ before, held, held2 }));
+      // The warning box is only present in some states; when it is there it
+      // must not resize under a keystroke either.
+      const warnStable = !before.warn || (same(before.warn, held.warn) && same(before.warn, held2.warn));
+      ok('the warning box does not resize while a chord is held down', warnStable,
+         JSON.stringify({ before: before.warn, held: held.warn, held2: held2.warn }));
+    }
+  }
+
+  // ---- the explanation arrives AS THE CHILD TYPES -------------------------
+  // The tester asked it as a question (17 Oct): "Should the contraction
+  // explanation update on space as the child types or only populate when
+  // cursoring and clicking afterwards." PB: as the child types. It used to
+  // populate only from a click or a caret move, so the teaching - which
+  // contraction was used, which one was missed - arrived only if somebody went
+  // back and asked for it.
+  //
+  // THE SPACE IS PRESSED FOR REAL. The word that a separator finishes is
+  // captured on KEYDOWN, so an execCommand insertion of " " never reaches that
+  // path at all - which is how I first "proved" this did not work after fixing
+  // it. The word itself can be inserted either way; the space cannot.
+  {
+    const MOTHER = word([1, 3, 4], [1, 3, 5], [2, 3, 4, 5], [1, 2, 5], [1, 5], [1, 2, 3, 5]);
+    await page.evaluate(async ({ w }) => {
+      const c = window.__c;
+      await c.clear();
+      await c.type(w);                       // the cells, spelt out, no space yet
+    }, { w: MOTHER });
+    const before = await page.evaluate(() =>
+      document.getElementById('statusBar').textContent.replace(/\s+/g, ' ').trim());
+    ok('before the space, the status bar is still the hint',
+       /Click a word/.test(before), before.slice(0, 80));
+
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(700);
+    const after = await page.evaluate(() =>
+      document.getElementById('statusBar').textContent.replace(/\s+/g, ' ').trim());
+    ok('the space explains the word that was just finished',
+       /mother/i.test(after), after.slice(0, 120));
+    // The point of the explanation is the contraction that was NOT used.
+    ok('...and names the contraction it could have used',
+       /could also be written/i.test(after), after.slice(0, 160));
+  }
+
+  // ---- MARKING A RANGE AS MATHS IN TWO PRESSES ---------------------------
+  // Tester, 17 Oct: "I would insert my cursor, click Ctrl+M and this would
+  // mark everything to the right as maths, then click my cursor and click
+  // Ctrl+M and this would mark everything to the left. It should handle the
+  // edge case where the user inserts the right marker then the left marker too
+  // or if it conflicts with other sections already marked as maths."
+  //
+  // Selecting and pressing Ctrl+M has done this since 12 Aug, but selecting
+  // means dragging, and this app is for someone using six keys and a braille
+  // display. The gesture is Ctrl+Shift+M, not Ctrl+M: that already means "a
+  // sum starts here" when nothing is selected, and changing its meaning by
+  // context would move an established key under the people using it.
+  {
+    const EXPR = NUM + ONE + PLUS + NUM + TWO;
+    const setup = async () => {
+      await page.evaluate(async ({ c3, e }) => {
+        const c = window.__c, f = c.$('brlInput');
+        await c.clear();
+        await c.type(`${c3} ${e} ${c3}`);
+        window.__a = c3.length + 1;             // first cell of the sum
+        window.__b = window.__a + e.length;     // just past its last cell
+        f.focus();
+      }, { c3: CAT, e: EXPR });
+    };
+    const at = (which) => page.evaluate((w) => {
+      const f = document.getElementById('brlInput');
+      const p = w === 'a' ? window.__a : window.__b;
+      f.focus(); f.setSelectionRange(p, p);
+    }, which);
+    // THE CELLS THAT GOT MARKED, not how they read. Which code reads them is
+    // the maths readers' business and is tested in their own suites; what this
+    // gesture has to get right is the RANGE. (Asserting the reading here first
+    // failed as "a6b": the fixture is written in UEB cells and this context's
+    // maths code is Nemeth, so the marking was correct and the assertion was
+    // measuring the wrong thing.)
+    const maths = () => page.evaluate(() => [...document.querySelectorAll('#out .mathrow')]
+      .map((r) => (r.dataset.verifyExpr || '').trim()));
+    const press = async () => { await page.keyboard.press('Control+Shift+KeyM'); await page.waitForTimeout(500); };
+
+    await setup();
+    ok('the sum is plain text before any marking', (await maths()).length === 0, await maths());
+    await at('a'); await press();
+    const half = await page.evaluate(() => document.getElementById('statusBar').textContent);
+    ok('the first press says a range has been started', /Maths starts here/i.test(half), half.slice(0, 70));
+    ok('...and marks nothing on its own', (await maths()).length === 0, await maths());
+    await at('b'); await press();
+    ok('the second press marks exactly the cells between the two',
+       (await maths()).join('|') === EXPR, await maths());
+
+    // THE ORDER MUST NOT MATTER - the edge case the tester named.
+    await setup();
+    await at('b'); await press();
+    await at('a'); await press();
+    ok('the end may be marked before the start', (await maths()).join('|') === EXPR, await maths());
+
+    // ...AND A RANGE THAT COLLIDES WITH ONE ALREADY MARKED IS REFUSED, rather
+    // than nesting or orphaning a marker. The sum is already maths here; a
+    // range from the middle of it into the text after it straddles that run.
+    const before = await maths();
+    await page.evaluate(() => {
+      const f = document.getElementById('brlInput');
+      f.focus(); f.setSelectionRange(window.__a + 2, window.__a + 2);
+    });
+    await press();
+    await page.evaluate(() => {
+      const f = document.getElementById('brlInput');
+      f.focus(); f.setSelectionRange(f.value.length, f.value.length);
+    });
+    await press();
+    ok('a range straddling maths already marked changes nothing',
+       (await maths()).join('|') === before.join('|'), { before, after: await maths() });
+
+    // A HALF-MADE RANGE IS NOT LEFT LYING ABOUT.
+    await setup();
+    await at('a'); await press();
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    await at('b'); await press();
+    ok('Escape cancels a half-made range, so the next press only starts a new one',
+       (await maths()).length === 0, await maths());
+
+    await setup();
+    await at('a'); await press();
+    await page.evaluate(async () => { await window.__c.type('\u2801'); });   // an edit moves the cells
+    await at('b'); await press();
+    ok('an edit cancels a half-made range too', (await maths()).length === 0, await maths());
+  }
+
   // ---- the work survives the page going away -----------------------------
   // PB, 10 Oct: autosave, as the answer to the audit's objection that a worker
   // which takes over mid-session tells the writer to "save and reload" in an
@@ -370,6 +561,74 @@ const ok = (name, cond, got = '') => {
       ? 'still there' : null,
   }));
   ok('and Clear throws the kept draft away too', afterClear.print === '' && afterClear.draft === null, afterClear);
+
+  // ---- THE WORD BEING TYPED (tester, 17 Oct) -------------------------------
+  // "In Grade 1 mode, the print does not appear letter by letter. This can be
+  // confusing in focus mode when self-voicing is off and nothing appears until
+  // space." It did not, and the grade is the whole point: in a CONTRACTED code
+  // one cell can still become a different word - the single cell for "p" is
+  // also the whole word "people" - so showing it early would show something
+  // false. In an uncontracted code a cell is one letter and there is nothing
+  // waiting to be resolved. Both halves are checked here, because the fix is
+  // only right if the contracted case is left exactly as it was.
+  {
+    const typeInto = async (p, cells) => p.evaluate((v) => {
+      const ta = document.getElementById('brlInput');
+      ta.focus(); ta.value = v; ta.setSelectionRange(v.length, v.length);
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
+    }, cells);
+    const printOf = (p) => p.evaluate(() => document.getElementById('out').textContent);
+
+    const openWith = async (code) => {
+      const c = await browser.newContext();
+      await c.addInitScript((id) => {
+        localStorage.setItem('translate.settings', JSON.stringify({ brailleCode: id, sixKey: true }));
+      }, code);
+      const pg = await c.newPage();
+      await pg.goto(`http://localhost:${PORT}/Translate/`, { waitUntil: 'load' });
+      await pg.waitForSelector('#brlInput');
+      await pg.waitForTimeout(2500);
+      return { c, pg };
+    };
+
+    const CAT = word([1, 4], [1], [2, 3, 4, 5]);
+    const PCELL = cell(1, 2, 3, 4);              // "p", and also the word "people"
+
+    const g1 = await openWith('en-ueb-g1');
+    await typeInto(g1.pg, CAT);
+    await g1.pg.waitForTimeout(400);
+    const g1Mid = (await printOf(g1.pg)).trim();
+    ok('grade 1: the word shows as it is typed, before any space',
+       g1Mid === 'cat', JSON.stringify(g1Mid));
+    const g1Marked = await g1.pg.evaluate(() =>
+      [...document.querySelectorAll('#out [data-typing]')].map((e) => e.textContent));
+    ok('grade 1: and it is marked as still being typed',
+       g1Marked.length === 1 && g1Marked[0] === 'cat', JSON.stringify(g1Marked));
+    // A lone capital sign is not a letter yet, so it must show nothing rather
+    // than inventing one.
+    await typeInto(g1.pg, cell(6));
+    await g1.pg.waitForTimeout(400);
+    ok('grade 1: a lone capital sign shows nothing until its letter arrives',
+       (await printOf(g1.pg)).trim() === '', JSON.stringify(await printOf(g1.pg)));
+    await g1.c.close();
+
+    const g2 = await openWith('en-ueb-g2');
+    await typeInto(g2.pg, CAT);
+    await g2.pg.waitForTimeout(400);
+    ok('grade 2 is UNCHANGED: nothing shows until the space',
+       (await printOf(g2.pg)).trim() === '', JSON.stringify(await printOf(g2.pg)));
+    await typeInto(g2.pg, PCELL);
+    await g2.pg.waitForTimeout(400);
+    const pMid = (await printOf(g2.pg)).trim();
+    await typeInto(g2.pg, PCELL + ' ');
+    await g2.pg.waitForTimeout(400);
+    const pDone = (await printOf(g2.pg)).trim();
+    // THE REASON THE CONTRACTED CASE WAITS, stated as a measurement: the same
+    // one cell is "people" once a space settles it.
+    ok('grade 2: the p-cell shows nothing while typing, and is "people" once finished',
+       pMid === '' && pDone === 'people', `${JSON.stringify(pMid)} -> ${JSON.stringify(pDone)}`);
+    await g2.c.close();
+  }
 
   await browser.close();
   server.close();

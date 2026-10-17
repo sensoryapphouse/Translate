@@ -130,6 +130,14 @@ function applyPrintLang() {
 // the colour pairing quietly switched itself off for exactly the words a
 // learner most needs it for. Derived from the code list rather than hardwired,
 // so it follows whatever code is in use.
+/** Is the code in use an uncontracted one? Read from the code list the same
+ *  way uncontractedSibling reads it, so both follow whatever code is in use
+ *  rather than hardwiring a list of ids. */
+const isUncontracted = (id = settings.brailleCode) => {
+  const code = codeById(id);
+  return !!code && /grade 1|uncontracted/i.test(code.grade || '');
+};
+
 const uncontractedSibling = (id = settings.brailleCode) => {
   const code = codeById(id);
   if (!code) return null;
@@ -1688,13 +1696,39 @@ function render() {
     tLine.className = 'line';
     if (!ready) tLine.textContent = '…';
     else {
-      // Only finished words appear here. The word still being brailled is
-      // deliberately NOT shown: a half-formed word back-translates to
-      // something misleading, and nothing has to be "un-shown" on the next key.
+      // Only finished words appear here IN A CONTRACTED CODE. A half-formed
+      // word back-translates to something misleading there - the one cell of
+      // "p" is also the whole word "people" until the next key says which -
+      // so it is not shown and nothing has to be un-shown.
       ln.words.forEach((w, j) => {
         tLine.appendChild(wordSpan(bt(w), `${i}:${j}`, 'word', w));
         tLine.appendChild(document.createTextNode(' '));
       });
+      // IN AN UNCONTRACTED CODE THAT REASON DOES NOT HOLD, so the word being
+      // typed is shown as it is typed (tester, 17 Oct: "in Grade 1 mode the
+      // print does not appear letter by letter... confusing in focus mode when
+      // self-voicing is off and nothing appears until space"). A cell is one
+      // letter in grade 1, so there is nothing waiting to be resolved; a lone
+      // capital or number sign translates to nothing and simply shows nothing
+      // until its letter arrives, which is the honest answer rather than a
+      // misleading one.
+      //
+      // The maths rows have worked this way all along - they render while
+      // pending and mark themselves data-typing - so a child typing a sum
+      // watched it build while a child typing prose watched an empty pane.
+      //
+      // NOT CLICKABLE AND NOT JUDGED while it is still being typed: no word
+      // key, so it is not registered for inspection, and no cells passed, so
+      // the missed-contraction underline cannot run on half a word. It gets a
+      // key and its underline the moment a space finishes it.
+      if (ln.pending && isUncontracted()) {
+        const sofar = bt(ln.pending);
+        if (sofar) {
+          const s = wordSpan(sofar, '', 'word', '');
+          s.dataset.typing = '1';
+          tLine.appendChild(s);
+        }
+      }
     }
     out.appendChild(tLine);
   });
@@ -1844,6 +1878,15 @@ const MAX_BRAILLE_PX = 30;
 // the glyphs. Both numbers must move together or the two disagree about
 // where the line wraps.
 const BRAILLE_HPAD_PX = 10;
+// The gap .head-over-braille lays its buttons out with. Named here because the
+// fit test below has to add it up, and a measurement that disagreed with the
+// stylesheet would decide the layout on a width the layout never had. Keep it
+// equal to that rule's `gap`.
+const HEAD_GAP_PX = 12;
+// The braille pane's line-height, as a RATIO here and whole PIXELS on the
+// element. Keep it equal to the `line-height` in index.html's #brlInput and
+// #braille rules, which this overrides once a size is known.
+const BRAILLE_LINE_RATIO = 1.25;
 // THE PRINT PANE FOLLOWS THE BRAILLE SIZE (PB, 2026-08-18): #out was a fixed
 // 17px while the braille pane ranged 20-40+px, so print read much smaller
 // than braille at almost every width. PRINT_RATIO is chosen to land on
@@ -1859,9 +1902,20 @@ const PRINT_RATIO = 0.7;
 const MATH_RATIO = 22 / 17;
 // The size print is read at, whatever the braille pane is doing (PB, 10 Oct:
 // "a bit bigger for sighted people as it is a bit small for many people").
-// 21 is what the old braille ratio gave at the braille cap, so the widest
-// windows are unchanged and every narrower one comes UP to meet them.
-const PRINT_BASE_PX = 21;
+// It is a FLOOR, not a fixed size: above it print still follows the braille
+// at PRINT_RATIO, and the two meet continuously at a braille size of ~27px.
+//
+// 21 -> 19 (PB, 17 Oct). A tester from the very audience the 10 Oct rise was
+// made for - TVIs, paraprofessionals and parents - asked for "normal" back
+// down a little. For scale: the build they compared against renders print at
+// 15px where ours rendered 21, measured at 1400px, so this was a 40% rise
+// rather than the nudge it reads as in the source. 19 keeps the direction of
+// the 10 Oct change and most of its size while answering the one piece of
+// evidence we have from the reader it was aimed at. Measured after: 19px at
+// 1100 and 1400, 20px at 1920 where the braille reaches 29 and the ratio
+// takes over; maths 27 -> 25. Large and Largest are unchanged multiples of
+// whatever this is, so they now give 24 and 29 rather than 26 and 32.
+const PRINT_BASE_PX = 19;
 // The narrowest column of print worth keeping side by side. Below this the
 // print pane is a few words per line and stacking reads better - which is
 // what makes stacking a real answer to a narrow window rather than a
@@ -1996,7 +2050,18 @@ function fitBrailleLine() {
   // THE HEADER FOLLOWS THE PANE (PB, 12 Oct): the Maths and Load group is as
   // wide as the braille pane so it centres over it. Written here because this
   // is the one place that knows what the pane ended up as.
-  const stackedNow = panes.classList.contains('stacked');
+  // ARE THEY STACKED? ASK THE LAYOUT, NOT THE CLASS (tester, 17 Oct, found
+  // while tracing the toolbar overlap). Two things stack these panes and only
+  // one of them is this file's: the `stacked` class added above, and
+  //     @media (max-width:820px) { .panes { flex-direction:column; } }
+  // in the stylesheet. Reading the class alone meant that between 700 and
+  // 820px the panes were stacked on screen while this code believed they were
+  // side by side - measured at 800px, the two panes one above the other at
+  // tops 85 and 422, with `stacked` false - so it published the braille
+  // pane's full 772px as the width to centre the toolbar over, and the
+  // buttons collided. The computed direction answers for BOTH causes, so the
+  // breakpoint does not have to be repeated here where it would go stale.
+  const stackedNow = getComputedStyle(panes).flexDirection === 'column';
   document.body.classList.toggle('panes-stacked', stackedNow);
   if (brlPane && !stackedNow) {
     const pr = brlPane.getBoundingClientRect();
@@ -2008,19 +2073,74 @@ function fitBrailleLine() {
     const rowLeft = row ? row.getBoundingClientRect().left : 0;
     document.documentElement.style.setProperty('--brl-pane-w', Math.round(pr.width) + 'px');
     document.documentElement.style.setProperty('--brl-pane-x', Math.round(pr.left - rowLeft) + 'px');
+
+    // ...BUT ONLY WHILE IT FITS BESIDE THE OTHER BUTTONS (tester, 17 Oct:
+    // "buttons overlap when resizing"). Centring this group meant taking it
+    // OUT OF FLOW, and an absolutely positioned box is laid out against
+    // nothing: its box overlapped .head-right by a constant 291px at EVERY
+    // width. Wide windows only hid that, because the centred content inside
+    // the box was not wide enough to reach. Below about 880px the buttons
+    // themselves collided - measured at 850px: -11px, at 700px: -86px, which
+    // is Clear sitting on top of Save with only its last letter showing.
+    // .panes-stacked already drops the group back into flow, but it fires
+    // when the PANES stack, a far narrower condition than the toolbar
+    // colliding, so it was still false at 700px with the buttons 86px deep
+    // in each other.
+    //
+    // Measured from the children's own widths, not from the applied layout:
+    // a button is the same width centred or in flow, so the decision cannot
+    // depend on its own outcome.
+    const over = document.querySelector('.head-over-braille');
+    const hr = document.querySelector('.head-right');
+    let centredFits = false;
+    if (over && hr) {
+      const kids = [...over.children].filter((el) => el.getClientRects().length);
+      const contentW = kids.reduce((w, el) => w + el.getBoundingClientRect().width, 0)
+        + HEAD_GAP_PX * Math.max(0, kids.length - 1);
+      const hrLeft = hr.getBoundingClientRect().left - rowLeft;
+      const paneX = pr.left - rowLeft;
+      const reach = paneX + (pr.width + contentW) / 2;
+      // HYSTERESIS, so a width sitting exactly on the boundary cannot flap
+      // between the two layouts as the window is dragged: it takes one gap of
+      // clearance to stay centred and two to go back to centred once dropped.
+      const need = document.body.classList.contains('head-inflow')
+        ? HEAD_GAP_PX * 2 : HEAD_GAP_PX;
+      centredFits = reach <= hrLeft - need;
+    }
+    document.body.classList.toggle('head-inflow', !centredFits);
   } else {
+    document.body.classList.remove('head-inflow');
     document.documentElement.style.setProperty('--brl-pane-w', 'auto');
     document.documentElement.style.setProperty('--brl-pane-x', '0px');
   }
 
   const lineWidth = Math.min(usable(),
     Math.ceil(CELLS_PER_LINE * cellRatio * brailleSize) + BRAILLE_HPAD_PX) + 'px';
+  // AND THE LINE HEIGHT IN WHOLE PIXELS (tester, 17 Oct: "cursor can still
+  // drift visually in Safari for multiline documents and resized window").
+  // line-height:1.25 in the stylesheet is a RATIO, and the font size is a
+  // whole number, so the line BOX is fractional at every odd size - measured
+  // at 1280px, 23px type gives 28.75px lines. Both layers compute the same
+  // 28.75, but they are laid out by different engines: #brlInput is a
+  // textarea, laid out by the form-control text engine, while #braille is
+  // ordinary inline layout. An engine that snaps line boxes to whole device
+  // pixels in one and not the other gains about a pixel every four lines, so
+  // the error grows DOWN a document and changes when the window is resized
+  // because the size changes with it - which is the shape of the report.
+  //
+  // Chrome lays both out alike, which is why it has never shown here. A whole
+  // number of pixels has nothing to round, so no engine can round it two ways.
+  const lineH = Math.round(brailleSize * BRAILLE_LINE_RATIO) + 'px';
   pane.style.fontSize = size;
+  pane.style.lineHeight = lineH;
   pane.style.width = lineWidth;
   // The overlay pair must be the same size to the pixel, or the native caret
   // sits between the wrong cells. One variable, written to both.
   const ta = $('brlInput');
-  if (ta) { ta.style.fontSize = size; ta.style.width = lineWidth; syncField(); }
+  if (ta) {
+    ta.style.fontSize = size; ta.style.lineHeight = lineH;
+    ta.style.width = lineWidth; syncField();
+  }
 
   // Print follows braille from the SAME number, so the two panes can't drift
   // apart — see PRINT_RATIO/MATH_RATIO above. #out's own font-size is set
@@ -2291,6 +2411,27 @@ function afterNativeEdit(p) {
   // The nudge goes BEFORE the word, so the two do not collide.
   if (missedContraction(finished)) ding();
   maybeSpeak(finished, finishedIsWord);
+  // AND THE STATUS BAR SAYS WHAT THE WORD WAS MADE OF, AS IT IS TYPED
+  // (PB, 17 Oct, answering the tester's question "should the contraction
+  // explanation update on space as the child types or only populate when
+  // cursoring and clicking afterwards": as the child types).
+  //
+  // It used to populate only from a click or a caret move, so the teaching -
+  // which contraction was used, which one was missed - arrived only if somebody
+  // went back and asked for it. A space is the moment the answer becomes
+  // knowable, and it is already the moment the app dings about a missed one;
+  // the explanation now follows the ding instead of waiting to be summoned.
+  //
+  // SILENT, ALWAYS. Typing already speaks the letter and the word, and
+  // explainWord speaks too on maths words; letting it speak here would put two
+  // utterances on one keystroke and the later would cut off the earlier. This
+  // changes what is SHOWN, never what is heard.
+  if (ready && finished.trim()) {
+    const start = lineStartOf(p.at);
+    const c1 = p.at - start;
+    explainWord(finished, `${lineIndexOf(p.at)}:${Math.max(0, c1 - rawFinished.length)}:${c1}`,
+                { silent: true });
+  }
 }
 
 let drewThisTask = false;
@@ -2304,6 +2445,11 @@ function onFieldInput() {
   // `input`. Unfenced, this handler would re-derive buf from the field we just
   // wrote and re-enter syncField on every cell.
   if (applyingSync) return;
+  // A HALF-MADE RANGE DOES NOT SURVIVE AN EDIT. The first Ctrl+Shift+M
+  // remembers a BUFFER POSITION; typing or deleting moves the braille out from
+  // under it, and a mark placed from a stale position would wrap the wrong
+  // cells. Silently, because the edit is the user's answer.
+  mathsAnchor = null;
   // ANY EDIT PINS MODES TO LINES, not just a chord. The chord path already did
   // this, but text can reach the field without one - a braille display's own
   // keyboard, a paste, BRF ASCII typed with six-key off - and the flag stayed
@@ -2808,8 +2954,18 @@ let verifyTimer = 0;
 
 function offerVerify(out, fallbackCode) {
   const rows = [...out.querySelectorAll('.mathrow')]
-    .filter((r) => r.dataset.verifyExpr && r.dataset.typing !== '1' &&
-                   !r.querySelector('.repair'));
+    // A ROW BEING TYPED STILL KEEPS A VERDICT IT ALREADY HAS (tester, 17 Oct:
+    // "on a key down in maths mode the equation jumps from being central to
+    // left justified and returns to being central on a key up... the yellow
+    // warning box also resizes"). Typing rows used to be filtered out here
+    // altogether, so a row carrying "Unverified" lost the notice on every key
+    // DOWN and regained it on every key UP - measured 446px -> 39px -> 446px
+    // for a single keystroke, which is the jump and the resize in one.
+    // What must not happen mid-word is the EXPENSIVE part: judging braille the
+    // writer has not finished. That is still skipped below. Applying a verdict
+    // this expression has already been given costs a map lookup and keeps the
+    // row the same size from one key to the next.
+    .filter((r) => r.dataset.verifyExpr && !r.querySelector('.repair'));
   if (!rows.length) return;
   const pending = [];
   for (const row of rows) {
@@ -2821,7 +2977,11 @@ function offerVerify(out, fallbackCode) {
     const key = code + '\n' + row.dataset.verifyExpr;
     if (verifyCache.has(key)) {
       if (verifyCache.get(key) === false) showUnverified(row);
-    } else pending.push({ row, key, code });
+    } else if (row.dataset.typing !== '1') {
+      // Only a SETTLED row is queued for fresh verification: half-typed
+      // braille has not earned a judgement yet.
+      pending.push({ row, key, code });
+    }
   }
   if (!pending.length) return;
   clearTimeout(verifyTimer);
@@ -3943,6 +4103,57 @@ const trailingToken = (s) => {
 //
 // SHARED BY CTRL+M/CTRL+I AND THE HEADER CHECKBOX (PB, 2026-08-12). The
 // checkbox used to set a document-wide sticky mode of its own; it now just
+// MARKING A RANGE IN TWO PRESSES, WITHOUT SELECTING ANYTHING.
+//
+// Tester, 17 Oct: "My expectation is that I would insert my cursor, click
+// Ctrl+M and this would mark everything to the right as maths, then click my
+// cursor and click Ctrl+M and this would mark everything to the left."
+//
+// Selecting and pressing Ctrl+M already does this, and has since 12 Aug - but
+// selecting means dragging, and the reader this app is for is using six keys
+// and a braille display. Two cursor placements are a selection you can make
+// without a mouse.
+//
+// IT IS NOT Ctrl+M. That key already means "a sum starts here" with nothing
+// selected (PB, 11 Aug), which is the typing path and works; making its
+// meaning depend on whether there is text to the right would change an
+// established gesture under the people using it. Ctrl+Shift+M is its own
+// gesture and leaves that alone.
+//
+// THE ORDER DOES NOT MATTER. The two marks are sorted, so setting the end
+// before the start is the same gesture, which is the edge case the tester
+// asked about. The other one - a range that collides with maths already
+// marked - is answered by markSelectionAsMaths below, which refuses out loud
+// rather than nesting or orphaning a marker.
+let mathsAnchor = null;
+
+function cancelMathsAnchor(why) {
+  if (mathsAnchor === null) return false;
+  mathsAnchor = null;
+  if (why) speak(why);
+  return true;
+}
+
+function markMathsRangeStep() {
+  const ta = $('brlInput');
+  const pos = ta ? Math.min(ta.selectionStart, ta.selectionEnd) : caret;
+  if (mathsAnchor === null) {
+    if (!buf.trim()) { speak('There is nothing written to mark'); return; }
+    mathsAnchor = pos;
+    speak('Maths starts here. Move to the other end and press again.');
+    const sb = $('statusBar');
+    if (sb) {
+      sb.innerHTML = '<span class="sb-hint">Maths starts here. Move to the other end '
+        + 'and press Ctrl+Shift+M again. Escape cancels.</span>';
+    }
+    return;
+  }
+  const a = Math.min(mathsAnchor, pos), b = Math.max(mathsAnchor, pos);
+  mathsAnchor = null;
+  if (b <= a) { speak('Both marks are in the same place, so nothing has changed'); return; }
+  markSelectionAsMaths(a, b);
+}
+
 // MARK (OR UNMARK) A SELECTION AS MATHS. Returns false when the selection is
 // not something we can answer for, so the caller falls through to its ordinary
 // behaviour rather than guessing.
@@ -4117,11 +4328,20 @@ document.addEventListener('keydown', (e) => {
       && document.activeElement === $('brlInput')) {
     if (moveByMathsTerm(e.code === 'ArrowRight' ? 1 : -1)) { e.preventDefault(); return; }
   }
-  if (e.ctrlKey && !e.metaKey && !e.altKey && (e.code === 'KeyI' || e.code === 'KeyM')) {
+  if (e.ctrlKey && e.shiftKey && !e.metaKey && !e.altKey && e.code === 'KeyM') {
+    e.preventDefault();
+    markMathsRangeStep();
+    return;
+  }
+  // !e.shiftKey, so the two-step marker above gets its own gesture rather than
+  // falling through to this one.
+  if (e.ctrlKey && !e.shiftKey && !e.metaKey && !e.altKey
+      && (e.code === 'KeyI' || e.code === 'KeyM')) {
     e.preventDefault();
     toggleMathsAtCaret();
     return;
   }
+  if (e.code === 'Escape' && cancelMathsAnchor('Cancelled')) { e.preventDefault(); return; }
   // A modifier pressed mid-chord means the chord is abandoned (Cmd+Tab is the
   // classic: its keyups go to the other app). Clearing here catches it BEFORE
   // the window even blurs. Escape is the explicit unlock for the same state —
@@ -4625,7 +4845,7 @@ function resetAll() {
   draftOffered = false;
   hideDraftOffer();
   buf = ''; caret = 0; chord = 0; held.clear();
-  mathSpans = []; prevBuf = '';
+  mathSpans = []; prevBuf = ''; mathsAnchor = null;
   lineModes.length = 0;
   modeAppliesToAll = true;
   // AN EMPTY DOCUMENT IS A TEXT DOCUMENT (PB, 2026-08-19). Clearing emptied the
