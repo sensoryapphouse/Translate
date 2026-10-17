@@ -1,11 +1,11 @@
 {
-  "name": "brlit_mathcat",
+  "name": "emboss_mathcat",
   "version": "0.1.0",
   "files": [
-    "brlit_mathcat_bg.wasm",
-    "brlit_mathcat.js",
-    "brlit_mathcat.d.ts"
+    "emboss_mathcat_bg.wasm",
+    "emboss_mathcat.js",
+    "emboss_mathcat.d.ts"
   ],
-  "main": "brlit_mathcat.js",
-  "types": "brlit_mathcat.d.ts"
+  "main": "emboss_mathcat.js",
+  "types": "emboss_mathcat.d.ts"
 }

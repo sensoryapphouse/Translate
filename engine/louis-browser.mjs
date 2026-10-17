@@ -12,6 +12,7 @@ const TABLE_FILES = [
 export const TABLES = {
   uebG2: '/tables/en-us-brf.dis,/tables/en-ueb-g2.ctb',   // contracted (Grade 2)
   uebG1: '/tables/en-us-brf.dis,/tables/en-ueb-g1.ctb',   // uncontracted (Grade 1)
+  uebMath: '/tables/en-us-brf.dis,/tables/en-ueb-g2.ctb,/tables/en-ueb-math.ctb', // Technical math
 };
 
 let M = null;
@@ -82,54 +83,78 @@ export async function ensureTables(tableList) {
 
 export function version() { return M.ccall('lou_version', 'string', [], []); }
 
-// liblouis typeform (emphasis) bit values for the `formtype` buffer. Legacy
-// liblouis convention (still the values the UEB emphasis classes map to):
-// italic=1, underline=2, bold=4. Verify with a live emphasis test before relying on it.
-export const TYPEFORM = { plain: 0, italic: 1, underline: 2, bold: 4 };
+// liblouis typeform (emphasis) bit values for the `formtype` buffer: the UEB tables'
+// emphasis classes in declaration order (en-ueb-g1.ctb: italic, underline, bold, script,
+// transnote, trans1-trans5). Same values as Emboss/engine/louis.mjs, where they were confirmed
+// against the compiled tables (UEB §9: script is its own indicator; trans1-trans5 are the
+// transcriber-defined typeforms).
+export const TYPEFORM = { plain: 0, italic: 1, underline: 2, bold: 4, script: 8, transnote: 16, trans1: 32, trans2: 64, trans3: 128, trans4: 256, trans5: 512 };
+// Persistent reusable translation buffers in WASM memory to eliminate heap churn
+let bufInCap = 0;
+let bufInPtr = 0;
+let bufOutCap = 0;
+let bufOutPtr = 0;
+let bufInPosPtr = 0;
+let bufOutPosPtr = 0;
+let bufTypeCap = 0;
+let bufTypePtr = 0;
+let bufInLenPtr = 0;
+let bufOutLenPtr = 0;
+
+function ensureBuffers(inLen, outCap) {
+  if (!bufInLenPtr) {
+    bufInLenPtr = M._malloc(4);
+    bufOutLenPtr = M._malloc(4);
+  }
+  const maxCap = Math.max(inLen * 2, outCap, 4096);
+  if (inLen > bufInCap) {
+    if (bufInPtr) M._free(bufInPtr);
+    if (bufOutPosPtr) M._free(bufOutPosPtr);
+    bufInCap = Math.max(inLen * 2, 4096);
+    bufInPtr = M._malloc(bufInCap * 2);
+    bufOutPosPtr = M._malloc(bufInCap * 4);
+  }
+  if (outCap > bufOutCap) {
+    if (bufOutPtr) M._free(bufOutPtr);
+    if (bufInPosPtr) M._free(bufInPosPtr);
+    bufOutCap = Math.max(outCap * 2, 16384);
+    bufOutPtr = M._malloc(bufOutCap * 2);
+    bufInPosPtr = M._malloc(bufOutCap * 4);
+  }
+  if (maxCap > bufTypeCap) {
+    if (bufTypePtr) M._free(bufTypePtr);
+    bufTypeCap = Math.max(maxCap * 2, 16384);
+    bufTypePtr = M._malloc(bufTypeCap * 2);
+  }
+}
 
 // Translate `text` -> BRF. `typeform`, if given, is an array (one entry per input
 // character) of TYPEFORM bit flags; liblouis emits the UEB emphasis indicators.
 // Passing no typeform keeps the exact previous behaviour (6th arg 0).
 export function translate(text, tableList = TABLES.uebG2, typeform = null) {
   if (!M) throw new Error('call init() first');
-  if (!text) return '';
   const inLen = text.length;
-  // Grow the output buffer and retry if liblouis fills it exactly — a full buffer
-  // means the braille may have been silently TRUNCATED (data loss). Braille rarely
-  // exceeds ~3x the input, so the initial 6x+1024 almost never retries. All
-  // buffers are freed in `finally` so a throw from ccall/getValue can't leak them.
   for (let mul = 6; ; mul *= 4) {
     const outCap = inLen * mul + 1024;
-    const inPtr = M._malloc(Math.max(inLen, 1) * 2);
-    const outPtr = M._malloc(outCap * 2);
-    const inLenPtr = M._malloc(4);
-    const outLenPtr = M._malloc(4);
+    ensureBuffers(inLen, outCap);
+    for (let i = 0; i < inLen; i++) M.setValue(bufInPtr + i * 2, text.charCodeAt(i), 'i16');
+    M.setValue(bufInLenPtr, inLen, 'i32');
+    M.setValue(bufOutLenPtr, outCap, 'i32');
     let typePtr = 0;
-    try {
-      for (let i = 0; i < inLen; i++) M.setValue(inPtr + i * 2, text.charCodeAt(i), 'i16');
-      M.setValue(inLenPtr, inLen, 'i32');
-      M.setValue(outLenPtr, outCap, 'i32');
-      if (typeform) {                                            // formtype = unsigned short
-        typePtr = M._malloc(Math.max(inLen, outCap) * 2);
-        for (let i = 0; i < inLen; i++) {
-          const val = typeof typeform === 'number' ? typeform : (typeform[i] || 0);
-          M.setValue(typePtr + i * 2, val, 'i16');
-        }
-      }
-      const rc = M.ccall('lou_translateString', 'number',
-        ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-        [tableList, inPtr, inLenPtr, outPtr, outLenPtr, typePtr, 0, 0]);
-      if (!rc) throw new Error('lou_translateString failed');
-      const outLen = M.getValue(outLenPtr, 'i32');
-      if (outLen >= outCap && mul < 400) continue;
-      if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');               // buffer full -> retry bigger
-      let out = '';
-      for (let i = 0; i < outLen; i++) out += String.fromCharCode(M.getValue(outPtr + i * 2, 'i16') & 0xffff);
-      return out;
-    } finally {
-      M._free(inPtr); M._free(outPtr); M._free(inLenPtr); M._free(outLenPtr);
-      if (typePtr) M._free(typePtr);
+    if (typeform) {
+      typePtr = bufTypePtr;
+      for (let i = 0; i < inLen; i++) M.setValue(typePtr + i * 2, typeform[i] || 0, 'i16');
     }
+    const rc = M.ccall('lou_translateString', 'number',
+      ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+      [tableList, bufInPtr, bufInLenPtr, bufOutPtr, bufOutLenPtr, typePtr, 0, 0]);
+    if (!rc) throw new Error('lou_translateString failed');
+    const outLen = M.getValue(bufOutLenPtr, 'i32');
+    if (outLen >= outCap && mul < 400) continue;
+    if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');
+    let out = '';
+    for (let i = 0; i < outLen; i++) out += String.fromCharCode(M.getValue(bufOutPtr + i * 2, 'i16') & 0xffff);
+    return out;
   }
 }
 
@@ -138,74 +163,89 @@ export function translate(text, tableList = TABLES.uebG2, typeform = null) {
 // word/cell-level print↔braille linking in the editor.
 export function translatePos(text, tableList = TABLES.uebG2, typeform = null) {
   if (!M) throw new Error('call init() first');
-  if (!text) return { braille: '', inputPos: [] };
   const inLen = text.length;
   for (let mul = 6; ; mul *= 4) {
     const outCap = inLen * mul + 1024;
-    const inPtr = M._malloc(Math.max(inLen, 1) * 2);
-    const outPtr = M._malloc(outCap * 2);
-    const inLenPtr = M._malloc(4);
-    const outLenPtr = M._malloc(4);
-    const outPosPtr = M._malloc(Math.max(inLen, 1) * 4);
-    const inPosPtr = M._malloc(outCap * 4);
+    ensureBuffers(inLen, outCap);
+    for (let i = 0; i < inLen; i++) M.setValue(bufInPtr + i * 2, text.charCodeAt(i), 'i16');
+    M.setValue(bufInLenPtr, inLen, 'i32');
+    M.setValue(bufOutLenPtr, outCap, 'i32');
     let typePtr = 0;
-    try {
-      for (let i = 0; i < inLen; i++) M.setValue(inPtr + i * 2, text.charCodeAt(i), 'i16');
-      M.setValue(inLenPtr, inLen, 'i32');
-      M.setValue(outLenPtr, outCap, 'i32');
-      if (typeform) {
-        typePtr = M._malloc(Math.max(inLen, outCap) * 2);
-        for (let i = 0; i < inLen; i++) {
-          const val = typeof typeform === 'number' ? typeform : (typeform[i] || 0);
-          M.setValue(typePtr + i * 2, val, 'i16');
-        }
-      };
-      const rc = M.ccall('lou_translate', 'number',
-        ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-        [tableList, inPtr, inLenPtr, outPtr, outLenPtr, typePtr, 0, outPosPtr, inPosPtr, 0, 0]);
-      if (!rc) throw new Error('lou_translate failed');
-      const outLen = M.getValue(outLenPtr, 'i32');
-      if (outLen >= outCap && mul < 400) continue;
-      if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');
-      let braille = '';
-      const inputPos = new Array(outLen);
-      for (let j = 0; j < outLen; j++) { braille += String.fromCharCode(M.getValue(outPtr + j * 2, 'i16') & 0xffff); inputPos[j] = M.getValue(inPosPtr + j * 4, 'i32'); }
-      return { braille, inputPos };
-    } finally {
-      M._free(inPtr); M._free(outPtr); M._free(inLenPtr); M._free(outLenPtr); M._free(outPosPtr); M._free(inPosPtr);
-      if (typePtr) M._free(typePtr);
+    if (typeform) {
+      typePtr = bufTypePtr;
+      for (let i = 0; i < inLen; i++) M.setValue(typePtr + i * 2, typeform[i] || 0, 'i16');
     }
+    const rc = M.ccall('lou_translate', 'number',
+      ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+      [tableList, bufInPtr, bufInLenPtr, bufOutPtr, bufOutLenPtr, typePtr, 0, bufOutPosPtr, bufInPosPtr, 0, 0]);
+    if (!rc) throw new Error('lou_translate failed');
+    const outLen = M.getValue(bufOutLenPtr, 'i32');
+    if (outLen >= outCap && mul < 400) continue;
+    if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');
+    let braille = '';
+    const inputPos = new Array(outLen);
+    for (let j = 0; j < outLen; j++) {
+      braille += String.fromCharCode(M.getValue(bufOutPtr + j * 2, 'i16') & 0xffff);
+      inputPos[j] = M.getValue(bufInPosPtr + j * 4, 'i32');
+    }
+    return { braille, inputPos };
   }
 }
 
 // Back-translate BRF ASCII (or Unicode braille) -> text, using the same table list
 // as translate(). Used for the round-trip proofread (translate then back-translate
-// should return the source). Same buffer-growth + free-in-finally discipline.
+// should return the source).
 export function backTranslate(braille, tableList = TABLES.uebG2) {
+  const res = backTranslateRuns(braille, tableList);
+  return res.text;
+}
+
+// Back-translate BRF ASCII -> text AND return contiguous runs with TYPEFORM bits.
+// tf: 0=plain, 1=italic, 2=underline, 4=bold (or bitwise combinations).
+export function backTranslateRuns(braille, tableList = TABLES.uebG2) {
   if (!M) throw new Error('call init() first');
   const inLen = braille.length;
   for (let mul = 6; ; mul *= 4) {
     const outCap = inLen * mul + 1024;
-    const inPtr = M._malloc(Math.max(inLen, 1) * 2);
-    const outPtr = M._malloc(outCap * 2);
-    const inLenPtr = M._malloc(4);
-    const outLenPtr = M._malloc(4);
-    try {
-      for (let i = 0; i < inLen; i++) M.setValue(inPtr + i * 2, braille.charCodeAt(i), 'i16');
-      M.setValue(inLenPtr, inLen, 'i32');
-      M.setValue(outLenPtr, outCap, 'i32');
-      const rc = M.ccall('lou_backTranslateString', 'number',
-        ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-        [tableList, inPtr, inLenPtr, outPtr, outLenPtr, 0, 0, 0]);
-      if (!rc) throw new Error('lou_backTranslateString failed');
-      const outLen = M.getValue(outLenPtr, 'i32');
-      if (outLen >= outCap && mul < 400) continue;
-      if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');
-      let out = '';
-      for (let i = 0; i < outLen; i++) out += String.fromCharCode(M.getValue(outPtr + i * 2, 'i16') & 0xffff);
-      return out;
-    } finally {
-      M._free(inPtr); M._free(outPtr); M._free(inLenPtr); M._free(outLenPtr);
+    ensureBuffers(inLen, outCap);
+    for (let i = 0; i < inLen; i++) M.setValue(bufInPtr + i * 2, braille.charCodeAt(i), 'i16');
+    M.setValue(bufInLenPtr, inLen, 'i32');
+    M.setValue(bufOutLenPtr, outCap, 'i32');
+    for (let i = 0; i < outCap; i++) M.setValue(bufTypePtr + i * 2, 0, 'i16');
+    const rc = M.ccall('lou_backTranslate', 'number',
+      ['string', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+      [tableList, bufInPtr, bufInLenPtr, bufOutPtr, bufOutLenPtr, bufTypePtr, 0, 0, 0, 0, 0]);
+    if (!rc) throw new Error('lou_backTranslate failed');
+    const outLen = M.getValue(bufOutLenPtr, 'i32');
+    if (outLen >= outCap && mul < 400) continue;
+    if (outLen >= outCap) throw new Error('liblouis: braille output exceeded the maximum buffer (possible truncation)');
+
+    let out = '';
+    const tfArray = new Array(outLen);
+    for (let i = 0; i < outLen; i++) {
+      out += String.fromCharCode(M.getValue(bufOutPtr + i * 2, 'i16') & 0xffff);
+      tfArray[i] = M.getValue(bufTypePtr + i * 2, 'i16');
     }
+
+    const runs = [];
+    let curText = '';
+    let curTf = -1;
+    for (let i = 0; i < outLen; i++) {
+      const ch = out[i];
+      const tf = tfArray[i];
+      if (curTf === -1) {
+        curTf = tf;
+        curText = ch;
+      } else if (curTf === tf) {
+        curText += ch;
+      } else {
+        runs.push({ type: 'text', text: curText, tf: curTf });
+        curTf = tf;
+        curText = ch;
+      }
+    }
+    if (curText) runs.push({ type: 'text', text: curText, tf: curTf });
+
+    return { text: out, tfArray, runs };
   }
 }

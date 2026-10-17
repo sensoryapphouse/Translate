@@ -1,4 +1,4 @@
-/* @ts-self-types="./brlit_mathcat.d.ts" */
+/* @ts-self-types="./emboss_mathcat.d.ts" */
 
 /**
  * Return MathCAT's own version string (from its Cargo.toml), useful as a smoke test
@@ -152,7 +152,7 @@ function __wbg_get_imports() {
     };
     return {
         __proto__: null,
-        "./brlit_mathcat_bg.js": import0,
+        "./emboss_mathcat_bg.js": import0,
     };
 }
 

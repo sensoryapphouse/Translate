@@ -42,6 +42,7 @@
 // asked for, because eBraille 1.0 has no vocabulary for it.
 
 import { unzip } from './unmxl.mjs';
+import { parseXml, unescapeXml } from './xml.mjs';
 
 export const EBRAILLE_VERSION = 'eBraille 1.0';
 export const EBRL_MEDIA_TYPE = 'application/epub+zip';   // OCF's, not eBraille-specific
@@ -178,12 +179,20 @@ const braiTag = (language) => {
 // package document and the entry page are the same for all of them, so they
 // are built here ONCE from a spec:
 //
-//   { title, titleBraille, creator, producer, language, identifier, modified,
+//   { title, titleBraille, creator, producer, publisher?, language, identifier, modified,   // publisher: dc:publisher; absent = the producer (S3b #18, optional)
 //     copyrightYear, systems: [registry strings], cellType: '6',
 //     completeTranscription: true, tactileGraphics: 'none' | 'SVG' | …,
-//     toc: [{ href, label }],                   // label in braille where possible
-//     documents: [{ href, body, mathml, svg }], // body = the inside of <body>
-//     resources: [{ href, mediaType, data }] }  // tactile graphics and the like
+//     toc: [{ href, label, children?: [...] }], // label in braille where possible; children nest (8.3.1)
+//     documents: [{ href, body, mathml, svg,    // body = the inside of <body>
+//                   title?, stylesheets? }],    // title = the <title>; stylesheets = hrefs to <link> (2026-10-01)
+//     resources: [{ href, mediaType, data }],   // tactile graphics, style sheets and the like
+//     pageList?: [{ href, title, label }],      // 8.3.2: print page number in `title`, label in braille
+//     accessibilityFeatures?: ['printPageNumbers', ...],  // schema:accessibilityFeature, one <meta> each
+//     landmarks?: [{ href, type, label }] }     // 8.3.3: epub:type from the Structural Semantics Vocabulary
+//
+// THESE FIELDS ARE OPTIONAL AND ARE THERE FOR EMBOSS (2026-10-01, Paul): its export is now structured
+// (several content documents, a nested contents list, a page list, a style sheet). A spec without them is
+// written byte for byte as before - Translate and BrlDuet's files do not change.
 //
 // writeEbraille() below is the mode-sections adapter over this; Emboss has its
 // own adapter in format/ebraille.mjs.
@@ -195,25 +204,36 @@ function buildOPF(spec) {
   const docs = spec.documents ?? [];
   const res = spec.resources ?? [];
   const systems = (spec.systems && spec.systems.length) ? spec.systems : [SYSTEM_FOR.text];
+  const pubId = spec.identifier ?? 'urn:uuid:' + stableUuid(spec.identitySeed ?? JSON.stringify(docs.map((d) => d.body)));
   return `<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="pub-id"
          xml:lang="${esc(langParts[0])}"
-         prefix="a11y: http://www.idpf.org/epub/vocab/package/a11y/# dcterms: http://purl.org/dc/terms/">
+         prefix="a11y: http://www.idpf.org/epub/vocab/package/a11y/# dcterms: http://purl.org/dc/terms/ sah: https://sensoryapphouse.com/ns/braille#">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="pub-id">${esc(spec.identifier ?? 'urn:uuid:' + stableUuid(spec.identitySeed ?? JSON.stringify(docs.map((d) => d.body))))}</dc:identifier>
+    <dc:identifier id="pub-id">${esc(pubId)}</dc:identifier>
     <dc:title>${esc(spec.title || 'Braille document')}</dc:title>
     <dc:language>${esc(lang)}</dc:language>
     <dc:creator>${esc(spec.creator || 'Unknown')}</dc:creator>
-    <dc:publisher>${esc(spec.producer || 'Sensory App House Ltd')}</dc:publisher>
+    <dc:publisher>${esc(spec.publisher || spec.producer || 'Sensory App House Ltd')}</dc:publisher>
     <dc:date>${esc(now.slice(0, 10))}</dc:date>
     <dc:format>${EBRAILLE_VERSION}</dc:format>
     <meta property="dcterms:modified">${esc(now)}</meta>
     <meta property="dcterms:dateCopyrighted">${esc(String(year))}</meta>
     <meta property="a11y:producer">${esc(spec.producer || 'Sensory App House Ltd')}</meta>
-    <meta property="a11y:brailleCellType">${esc(spec.cellType ?? '6')}</meta>
+    <meta property="a11y:brailleCellType">${esc(spec.cellType ?? '6')}</meta>${spec.brailleCode ? `
+    <!-- THE EXACT TABLE THE TEXT WAS WRITTEN WITH (audit TR-03, 15 Oct 2026).
+         a11y:brailleSystem says "ueb grade2" or "Nemeth no-grade math" - a
+         publication-wide statement from a small registry vocabulary, and the
+         only thing the standard offers. It cannot distinguish French from
+         Spanish, or either from UEB, so a file saved in one language reopened
+         in another, silently, with the cells intact and every word changed.
+         This names the liblouis table instead, under our own prefix because
+         eBraille has nowhere for it. Additive: a reader that does not know
+         sah: ignores it and is no worse off than before. -->
+    <meta property="sah:brailleCode">${esc(spec.brailleCode)}</meta>` : ''}
 ${systems.map((sy) => `    <meta property="a11y:brailleSystem">${esc(sy)}</meta>`).join('\n')}
     <meta property="a11y:completeTranscription">${spec.completeTranscription === false ? 'false' : 'true'}</meta>
-    <meta property="a11y:tactileGraphics">${esc(spec.tactileGraphics || 'none')}</meta>
+    <meta property="a11y:tactileGraphics">${esc(spec.tactileGraphics || 'none')}</meta>${(spec.accessibilityFeatures || []).map((f) => `\n    <meta property="schema:accessibilityFeature">${esc(f)}</meta>`).join('')}
   </metadata>
   <manifest>
     <item id="nav" href="index.html" media-type="application/xhtml+xml" properties="nav"/>
@@ -299,24 +319,98 @@ const htmlHead = (doc, lang, extra = '') => `<?xml version="1.0" encoding="UTF-8
 ${extra}</head>
 `;
 
+// A TITLE IN BRAILLE WHEN NO TRANSLATOR IS TO HAND (2026-09-05). The entry
+// page's heading and its table-of-contents link are CONTENT, and eBraille
+// content should be braille and whitespace only (§3): the DAISY checker
+// warns EBR-030 on every print character there. BrlDuet translates the title
+// with liblouis when it can, Emboss and Translate hand one over — but a
+// title can still arrive as print (liblouis not loaded, a caller with no
+// translator), and the file then ships warned. This is the fallback: UEB
+// grade 1 for the characters a title is made of — letters, capitals, digits
+// with the numeric indicator (restated after a hyphen, kept across a full
+// stop or comma), the blank cell, and the common punctuation. Checked
+// against liblouis's own en-ueb-g1 table on six titles, cell for cell
+// identical (2026-09-05, main session). Cells are BUILT FROM DOT NUMBERS,
+// never typed. Anything outside the table is dropped from the braille
+// title rather than guessed at.
+const cellOf = (...ds) => String.fromCodePoint(0x2800 + ds.reduce((m, d) => m | (1 << (d - 1)), 0));
+const G1_AJ = [[1], [1, 2], [1, 4], [1, 4, 5], [1, 5], [1, 2, 4], [1, 2, 4, 5], [1, 2, 5], [2, 4], [2, 4, 5]];
+const G1_LETTER = (() => {
+  const t = {};
+  'abcdefghij'.split('').forEach((c, i) => { t[c] = G1_AJ[i]; });
+  'klmnopqrst'.split('').forEach((c, i) => { t[c] = [...G1_AJ[i], 3]; });
+  'uvxyz'.split('').forEach((c, i) => { t[c] = [...G1_AJ[i], 3, 6]; });
+  t.w = [2, 4, 5, 6];
+  return t;
+})();
+const G1_PUNCT = { '-': [3, 6], '.': [2, 5, 6], ',': [2], ':': [2, 5], ';': [2, 3], '!': [2, 3, 5], '?': [2, 3, 6], "'": [3], '/': [3, 4] };
+function titleToGrade1(title) {
+  let out = '', inNumber = false;
+  for (const ch of String(title ?? '')) {
+    const lower = ch.toLowerCase();
+    if (G1_LETTER[lower]) {
+      if (inNumber) { out += cellOf(5, 6); inNumber = false; }   // grade 1 indicator: a letter a-j after digits
+      if (ch !== lower) out += cellOf(6);
+      out += cellOf(...G1_LETTER[lower]);
+    } else if (ch >= '0' && ch <= '9') {
+      if (!inNumber) { out += cellOf(3, 4, 5, 6); inNumber = true; }
+      out += cellOf(...G1_AJ[(Number(ch) + 9) % 10]);           // 1-9 are a-i, 0 is j
+    } else if (ch === ' ') { out += cellOf(); inNumber = false; }
+    else if (ch === '(' || ch === ')') { out += cellOf(5) + cellOf(...(ch === '(' ? [1, 2, 6] : [3, 4, 5])); inNumber = false; }
+    else if (G1_PUNCT[ch]) { out += cellOf(...G1_PUNCT[ch]); if (ch !== '.' && ch !== ',') inNumber = false; }
+    else inNumber = false;
+  }
+  return out;
+}
+
+// A nested contents list (8.3.1, Example 50): an entry's sub-sections go in an <ol> after its link. A flat
+// entry is written exactly as it always was.
+function tocItems(items, shown, indent) {
+  const pad = ' '.repeat(indent);
+  return items.map((t) => {
+    const a = `<a href="${esc(t.href)}">${esc(t.label || shown)}</a>`;
+    if (!t.children || !t.children.length) return `${pad}<li>${a}</li>`;
+    return `${pad}<li>${a}\n${pad}  <ol>\n${tocItems(t.children, shown, indent + 4)}\n${pad}  </ol>\n${pad}</li>`;
+  }).join('\n');
+}
+
 function buildEntryPage(spec, lang) {
-  const shown = spec.titleBraille || spec.title || 'Braille document';
+  const shown = spec.titleBraille || titleToGrade1(spec.title || 'Braille document');
   const toc = (spec.toc && spec.toc.length) ? spec.toc : [{ href: CONTENT_DOC, label: shown }];
+  // The page list (8.3.2): one flat <ol>, the braille page number inside the link and the PRINT number in `title`,
+  // which is how a reader matches the number a user types. Its heading is braille too (EBR-030).
+  const pages = (spec.pageList && spec.pageList.length)
+    ? `  <nav epub:type="page-list" role="doc-pagelist" aria-label="Page list">
+    <h2>${esc(spec.pageListHeading || shown)}</h2>
+    <ol>
+${spec.pageList.map((p) => `      <li><a href="${esc(p.href)}" title="${esc(p.title)}">${esc(p.label)}</a></li>`).join('\n')}
+    </ol>
+  </nav>
+` : '';
+  const marks = (spec.landmarks && spec.landmarks.length)
+    ? `  <nav epub:type="landmarks" aria-label="Landmarks">
+    <h2>${esc(spec.landmarksHeading || shown)}</h2>
+    <ol>
+${spec.landmarks.map((l) => `      <li><a href="${esc(l.href)}" epub:type="${esc(l.type)}">${esc(l.label)}</a></li>`).join('\n')}
+    </ol>
+  </nav>
+` : '';
   return htmlHead(spec, lang,
     '  <link rel="publication" href="package.opf" type="application/oebps-package+xml"/>\n') +
 `<body>
   <nav epub:type="toc" role="doc-toc" aria-label="Table of contents">
     <h2>${esc(shown)}</h2>
     <ol>
-${toc.map((t) => `      <li><a href="${esc(t.href)}">${esc(t.label || shown)}</a></li>`).join('\n')}
+${tocItems(toc, shown, 6)}
     </ol>
   </nav>
-</body>
+${pages}${marks}</body>
 </html>
 `;
 }
 
-const wrapContent = (spec, lang, body) => htmlHead(spec, lang) + `<body>
+const wrapContent = (spec, lang, body, d = {}) => htmlHead(d.title ? { ...spec, title: d.title } : spec, lang,
+  (d.stylesheets || []).map((h) => `  <link rel="stylesheet" type="text/css" href="${esc(h)}"/>\n`).join('')) + `<body>
 ${body}
 </body>
 </html>
@@ -356,7 +450,7 @@ export function packageEbraille(spec) {
     { name: 'META-INF/container.xml', data: enc.encode(CONTAINER_XML) },
     { name: 'package.opf', data: enc.encode(buildOPF(spec)) },
     { name: 'index.html', data: enc.encode(buildEntryPage(spec, brai)) },
-    ...docs.map((d) => ({ name: d.href, data: enc.encode(wrapContent(spec, brai, d.body)) })),
+    ...docs.map((d) => ({ name: d.href, data: enc.encode(wrapContent(spec, brai, d.body, d)) })),
     ...(spec.resources ?? []).map((r) => ({ name: r.href, data: r.data })),
   ]);
 }
@@ -413,10 +507,24 @@ export function writeEbraille(doc) {
     completeTranscription: doc.completeTranscription ?? true,
     tactileGraphics: 'none',
     identitySeed: JSON.stringify(doc.sections ?? []),
-    toc: [{ href: CONTENT_DOC, label: doc.titleBraille || doc.title || 'Braille document' }],
+    toc: [{ href: CONTENT_DOC, label: doc.titleBraille || titleToGrade1(doc.title || 'Braille document') }],
     documents: [{ href: CONTENT_DOC, body: sectionsBody(doc), mathml: (doc.sections ?? []).some((sec) => sec.mathml) }],
   });
 }
+
+// WHAT ENDS A BRAILLE LINE. Both readers below — the one that walks sections
+// and the one for files that have none — share this list, because they are
+// answering the same question and disagreeing about <li> or <td> would mean a
+// file read differently depending on whether its producer used sections.
+const BLOCK = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td', 'th', 'tr',
+  'caption', 'figcaption', 'div', 'aside', 'ul', 'ol', 'dl', 'dt', 'dd', 'table',
+  'thead', 'tbody', 'tfoot', 'section', 'nav', 'main', 'article', 'header', 'footer',
+  'blockquote', 'pre', 'figure', 'hr', 'br']);
+
+// Elements whose text is never braille content. <math> is the interesting one:
+// it is read whole, as MathML, so walking into it as well would turn an <mtext>
+// into a bogus line.
+const NOT_CONTENT = new Set(['head', 'script', 'style', 'math']);
 
 /**
  * Read a .ebrl file back into a doc. Falls back gracefully: a file written by
@@ -436,72 +544,174 @@ export async function readEbraille(buffer) {
   // both without knowing which it has. A file whose spine cannot be resolved
   // at all falls back to index.html, which is where a foreign producer's
   // single-document publication would keep its sections too.
+  // PARSED, NOT PATTERN-MATCHED (PB, 10 Oct 2026: "yes, we should open other
+  // people's ebraille"). Everything below used to be regular expressions, and
+  // they encoded OUR serialisation rather than the format: double-quoted
+  // attributes, the literal prefixes dc: and a11y:, a <math> with no prefix,
+  // and non-greedy bodies that any nesting defeats. A valid file from another
+  // producer could differ in every one of those and be misread or read as
+  // empty. xml.mjs resolves names and namespaces so elements are found by what
+  // they MEAN; the shape returned from here is unchanged.
+  const pkg = parseXml(opf || '');
   const manifest = {};
-  for (const m of (opf || '').matchAll(/<item\b[^>]*>/g)) {
-    const id = (m[0].match(/\bid="([^"]*)"/) || [])[1];
-    const href = (m[0].match(/\bhref="([^"]*)"/) || [])[1];
+  for (const item of pkg.find('item')) {
+    const id = item.attr('id');
+    const href = item.attr('href');
     if (id && href) manifest[id] = decodeURIComponent(href);
   }
-  const spine = [...(opf || '').matchAll(/<itemref\b[^>]*\bidref="([^"]*)"/g)]
-    .map((m) => manifest[m[1]]).filter(Boolean);
+  const spine = pkg.find('itemref').map((r) => manifest[r.attr('idref')]).filter(Boolean);
   const docs = spine.map(get).filter((d) => d !== null);
   const html = docs.length ? docs.join('\n') : get('index.html');
 
-  const pick = (re) => { const m = opf && opf.match(re); return m ? m[1].trim() : ''; };
+  const first = (local) => {
+    const n = pkg.find(local)[0];
+    return n ? n.text().trim() : '';
+  };
+  // a11y:producer and a11y:brailleSystem are prefixed in the ATTRIBUTE VALUE,
+  // where the prefix is just as free a choice, so the local part decides.
+  const byProperty = (want) => pkg.find('meta')
+    .filter((m) => String(m.attr('property') || '').split(':').pop() === want)
+    .map((m) => m.text().trim());
   const meta = {
-    title: pick(/<dc:title[^>]*>([\s\S]*?)<\/dc:title>/),
-    creator: pick(/<dc:creator[^>]*>([\s\S]*?)<\/dc:creator>/),
-    producer: pick(/property="a11y:producer"[^>]*>([\s\S]*?)<\/meta>/),
-    language: pick(/<dc:language[^>]*>([\s\S]*?)<\/dc:language>/).replace(/-Brai/i, ''),
-    identifier: pick(/<dc:identifier[^>]*>([\s\S]*?)<\/dc:identifier>/),
-    systems: [...(opf || '').matchAll(/property="a11y:brailleSystem"[^>]*>([\s\S]*?)<\/meta>/g)]
-      .map((m) => m[1].trim()),
+    title: first('title'),
+    creator: first('creator'),
+    producer: byProperty('producer')[0] || '',
+    language: first('language').replace(/-Brai/i, ''),
+    identifier: first('identifier'),
+    systems: byProperty('brailleSystem'),
+    // Absent from any file written before 15 Oct 2026, and from every other
+    // producer's: '' then, and the caller leaves the reader's code alone rather
+    // than guessing one.
+    brailleCode: byProperty('brailleCode')[0] || '',
   };
 
-  // Split one <p> into its runs. Anything that is not a mode span is text, so
-  // markup this function does not know about degrades to cells rather than
-  // being dropped — the same rule the section reader follows.
-  const lineRuns = (html) => {
-    const parts = [];
-    let last = 0;
-    for (const m of html.matchAll(/<span\b[^>]*class="([^"]*)"[^>]*>([\s\S]*?)<\/span>/g)) {
-      if (m.index > last) parts.push({ text: unesc(html.slice(last, m.index)) });
-      const mode = CLASS_MODE[m[1].split(/\s+/).find((c) => CLASS_MODE[c])];
-      parts.push({ text: unesc(m[2]), ...(mode && mode !== 'text' ? { mode } : {}) });
-      last = m.index + m[0].length;
+  const doc = parseXml(html || '');
+
+  // ONE CHILD OF A LINE. Anything that is not a mode span is text, so markup
+  // this function does not know about degrades to cells rather than being
+  // dropped — the same rule the section reader follows.
+  //
+  // unescapeXml, NOT the module's old five-replacement unesc (TR-06, found by
+  // an audit 15 Oct 2026; mine, from the parser rewrite on the 12th). Element
+  // children were decoded by xml.mjs, which expands every character reference,
+  // while text sitting directly in a <p> went through unesc, which knew only
+  // &lt; &gt; &quot; &#39; &amp;. So <p>&#x2801;</p> kept its reference as
+  // literal text, the cell filter then found no braille in it and dropped the
+  // line, while the same reference inside a <span> read correctly. Two
+  // decoders on one document is the bug; there is now one.
+  const runOf = (child) => {
+    if (child.local === undefined) {
+      const t = child.cdata ? child.raw : unescapeXml(child.text || '');
+      return t ? [{ text: t }] : [];
     }
-    if (last < html.length) parts.push({ text: unesc(html.slice(last)) });
+    const cls = String(child.attr('class') || '').split(/\s+/).find((c) => CLASS_MODE[c]);
+    const mode = CLASS_MODE[cls];
+    if (mode) return [{ text: child.text(), ...(mode !== 'text' ? { mode } : {}) }];
+    const t = child.text();
+    return t ? [{ text: t }] : [];
+  };
+
+  /** Every run of one line, in document order. */
+  const lineRuns = (node) => {
+    const parts = (node.children || []).flatMap(runOf);
     return parts.length ? parts : [{ text: '' }];
   };
 
+  // EVERY BLOCK IS A LINE, NOT JUST <p> (TR-05, same audit, also mine). The
+  // section reader asked for sec.find('p'), so a section holding a heading, a
+  // list or a table returned its paragraphs and lost the rest without a word —
+  // a silent read, which is worse for a teacher than a refusal.
+  //
+  // The rule now matches the no-section reader's: a block ends a line. A LEAF
+  // block — one with no block inside it — is one line, kept even when empty
+  // because an empty <p> IS a blank braille line. A block that holds other
+  // blocks is a container to walk, so <ul> contributes nothing itself and its
+  // <li>s are the lines. A <br> ends a line where it stands.
+  const holdsBlock = (n) => (n.children || []).some((c) => c.local !== undefined
+    && (BLOCK.has(c.local) || holdsBlock(c)));
+
+  const blockLines = (from) => {
+    const out = [];
+    let loose = [];
+    // Inline content sitting directly in a container is a line only when it
+    // says something: a </ul> must not manufacture a blank line.
+    const flushLoose = () => {
+      if (loose.some((r) => r.text !== '')) out.push(loose);
+      loose = [];
+    };
+    for (const c of from.children || []) {
+      if (c.local === undefined) { loose.push(...runOf(c)); continue; }
+      if (NOT_CONTENT.has(c.local)) continue;    // <math> is captured whole, below
+      // <br> and <hr> END a line; neither is a line of its own, because
+      // neither carries a cell and inventing a blank one is the same fault as
+      // dropping a real one.
+      if (c.local === 'br' || c.local === 'hr') { flushLoose(); continue; }
+      if (!BLOCK.has(c.local)) { loose.push(...runOf(c)); continue; }
+      flushLoose();
+      if (holdsBlock(c)) out.push(...blockLines(c));
+      else out.push(lineRuns(c));
+    }
+    flushLoose();
+    return out;
+  };
+
+  // TOP-LEVEL SECTIONS ONLY. find() reaches every depth, which is right for
+  // metadata and wrong here: a section nested in another would be read twice,
+  // once on its own and once as part of its parent's content.
+  const topSections = (from) => {
+    const out = [];
+    (function walk(n) {
+      for (const c of n.children || []) {
+        if (c.local === undefined) continue;
+        if (c.local === 'section') out.push(c);
+        else walk(c);
+      }
+    }(from));
+    return out;
+  };
+
   const sections = [];
-  for (const m of html.matchAll(/<section\b[^>]*class="([^"]*)"[^>]*>([\s\S]*?)<\/section>/g)) {
-    const cls = m[1].split(/\s+/).find((c) => CLASS_MODE[c]);
-    const inner = m[2];
-    const mathml = (inner.match(/<math[\s\S]*?<\/math>/) || [null])[0];
-    const rawLines = [...inner.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map((p) => p[1]);
+  for (const sec of topSections(doc)) {
+    const cls = String(sec.attr('class') || '').split(/\s+/).find((c) => CLASS_MODE[c]);
+    const math = sec.find('math')[0];
     const lines = [], runs = [];
-    rawLines.forEach((html) => {
-      const parts = lineRuns(html);
+    for (const parts of blockLines(sec)) {
       const text = parts.map((r) => r.text).join('');
-      // Only braille and blanks are content; a <p> holding markup leftovers is
-      // not a braille line and must not be pretended into one.
-      if (text !== '' && !/[⠀-⣿]/.test(text)) return;
+      // Only braille and blanks are content; a block holding markup leftovers
+      // or print text is not a braille line and must not be pretended into one.
+      if (text !== '' && !/[⠀-⣿]/.test(text)) continue;
       lines.push(text);
       runs.push(parts.some((r) => r.mode) ? parts : null);
-    });
-    const sec = { mode: CLASS_MODE[cls] ?? 'text', lines, ...(mathml ? { mathml } : {}) };
+    }
+    const out = { mode: CLASS_MODE[cls] ?? 'text', lines, ...(math ? { mathml: math.outerXml() } : {}) };
     // `runs` appears ONLY when a line actually changed mode part-way, so a
     // reader that predates inline runs sees exactly the shape it always saw.
-    if (runs.some(Boolean)) sec.runs = runs;
-    sections.push(sec);
+    if (runs.some(Boolean)) out.runs = runs;
+    sections.push(out);
+  }
+
+  // A FILE WITH NO <section> AT ALL (2026-10-01). Emboss's export is structured braille - headings, paragraphs, lists,
+  // tables, notes - in several content documents, with no sah-mode sections; a file from another producer is the same.
+  // Reading it as nothing would be a regression from the days Emboss wrote pages of <p> lines, so every block's end is a
+  // line end and the braille lines come back as one text section. Since 15 Oct 2026 the section reader applies the same
+  // rule, so the two agree; before that it read only <p> and a sectioned file lost its headings, lists and tables.
+  if (!sections.length && html) {
+    let flat = '';
+    (function walk(n) {
+      for (const c of n.children || []) {
+        if (c.local === undefined) { flat += c.cdata ? c.raw : unescapeXml(c.text || ''); continue; }
+        if (NOT_CONTENT.has(c.local)) continue;           // not content
+        if (c.local === 'br') { flat += '\n'; continue; }
+        walk(c);
+        if (BLOCK.has(c.local)) flat += '\n';
+      }
+    }(doc));
+    const lines = flat.split('\n').map((l) => l.trim()).filter((l) => /[⠀-⣿]/.test(l));
+    if (lines.length) sections.push({ mode: 'text', lines });
   }
 
   return { ...meta, sections };
 }
-
-const unesc = (s) => String(s).replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 
 /** True if these bytes look like a ZIP/OCF container, so Load can branch. */
 export function looksLikeEbraille(buffer) {

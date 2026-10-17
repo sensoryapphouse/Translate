@@ -9,6 +9,7 @@ repository. The components below are **not relicensed** and keep their own terms
 | **MathCAT** (maths braille and speech) | `engine/mathcat/pkg-web/` | MIT, © Neil Soiffer / DAISY Consortium |
 | **Temml** (maths renderer) | `web/vendor/temml.min.js` | MIT |
 | **Inter** (interface typeface) | `web/fonts/inter-*.woff2` | SIL Open Font License 1.1, © the Inter Project Authors — text in `web/fonts/Inter-OFL.txt` |
+| **Iconoir** (interface icons) | the `<symbol>` sprite inside `Translate/index.html` | MIT, © 2021 Luca Burgio — text in `web/icons/iconoir-LICENSE.txt` |
 
 ## What is deliberately absent
 

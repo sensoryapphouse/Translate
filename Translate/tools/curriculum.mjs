@@ -130,6 +130,13 @@ for (const code of CODES) {
   }
   const P = (a) => (TN ? String(Math.round(a / TN * 100)).padStart(3) + '%' : '   —');
   console.log(`  ${'ALL'.padEnd(28)}${String(TN).padStart(2)}     ${P(TR)}      ${P(TC)}     ${P(TF)}`);
+  // THE COUNTS, FOR THE GATE (TR-17, 15 Oct 2026). The table above is rounded
+  // because a person reads it; check.mjs was scraping those rounded figures and
+  // recording them as counts out of 100, so its baseline for this tool held no
+  // counts at all. At 481 independent cases one percentage point spans five
+  // different counts, and four lost cases could pass as "94%" either way. The
+  // table is left exactly as it was - this line is for the machine.
+  console.log(`#counts ALL n=${TN} readable=${TR} consistent=${TC} faithful=${TF}`);
 
   // the independent set
   let gn = 0, gr = 0, gc = 0, gf = 0;
@@ -154,6 +161,11 @@ for (const code of CODES) {
   if (gn) {
     const G = (a) => String(Math.round(a / gn * 100)).padStart(3) + '%';
     console.log(`  ${'INDEPENDENT SET'.padEnd(28)}${String(gn).padStart(2)}     ${G(gr)}      ${G(gc)}     ${G(gf)}`);
+    // gn is not a constant: a generated case that MathCAT cannot braille is
+    // skipped above, so the denominator itself moves with the engine. Reporting
+    // it is the only way the gate can tell a changed corpus from a changed
+    // result.
+    console.log(`#counts INDEPENDENT n=${gn} readable=${gr} consistent=${gc} faithful=${gf}`);
   }
   console.log('');
 }

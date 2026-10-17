@@ -31,10 +31,21 @@ mkdir -p "$OUT/Translate" "$OUT/engine/mathcat" "$OUT/liblouis" "$OUT/web"
 python3 - "$OUT" <<'PYEOF'
 import os, re, shutil, sys
 out = sys.argv[1]
-seen, queue = set(), ['Translate/translate.mjs']
+# AN IMPORTED MODULE THAT IS NOT ON DISK MUST FAIL THE BUILD (found by the
+# 2026-10-10 audit). This used to test existence when a file was POPPED off the
+# queue and `continue` past one that was absent, so an absent module never
+# entered `seen`; the check after the walk looked for absent files INSIDE `seen`,
+# which cannot contain any. It could never report anything, which is exactly how
+# the production failure recorded above got through: a module imported but never
+# copied. Existence is now tested at the EDGE, while the importer is still known,
+# so the report can say which file asked for what.
+entry = 'Translate/translate.mjs'
+seen, missing, queue = set(), {}, []
+if os.path.isfile(entry): queue.append(entry)
+else: missing[entry] = {'(the build entry point)'}
 while queue:
     f = queue.pop()
-    if f in seen or not os.path.exists(f): continue
+    if f in seen: continue
     seen.add(f)
     src = open(f, encoding='utf-8', errors='ignore').read()
     for m in re.findall(r"""(?:from|import)\s*\(?\s*['"]([^'"]+)['"]""", src):
@@ -42,10 +53,13 @@ while queue:
         if m.startswith('/'):   dep = os.path.normpath(m).lstrip('/')
         elif m.startswith('.'): dep = os.path.normpath(os.path.join(os.path.dirname(f), m))
         else: continue
+        if not os.path.isfile(dep): missing.setdefault(dep, set()).add(f); continue
         if dep not in seen: queue.append(dep)
-missing = [m for m in seen if not os.path.exists(m)]
 if missing:
-    print('MISSING MODULES: ' + ', '.join(sorted(missing)), file=sys.stderr); sys.exit(1)
+    print('MISSING MODULES - imported, but not on disk, so the build would ship an app that cannot load:', file=sys.stderr)
+    for m in sorted(missing):
+        print('  ' + m + '   (imported by ' + ', '.join(sorted(missing[m])) + ')', file=sys.stderr)
+    sys.exit(1)
 for m in sorted(seen):
     dst = os.path.join(out, m)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -119,7 +133,7 @@ HTML
 # licences/NOTICE.md is turned into a page the credits link to.
 mkdir -p "$OUT/licences"
 cp licences/NOTICE.md licences/Temml-MIT.txt licences/MathCAT-MIT.txt \
-   licences/liblouis-LGPL-2.1.txt licences/Inter-OFL-1.1.txt "$OUT/licences/"
+   licences/liblouis-LGPL-2.1.txt licences/Inter-OFL-1.1.txt licences/Iconoir-MIT.txt "$OUT/licences/"
 python3 - "$OUT" <<'PYEOF'
 import html, sys, os
 out = sys.argv[1]

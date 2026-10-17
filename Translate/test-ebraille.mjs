@@ -82,7 +82,12 @@ ok('both documents state their language', /<html [^>]*xml:lang="en-Brai-GB"/.tes
 const noMath = writeEbraille({ ...DOC, sections: DOC.sections.map((s) => ({ ...s, mathml: undefined })) });
 ok('...and no MathML means no mathml property', !/properties="mathml"/.test(await text(noMath, 'package.opf')));
 const printTitle = writeEbraille({ ...DOC, titleBraille: undefined });
-ok('without a braille title the PRINT title is used, never an empty heading', (await text(printTitle, 'index.html')).includes('<h2>Mixed document</h2>'));
+{
+  // The print title is transliterated to UEB grade 1 (2026-09-05): the heading is braille, never print and never empty.
+  const heading = ((await text(printTitle, 'index.html')).match(/<h2>([^<]*)<\/h2>/) || [])[1] || '';
+  const brailleOnly = new RegExp('^[' + String.fromCodePoint(0x2800) + '-' + String.fromCodePoint(0x28FF) + ' ]+' + '$');
+  ok('without a braille title the print title is written in UEB grade 1, never print and never an empty heading', brailleOnly.test(heading), JSON.stringify(heading));
+}
 
 console.log('\nthe round trip');
 const back = await readEbraille(ab(bytes));
@@ -129,7 +134,7 @@ if (jar && fs.existsSync(jar)) {
     const m = /Messages: (\d+) fatals \/ (\d+) errors \/ (\d+) warnings/.exec(out) || [];
     const ids = [...out.matchAll(/^(?:FATAL|ERROR|WARNING)\(([A-Z]+-\d+)\)/gm)].map((x) => x[1]);
     if (name === 'mixed-print-title') {
-      ok(`${name}: no errors; the print title earns EBR-030 and nothing else`, m[1] === '0' && m[2] === '0' && ids.every((i) => i === 'EBR-030'), ids.join(','));
+      ok(`${name}: 0 fatals, 0 errors, 0 warnings — a print title is written in UEB grade 1 when no braille title is given (2026-09-05)`, m[1] === '0' && m[2] === '0' && m[3] === '0', ids.join(',') || out.slice(-200));
     } else {
       ok(`${name}: 0 fatals, 0 errors, 0 warnings`, m[1] === '0' && m[2] === '0' && m[3] === '0', ids.join(',') || out.slice(-200));
     }
@@ -138,7 +143,11 @@ if (jar && fs.existsSync(jar)) {
   console.log('  skip - set EBRAILLE_CHECKER_JAR to ebraille-checker.jar to run the DAISY checker here');
 }
 
-console.log('\nthe Emboss adapter (format/ebraille.mjs) - the same container from embosser pages');
+console.log('\nthe Emboss adapter (format/ebraille.mjs) - the same container, built from the document model');
+// Paul, 1 Oct 2026 (feedback: the export was monolithic): Emboss no longer writes the embosser pages (one volume-N.html of
+// <p> lines per volume). It writes structured, reflowable content documents split at the top-level headings; the
+// expectations below that pinned volume-N.html and page lines were changed for that, named in
+// Emboss/docs/expectation-changes.md. The container, package, entry-page and SVG-resource expectations are unchanged.
 // Emboss's exporter reaches this writer through format/document.mjs and the
 // whole input/ chain, which other work may have mid-edit; a chain that will
 // not load is reported, never silently passed over.
@@ -150,21 +159,25 @@ if (emboss) {
   const eDocs = {
     'emboss-plain':   [{ title: 'Emboss test', blocks: [{ type: 'para', text: 'Hello world' }, { type: 'para', text: 'Knowledge is power.' }] }, {}],
     'emboss-svg':     [{ title: 'Emboss graphics', blocks: [{ type: 'para', text: 'A diagram follows.' }, { type: 'graphic', title: 'Right angle', svg: SVG }] }, {}],
-    'emboss-volumes': [{ title: 'Emboss long', blocks: Array.from({ length: 40 }, (_, i) => ({ type: 'para', text: `Paragraph ${i + 1} of a document long enough to need volumes.` })) }, { depth: 12, volumePages: 3 }],
+    'emboss-sections': [{ title: 'Emboss long', blocks: Array.from({ length: 3 }, (_, c) => [{ type: 'heading', level: 1, text: `Chapter ${c + 1}` }, ...Array.from({ length: 12 }, (_, i) => ({ type: 'para', text: `Paragraph ${i + 1} of chapter ${c + 1}.` }))]).flat() }, { depth: 12, volumePages: 3 }],
   };
   const eBytes = {};
   const translate = (print) => print.toUpperCase();   // BRF ASCII stand-in for the app's liblouis
   for (const [name, [doc, extra]] of Object.entries(eDocs)) eBytes[name] = emboss(doc, { width: 40, depth: 25, mode: 'ukaaf', translate, ...extra });
   const opfP = await text(eBytes['emboss-plain'], 'package.opf');
-  ok('an Emboss export is an OCF container with the entry page and one volume document', (await text(eBytes['emboss-plain'], 'mimetype')) === 'application/epub+zip' && /<itemref idref="doc1"\/>/.test(opfP) && (await text(eBytes['emboss-plain'], 'volume-1.html')) !== null);
-  ok('every page line is braille cells and nothing else', [...(await text(eBytes['emboss-plain'], 'volume-1.html')).matchAll(/<p>(.*?)<\/p>/g)].every((m) => /^[\u2800-\u28ff]*$/.test(m[1])));
+  ok('an Emboss export is an OCF container with the entry page and one content document', (await text(eBytes['emboss-plain'], 'mimetype')) === 'application/epub+zip' && /<itemref idref="doc1"\/>/.test(opfP) && (await text(eBytes['emboss-plain'], 'content/section-01.html')) !== null);
+  ok('every paragraph is braille cells and nothing else', [...(await text(eBytes['emboss-plain'], 'content/section-01.html')).matchAll(/<p\b[^>]*>(.*?)<\/p>/g)].length === 2 && [...(await text(eBytes['emboss-plain'], 'content/section-01.html')).matchAll(/<p\b[^>]*>(.*?)<\/p>/g)].every((m) => /^[\u2800-\u28ff ]*$/.test(m[1])));
   const opfS = await text(eBytes['emboss-svg'], 'package.opf');
-  ok('a tactile graphic travels as an SVG resource, declared in the package', /tactileGraphics">SVG</.test(opfS) && /href="graphics\/graphic-1.svg" media-type="image\/svg\+xml"/.test(opfS) && /href="volume-1.html"[^>]*properties="svg"/.test(opfS) && (await text(eBytes['emboss-svg'], 'graphics/graphic-1.svg')) === SVG);
-  ok('...and the figure\'s caption and alt are braille, like everything else the reader meets', /<img [^>]*alt="[\u2800-\u28ff]+"\/>[\s\S]*<figcaption>[\u2800-\u28ff]+<\/figcaption>/.test(await text(eBytes['emboss-svg'], 'volume-1.html')));
-  const opfV = await text(eBytes['emboss-volumes'], 'package.opf');
-  ok('a long document becomes one content document per volume, all in the spine', (opfV.match(/<itemref /g) || []).length >= 3 && (await text(eBytes['emboss-volumes'], 'volume-3.html')) !== null);
-  ok('the table of contents lists every volume, in braille', ((await text(eBytes['emboss-volumes'], 'index.html')).match(/<li><a href="volume-\d+.html">[\u2800-\u28ff]+<\/a><\/li>/g) || []).length >= 3);
+  ok('a tactile graphic travels as an SVG resource, declared in the package', /tactileGraphics">SVG</.test(opfS) && /href="graphics\/graphic-1.svg" media-type="image\/svg\+xml"/.test(opfS) && /href="content\/section-01.html"[^>]*properties="svg"/.test(opfS) && (await text(eBytes['emboss-svg'], 'graphics/graphic-1.svg')) === SVG);
+  ok('...and the figure\'s caption and alt are braille, like everything else the reader meets', /<img [^>]*alt="[\u2800-\u28ff ]+"\/>[\s\S]*<figcaption>[\u2800-\u28ff ]+<\/figcaption>/.test(await text(eBytes['emboss-svg'], 'content/section-01.html')));
+  const opfV = await text(eBytes['emboss-sections'], 'package.opf');
+  ok('a document of three chapters becomes one content document per chapter, all in the spine, and volumePages is not a division', (opfV.match(/<itemref /g) || []).length === 3 && (await text(eBytes['emboss-sections'], 'content/section-03.html')) !== null && (await text(eBytes['emboss-sections'], 'volume-1.html')) === null);
+  ok('the table of contents lists every chapter, in braille', ((await text(eBytes['emboss-sections'], 'index.html')).match(/<li><a href="content\/section-\d+.html#h-\d+">[\u2800-\u28ff ]+<\/a><\/li>/g) || []).length === 3);
   ok('it declares itself a complete transcription', /completeTranscription">true</.test(opfP));
+  // Paul, 1 Oct 2026: a structured export has no <section>; readEbraille reads a file with none as lines of text (the
+  // pages-of-<p> export it replaces used to come back that way).
+  const back = await readEbraille(ab(eBytes['emboss-sections']));
+  ok('Translate still reads an Emboss export: the braille of every content document comes back as lines of one text section', back.sections.length === 1 && back.sections[0].mode === 'text' && back.sections[0].lines.length === 3 + 36 && back.sections[0].lines.every((l) => /^[⠀-⣿ ]+$/.test(l)), JSON.stringify(back.sections.map((s) => s.lines.length)));
   let refused = false;
   try { emboss(eDocs['emboss-plain'][0], { width: 40, depth: 25 }); } catch (e) { refused = /translate/.test(e.message); }
   ok('without a translator it refuses, rather than upper-casing print into "braille"', refused);
@@ -221,6 +234,157 @@ console.log('a hostile ZIP is refused, a big honest one is not');
   ok('more entries than allowed is refused', e instanceof ZipLimitError && /more than 2 entries/.test(e.message), e && e.message);
   ok('the default caps are generous for real documents (64 MB total, 32 MB per entry)', ZIP_LIMITS.maxTotal === 64 * 1024 * 1024 && ZIP_LIMITS.maxEntry === 32 * 1024 * 1024);
   ok('a real .ebrl still reads', (await readEbraille(ab(bytes))).sections.length === DOC.sections.length);
+}
+
+// ---- SOMEONE ELSE'S eBRAILLE ------------------------------------------------
+// PB, 10 Oct 2026: "yes, we should open other people's ebraille." Until then
+// the reader used regular expressions that encoded OUR serialisation, so a
+// valid file written any other legal way was misread or read as empty. Each
+// case below is a choice an XML producer is free to make and we were not
+// tolerating. They are built by hand, NOT by writeEbraille, because a file we
+// wrote can only ever prove we can read ourselves.
+{
+  const enc = new TextEncoder();
+  const BRL = '\u280e\u2800\u281e';                       // three braille cells
+  const pack = (opf, content) => ab(zipStore([
+    { name: 'mimetype', data: enc.encode('application/epub+zip') },
+    { name: 'package.opf', data: enc.encode(opf) },
+    { name: 'index.html', data: enc.encode(content) },
+  ]));
+
+  // 1. single quotes everywhere, and a dc prefix bound by a single-quoted xmlns
+  const single = await readEbraille(pack(
+    `<?xml version='1.0'?><package xmlns='http://www.idpf.org/2007/opf' xmlns:dc='http://purl.org/dc/elements/1.1/'>`
+    + `<metadata><dc:title>Single Quoted</dc:title><dc:language>en-Brai</dc:language></metadata>`
+    + `<manifest><item id='c' href='index.html' media-type='text/html'/></manifest>`
+    + `<spine><itemref idref='c'/></spine></package>`,
+    `<html><body><section class='sah-text'><p>${BRL}</p></section></body></html>`));
+  ok("single-quoted attributes read", single.sections[0].lines[0] === BRL, single.sections[0]);
+  ok("...and so does the title beside them", single.title === 'Single Quoted', single.title);
+  ok("...and the language, with -Brai stripped as always", single.language === 'en', single.language);
+
+  // 2. a producer that binds Dublin Core to a different prefix
+  const prefixed = await readEbraille(pack(
+    `<package xmlns:meta="http://purl.org/dc/elements/1.1/"><metadata><meta:title>Odd Prefix</meta:title></metadata>`
+    + `<manifest><item id="x" href="index.html"/></manifest><spine><itemref idref="x"/></spine></package>`,
+    `<html><body><section class="sah-text"><p>${BRL}</p></section></body></html>`));
+  ok('a different namespace prefix still gives up its title', prefixed.title === 'Odd Prefix', prefixed.title);
+
+  // 3. MathML under a prefix, which the old `<math ...>` pattern could not see
+  const mathPrefixed = await readEbraille(pack(
+    `<package><manifest><item id="x" href="index.html"/></manifest><spine><itemref idref="x"/></spine></package>`,
+    `<html><body><section class="sah-ueb"><p>${BRL}</p>`
+    + `<m:math xmlns:m="http://www.w3.org/1998/Math/MathML"><m:mi>x</m:mi></m:math></section></body></html>`));
+  ok('prefixed MathML is found', /mi>x<\/m:mi>/.test(mathPrefixed.sections[0].mathml || ''), mathPrefixed.sections[0].mathml);
+
+  // 4. nested sections: the inner one must not also be read as part of the outer
+  const nested = await readEbraille(pack(
+    `<package><manifest><item id="x" href="index.html"/></manifest><spine><itemref idref="x"/></spine></package>`,
+    `<html><body><section class="sah-text"><p>${BRL}</p>`
+    + `<section class="sah-nemeth"><p>\u283c\u2801</p></section></section></body></html>`));
+  ok('a nested section is read once, inside its parent',
+     nested.sections.length === 1 && nested.sections[0].lines.length === 2, nested.sections);
+
+  // 5. braille delivered as CDATA, where < and & mean themselves
+  const cdata = await readEbraille(pack(
+    `<package><manifest><item id="x" href="index.html"/></manifest><spine><itemref idref="x"/></spine></package>`,
+    `<html><body><section class="sah-text"><p><![CDATA[${BRL}]]></p></section></body></html>`));
+  ok('braille inside CDATA reads', cdata.sections[0].lines[0] === BRL, cdata.sections[0]);
+
+  // 6. a bare structured document with no sections and no spine at all
+  const bare = await readEbraille(pack(
+    `<package><manifest/><spine/></package>`,
+    `<html><head><title>ignored</title></head><body><h1>${BRL}</h1><ul><li>${BRL}</li></ul></body></html>`));
+  ok('a sectionless document still yields its braille lines',
+     bare.sections.length === 1 && bare.sections[0].lines.length === 2, bare.sections);
+}
+
+// ---- A SECTION IS NOT JUST ITS PARAGRAPHS -----------------------------------
+// TR-05 and TR-06, an audit of 15 Oct 2026. Both were mine, introduced with the
+// parser rewrite three days earlier, and both were SILENT: a document opened,
+// looked plausible and was missing lines. The suite did not catch them because
+// check 6 above exercises a heading and a list in the one place they worked —
+// the sectionless reader — and nothing asked the two readers to agree.
+//
+// Every case is built by hand: a file we wrote has no headings or tables in it
+// to lose, so a round trip could never have found this.
+{
+  const enc = new TextEncoder();
+  const pack = (body) => ab(zipStore([
+    { name: 'mimetype', data: enc.encode('application/epub+zip') },
+    { name: 'package.opf', data: enc.encode('<package><manifest><item id="x" href="index.html"/></manifest><spine><itemref idref="x"/></spine></package>') },
+    { name: 'index.html', data: enc.encode(`<html><body>${body}</body></html>`) },
+  ]));
+  const H = dots(1, 2, 5), P = dots(1, 2, 3, 4), L = dots(1, 2, 3), T = dots(2, 3, 4, 5);
+  const allLines = (doc) => (doc.sections || []).flatMap((sec) => sec.lines || []);
+  const STRUCTURE = `<h1>${H}</h1><p>${P}</p><ul><li>${L}</li></ul><table><tr><td>${T}</td></tr></table>`;
+
+  // TR-05. Before the fix this returned [P] alone and said nothing about the
+  // heading, the list item or the table cell.
+  const inSection = await readEbraille(pack(`<section class="sah-text">${STRUCTURE}</section>`));
+  ok('a heading, a paragraph, a list item and a table cell are four lines, in order',
+     allLines(inSection).join('|') === [H, P, L, T].join('|'), JSON.stringify(allLines(inSection)));
+
+  // THE INVARIANT behind it: the same braille must read the same whether or not
+  // its producer wrapped it in a section. Disagreement here IS the bug.
+  const noSection = await readEbraille(pack(STRUCTURE));
+  ok('the two readers agree on the same content',
+     allLines(noSection).join('|') === allLines(inSection).join('|'),
+     `${JSON.stringify(allLines(noSection))} vs ${JSON.stringify(allLines(inSection))}`);
+
+  // A container contributes no line of its own: four blocks in, four lines out.
+  ok('<ul> and <table> do not manufacture blank lines', allLines(inSection).length === 4,
+     JSON.stringify(allLines(inSection)));
+
+  // ...but an empty <p> IS a blank braille line, and stays one.
+  const blank = await readEbraille(pack(`<section class="sah-text"><p>${P}</p><p></p><p>${P}</p></section>`));
+  ok('an empty paragraph is still a blank line',
+     allLines(blank).join('|') === `${P}||${P}`, JSON.stringify(allLines(blank)));
+
+  // A <br> ends a line where it stands; before the fix it was dropped and the
+  // two lines around it were run together.
+  const br = await readEbraille(pack(`<section class="sah-text"><p>${H}<br/>${P}</p></section>`));
+  ok('a <br> inside a paragraph ends the line',
+     allLines(br).join('|') === `${H}|${P}`, JSON.stringify(allLines(br)));
+
+  // A thematic break is a boundary, not a line: it must neither join the
+  // paragraphs around it nor add an empty one between them.
+  const hr = await readEbraille(pack(`<section class="sah-text"><p>${H}</p><hr/><p>${P}</p></section>`));
+  ok('an <hr> adds no line of its own', allLines(hr).join('|') === `${H}|${P}`, JSON.stringify(allLines(hr)));
+
+  // Inline modes must survive the new walk, and in a heading as in a paragraph.
+  // The class name is taken from the WRITER, not typed here: a fixture holding
+  // its own copy of 'sah-mode-ueb-maths' would pass while the reader and the
+  // writer drifted apart (and this check first failed because I had typed it
+  // wrong, which is the whole argument for asking the code).
+  const probe = await text(
+    writeEbraille({ title: 'probe', sections: [{ mode: 'text', lines: [[{ text: P, mode: 'ueb' }]] }] }),
+    'content.html');
+  const UEB_CLASS = ((probe || '').match(/<span class="([^"]+)"/) || [])[1];
+  ok('the writer still marks an inline ueb run with a class', !!UEB_CLASS, probe);
+  const spanned = await readEbraille(pack(
+    `<section class="sah-text"><h1>${H}<span class="${UEB_CLASS}">${P}</span></h1></section>`));
+  ok('an inline mode span inside a heading keeps its mode',
+     JSON.stringify((spanned.sections[0].runs || [])[0])
+       === JSON.stringify([{ text: H }, { text: P, mode: 'ueb' }]),
+     JSON.stringify(spanned.sections[0]));
+
+  // TR-06. Direct text went through a five-replacement decoder that did not
+  // know numeric references, so this line had no cells in it and was dropped
+  // whole; the same reference inside a <span> read correctly.
+  const hex = `&#x${(0x2800 + 1).toString(16)};`, dec10 = `&#${0x2800 + 3};`;
+  const refs = await readEbraille(pack(`<section class="sah-text"><p>${hex}${dec10}</p></section>`));
+  ok('numeric character references in direct text are cells',
+     allLines(refs).join('|') === dots(1) + dots(1, 2), JSON.stringify(allLines(refs)));
+  const refsInSpan = await readEbraille(pack(`<section class="sah-text"><p><span>${hex}${dec10}</span></p></section>`));
+  ok('...and read identically inside a span',
+     allLines(refsInSpan).join('|') === allLines(refs).join('|'),
+     `${JSON.stringify(allLines(refsInSpan))} vs ${JSON.stringify(allLines(refs))}`);
+
+  // One pass, not five: &amp;lt; is the text "&lt;", not a "<".
+  const once = await readEbraille(pack(`<section class="sah-text"><p>${P}&amp;lt;${P}</p></section>`));
+  ok('a reference is expanded once, not twice',
+     allLines(once)[0] === `${P}&lt;${P}`, JSON.stringify(allLines(once)));
 }
 
 console.log(`\n${pass}/${pass + fail} checks passed`);

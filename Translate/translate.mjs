@@ -10,6 +10,28 @@
 //
 // Words are translated one at a time so each braille word maps 1:1 to a text
 // word; that exact mapping is what makes click-to-link between the panes work.
+//
+// ON THE SIZE OF THIS FILE — NOTED AND DECLINED (PB, 10 Oct 2026).
+//
+// A code audit rated it Medium that this file is ~5,300 lines and holds
+// document state, per-line modes, caret semantics, rendering, speech, input
+// batching, export and UI orchestration together, observing that the density
+// of historical bug explanations is itself evidence that local changes have
+// broad side effects.
+//
+// The observation is accurate. The conclusion was weighed and rejected, and
+// the reason is recorded here so it is not re-opened as an oversight: those
+// bug explanations are the asset, not the symptom. Four separate defects were
+// found and fixed in one day BECAUSE the reasons the code is shaped as it is
+// were written down beside it - a maths mark that slid onto the wrong line, a
+// guard that swallowed every key a button did not need, a half-formed chord
+// reaching the print pane, and a service worker that deleted other apps'
+// caches. A split that scatters those notes across modules buys tidiness and
+// spends the thing that makes this file tractable.
+//
+// If it is ever split, the seams that are already clean - speech, export,
+// settings - are the ones to take. The render-and-state core is not a seam;
+// it is one idea, and the comments inside it say why.
 
 import * as louis from '/engine/louis-browser.mjs';
 // #261: the SAME syllable rules BrlDuet uses, synced by sync-engine.sh rather
@@ -225,6 +247,40 @@ function syncSpans() {
     if (sp.to < sp.from) sp.to = sp.from;
   }
   mathSpans = mathSpans.filter((sp) => sp.to > sp.from || !sp.closed);
+
+  // THE PER-LINE MODES MUST FOLLOW AN EDIT TOO (feedback 10 Oct, item 2: "the
+  // maths markers seem to fail when marking sections as maths ... try marking
+  // and unmarking sections of the example maths BRFs").
+  //
+  // Two parallel structures say where the maths is: mathSpans above, in buf
+  // coordinates, and lineModes, by line index. The spans have been reconciled
+  // against the edit since the day they existed — the loop above — and the
+  // modes never were. syncLineModes() only ever grew or truncated the array at
+  // its END, so an edit in the MIDDLE moved every line below it while its mode
+  // stayed on the index it used to occupy. Insert one line at the top of a
+  // loaded document and every mark below is off by one: the prose renders as
+  // maths and the equation renders as prose.
+  //
+  // The same diff that moves the spans says exactly what happened to the lines:
+  // the edit begins on the line holding `p`, it consumed the newlines inside
+  // the removed text and introduced those inside the added text. So the run of
+  // lines it touched is replaced by the run it left behind. They inherit the
+  // mode of the line the edit began on, which is what splitting a Nemeth line
+  // in two means: both halves are still Nemeth.
+  const lineOfIndex = (s, i) => {
+    let n = 0;
+    for (let k = 0; k < i && k < s.length; k += 1) if (s[k] === '\n') n += 1;
+    return n;
+  };
+  const newlinesIn = (s) => { let n = 0; for (const ch of s) if (ch === '\n') n += 1; return n; };
+  const gone = newlinesIn(prevBuf.slice(p, p + removed));
+  const born = newlinesIn(buf.slice(p, p + added));
+  if (gone || born) {
+    const at = lineOfIndex(prevBuf, p);
+    const inherited = lineModes[at];
+    lineModes.splice(at, gone + 1, ...Array(born + 1).fill(inherited));
+  }
+
   prevBuf = buf;
 }
 
@@ -294,9 +350,31 @@ function modeAtPos(pos) {
     carry = segmentsOf(line, carry, offset).carry;
     offset += line.length + 1;
   }
-  return carry === 'base' ? currentMode() : carry;
+  // THE LINE, THEN THE BOXES (audit TR-09, 15 Oct). 'base' means nothing at
+  // this position has an opinion - no inline span, no switch in force - and the
+  // answer was the global checkboxes, which describe what the whole document
+  // claims rather than what wrote THIS line. A loaded document whose lines
+  // carry their own modes therefore reported text while rendering maths: the
+  // Maths checkbox unticked over an equation, Ctrl+M toggling the wrong way,
+  // and finished-word speech reading a sum as literary braille.
+  if (carry !== 'base') return carry;
+  const li = lineIndexOf(pos);
+  return lineModes[li] || currentMode();
 }
 function modeAtCaret() { return modeAtPos(caret); }
+
+// THE LINE THAT HOLDS A POSITION (audit TR-08, 15 Oct). Sentence speech said
+// buf.split('\n').pop() - the document's LAST line - which is right only while
+// the writer is at the end of the document and never after Enter, because by
+// then the last line is the new empty one and the sum just finished was the
+// line above. Nothing was spoken at all. Editing an earlier line read out the
+// bottom of the document instead of the sentence just completed.
+function lineHolding(pos) {
+  const at = Math.max(0, Math.min(pos, buf.length));
+  const start = buf.lastIndexOf('\n', Math.max(0, at - 1)) + 1;
+  const end = buf.indexOf('\n', start);
+  return buf.slice(start, end === -1 ? buf.length : end);
+}
 
 // WHICH MODE WROTE THE WORD THAT JUST FINISHED. The speech paths asked the
 // whole-document maths boxes, and those are OFF for a document whose maths is
@@ -348,7 +426,117 @@ const setBuf = (next, where = caret) => {
   buf = next;
   caret = where;
   clampCaret();
+  scheduleDraftSave();
 };
+
+// ---- the draft, so a reload is not a loss --------------------------------
+//
+// WHY THIS EXISTS (PB, 10 Oct 2026). A code audit objected that the service
+// worker takes over a page whose modules are still the old version, and that
+// telling the writer to "save your work and reload" is a poor answer in an
+// editor with no autosave. PB chose to fix the second half: with the work kept,
+// a reload costs nothing, and that is true of every other reason a page goes
+// away too - a closed lid, a flat battery, a tab shut by mistake.
+//
+// IT IS OFFERED, NEVER RESTORED BEHIND THE WRITER (PB's ruling, same day).
+// Nothing appears unbidden: the draft waits, the status bar says it is there,
+// and a control brings it back. Restoring automatically is kinder to the child
+// who lost work and wrong for anyone who did not expect it - including, if
+// these were ever shared machines, the next child to sit down.
+// ONE RECORD PER TAB, AND A TAB TOUCHES ONLY ITS OWN (audit TR-01, 15 Oct).
+// Every tab wrote and removed the SAME key, so opening a second tab and closing
+// it again - without typing a word in it - called removeItem() and deleted the
+// first tab's record. The visible document survived; its protection did not,
+// and the next crash would have taken the work. Reproduced in Chrome before
+// this was written.
+//
+// Keys are now translate.draft.<owner>, where owner is per TAB and survives a
+// reload (sessionStorage), because reload is the commonest recovery of all. A
+// tab writes and removes only its own key. The offer takes the NEWEST record
+// whoever wrote it, so a crash - where the new tab has a new owner - still
+// recovers. Records older than DRAFT_KEEP_DAYS are pruned so the store cannot
+// grow without bound.
+const DRAFT_PREFIX = 'translate.draft.';
+const DRAFT_LEGACY_KEY = 'translate.draft';   // the single key used until 15 Oct
+const DRAFT_KEEP_DAYS = 30;
+const draftOwner = (() => {
+  try {
+    const k = 'translate.tab';
+    let v = sessionStorage.getItem(k);
+    if (!v) { v = Math.random().toString(36).slice(2, 10) + Date.now().toString(36); sessionStorage.setItem(k, v); }
+    return v;
+  } catch { return 'tab'; }   // sessionStorage refused: behave as a single tab
+})();
+const myDraftKey = () => DRAFT_PREFIX + draftOwner;
+let draftTimer = 0;
+let draftOffered = false;        // while an offer stands, the draft is not overwritten
+
+function draftState() {
+  return {
+    v: 1, at: new Date().toISOString(), buf,
+    lineModes: lineModes.slice(),
+    mathSpans: mathSpans.map((sp) => ({ from: sp.from, to: sp.to, closed: !!sp.closed })),
+    brailleCode: settings.brailleCode, mathsCode: settings.mathsCode,
+    ueb: !!($('uebMaths') || {}).checked, nem: !!($('nemethMaths') || {}).checked,
+  };
+}
+
+function writeDraft() {
+  // AN OFFER NOT YET ANSWERED OUTRANKS A NEW SAVE. Otherwise opening the app
+  // and pressing one key would overwrite the very work being offered, which is
+  // the one moment this whole feature exists to protect.
+  if (draftOffered) return;
+  try {
+    // OUR OWN KEY, EITHER WAY. An empty document removes this tab's record and
+    // nobody else's - which is the whole of TR-01.
+    if (!buf.trim()) localStorage.removeItem(myDraftKey());
+    else localStorage.setItem(myDraftKey(), JSON.stringify(draftState()));
+  } catch { /* a full or disabled store must not break typing */ }
+}
+
+/** Every stored draft, newest first, each with the key it came from. */
+function allDrafts() {
+  const out = [];
+  try {
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (!key || (key !== DRAFT_LEGACY_KEY && !key.startsWith(DRAFT_PREFIX))) continue;
+      try {
+        const d = JSON.parse(localStorage.getItem(key));
+        if (d && d.v === 1 && typeof d.buf === 'string' && d.buf.trim()) out.push({ key, ...d });
+      } catch { /* a corrupt record is no record */ }
+    }
+  } catch { /* a disabled store simply has none */ }
+  return out.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+}
+
+/** Drop records nobody is coming back for, so the store stays bounded. */
+function pruneDrafts() {
+  const cutoff = Date.now() - DRAFT_KEEP_DAYS * 24 * 60 * 60 * 1000;
+  for (const d of allDrafts()) {
+    const at = Date.parse(d.at);
+    if (Number.isFinite(at) && at < cutoff && d.key !== myDraftKey()) {
+      try { localStorage.removeItem(d.key); } catch { /* */ }
+    }
+  }
+}
+
+function scheduleDraftSave() {
+  clearTimeout(draftTimer);
+  // Long enough that a burst of typing writes once, short enough that the work
+  // lost to a crash is a sentence rather than a lesson.
+  draftTimer = setTimeout(writeDraft, 2000);
+}
+
+function readDraft() {
+  pruneDrafts();
+  // The newest, whoever wrote it: after a crash this tab has a new owner and
+  // the record worth offering is somebody else's.
+  return allDrafts()[0] || null;
+}
+
+/** Remove one record BY KEY - the one being discarded, which may not be ours. */
+const forgetDraft = (key) => { try { localStorage.removeItem(key || myDraftKey()); } catch { /* */ } };
 let chord = 0;
 const held = new Set();
 // The selection a chord began over, so the finished cell can replace it — see
@@ -403,10 +591,30 @@ let lineModes = [];
 // keep working. The moment the user types, modes go back to sticking to
 // lines, so hand-typed mixed documents are untouched.
 let modeAppliesToAll = true;
-function syncLineModes(count) {
+// THE TOGGLE MARKS THE LINE THE CARET IS ON, not the last line of the document
+// (feedback 10 Oct, item 2: "try entering and exiting maths mode in a blended
+// document and moving around that document to mark sections").
+//
+// This used to be `lineModes[count - 1] = currentMode()`, whose comment said
+// "the line being typed follows the toggle". The line being typed IS the line
+// the caret is on; the last line was only ever a proxy for it, correct while
+// the writer stays at the end of the document and wrong the moment they go
+// back up. Put the caret on line 2 of four, press Ctrl+M, and line 4 became
+// the maths line.
+//
+// Stamped ON A MODE CHANGE ONLY, never on every render. A mode is what a line
+// was WRITTEN under, so moving the caret through a loaded document must not
+// rewrite the line it rests on, and nor must typing a correction into it: both
+// used to be safe only because the stamp could reach no line but the last.
+let prevStampedMode = null;
+function syncLineModes(count, caretLine) {
   while (lineModes.length < count) lineModes.push(currentMode());
   if (lineModes.length > count) lineModes.length = count;
-  if (count) lineModes[count - 1] = currentMode();   // the line being typed follows the toggle
+  const now = currentMode();
+  if (count && now !== prevStampedMode && caretLine >= 0 && caretLine < count) {
+    lineModes[caretLine] = now;
+  }
+  prevStampedMode = now;
 }
 
 // ---- settings ----
@@ -418,15 +626,21 @@ function syncLineModes(count) {
 // their browser; it is never read again, and their settings come back as the
 // defaults. A migration would be the answer once the app has users.
 const SKEY = 'translate.settings';
+// WHAT A NEW USER HEARS (PB, 10 Oct: "all on except speak sentence").
+// Three of the four were off, so a child who had never opened Settings got
+// almost none of the app's voice - and this is a self-voicing app for people
+// who cannot read the screen, so silence is the wrong default to hand them.
+// The sentence is the exception: it repeats what the letters and words have
+// just said, which is useful to turn ON and wearing to be given.
+// The comment this replaces said a new setting must not change what an
+// existing user hears; that still holds, and these are not new settings - a
+// saved choice in translate.settings still wins over every default here.
 const settings = Object.assign(
-  { voiceURI: '', speakWord: false, speakSentence: false,
-    // DEFAULTS ON: it names what the app has always said out loud, and a new
-    // setting must not change what an existing user hears. It exists so a
-    // screen-reader user can switch off the reading their reader already does.
+  { voiceURI: '', speakWord: true, speakSentence: false,
     speakCursor: true,
-    mathsCode: 'nem', showAscii: false, sixKey: true, speakLetter: false,
+    mathsCode: 'nem', showAscii: false, sixKey: true, speakLetter: true,
     brailleCode: 'en-ueb-g2', focusDark: false, speechOutput: 'voice',
-    statusScale: 1 },
+    statusScale: 1, printSize: 'normal' },
   // NEVER TRUST THE STORE (2026-08-19). This parse runs at module evaluation,
   // so a corrupt value — a write cut short by a crash, a school's disk full,
   // an extension misbehaving — used to throw HERE and kill the entire module:
@@ -737,7 +951,55 @@ function missedInfo(brailleWord) {
         const c0 = pos[f0] !== undefined ? pos[f0] : 0;
         const c1 = f1 < pos.length && pos[f1] !== undefined ? pos[f1] : text.length;
         info = { cells: forward, t0: p, t1: typed.length - sfx,
-                 c0: Math.min(c0, text.length), c1: Math.min(Math.max(c1, c0 + 1), text.length) };
+                 c0: Math.min(c0, text.length), c1: Math.min(Math.max(c1, c0 + 1), text.length),
+                 names: [] };
+
+        // NAME THE CONTRACTION, AND MARK WHAT IT REALLY COVERS (feedback 10
+        // Oct, item 1: "when you don't use a contraction it says which
+        // contractions were not used").
+        //
+        // Everything above comes from a prefix/suffix diff of the two
+        // spellings, which is a guess at where they part company. liblouis
+        // knows exactly: ask it to align the CONTRACTED spelling with the same
+        // word and every segment covering more than one letter IS a
+        // contraction, with its meaning the letters it covers. That is the
+        // same alignment that already names contractions a child DID use
+        // ("⠻ = er"), so a missed one is now named the way a used one is.
+        //
+        // It also fixes the underline. The diff marked "children" at just its
+        // "c", because that is where the two spellings first differ; the
+        // alignment says ⠡⠝ covers the whole word, which is what the reader
+        // needs to see underlined.
+        const spell = alignWord(forward, text);
+        if (spell) {
+          let at = 0, lo = Infinity, hi = -Infinity;
+          for (const sg of spell) {
+            if (sg.chars.length > 1) {
+              info.names.push({ cells: sg.cells, meaning: sg.chars });
+              lo = Math.min(lo, at); hi = Math.max(hi, at + sg.chars.length);
+            }
+            at += sg.chars.length;
+          }
+          if (hi > lo) {
+            info.c0 = lo; info.c1 = Math.min(hi, text.length);
+            // The braille pane underlines the CELLS the reader typed, so carry
+            // the character span back through their own alignment. Without it
+            // the two panes would mark different things.
+            const asTyped = alignWord(brailleWord, text);
+            if (asTyped) {
+              let cell = 0, ch = 0, t0 = null, t1 = null;
+              for (const sg of asTyped) {
+                const end = ch + sg.chars.length;
+                if (end > lo && ch < hi) {                 // this segment is inside the span
+                  if (t0 === null) t0 = cell;
+                  t1 = cell + sg.cells.length;
+                }
+                cell += sg.cells.length; ch = end;
+              }
+              if (t0 !== null && t1 > t0) { info.t0 = t0; info.t1 = t1; }
+            }
+          }
+        }
       }
     } catch { /* an untranslatable word simply has no advice to give */ }
   }
@@ -979,8 +1241,12 @@ const bt = (brailleWord) => {
   const hit = btCache.get(brailleWord);
   if (hit !== undefined) return hit;
   let out = '';
-  try { out = louis.backTranslate(brailleWord, T_TEXT()).replace(LOUIS_ESCAPE, UNREADABLE).trim(); }
-  catch { out = ''; }
+  try {
+    out = louis.backTranslate(brailleWord, T_TEXT()).replace(LOUIS_ESCAPE, UNREADABLE).trim();
+    out = out.replace(/([a-zA-Z]+)[\x27\u2019]be\b/gi, "$1';");
+  } catch {
+    out = '';
+  }
   // a vocabulary, not a leak: a very long document still has few distinct words
   if (btCache.size > 20000) btCache.clear();
   btCache.set(brailleWord, out);
@@ -1120,9 +1386,14 @@ function render() {
   // independent: 2 decides what 3 and 4 draw, and 5 must run after both.
   syncSpans();
   // ==== 1. THE MODEL: the buffer becomes lines of words ===========================
-  const src = buf + (chord ? cell(chord) : '');
+  const chordCell = chord ? cell(chord) : '';   // the cell being held down, not yet typed
+  const src = buf + chordCell;
   const lines = model(src);
-  syncLineModes(lines.length);
+  // The caret's line, counted in the SAME string the lines were modelled from,
+  // so the index means the same thing on both sides.
+  let caretLine = 0;
+  for (let k = 0; k < caret && k < src.length; k += 1) if (src[k] === '\n') caretLine += 1;
+  syncLineModes(lines.length, caretLine);
   const baseModeOf = (i) => lineModes[i] || currentMode();
   // 'base' means no switch mark is in force here, so the line's own mode wins —
   // which is what keeps a document without a single switch rendering exactly as
@@ -1160,13 +1431,22 @@ function render() {
       if (skipIdx.has(i) || lines[i].pending || modeOf(i) === 'text') continue;
       let joined = groups.get(i) || lines[i].raw.trim();
       let j = i + 1;
+      // THE LINES' OWN MODE DECIDES, NOT THE CHECKBOX (audit TR-04, 15 Oct).
+      // Detection already asked modeOf(i); the SPLICE asked the global `ueb`,
+      // and the two disagree whenever the document's last section is in the
+      // other mode - which is what the checkbox ends up reflecting. A UEB sum
+      // in a document ending in text was therefore spliced by the NEMETH rule,
+      // which drops the first cell of the next line: in UEB that cell is the
+      // numeral sign, so 1+2 came out as 1+b. The converse case gave "ab".
+      // Both are a child's sum silently changed, with nothing marked.
+      const asUeb = modeOf(i) === 'ueb';
       while (j < lines.length && !lines[j].pending && modeOf(j) === modeOf(i)) {
         const nxt = lines[j].raw.trim();
-        const cont = modeOf(i) === 'ueb'
+        const cont = asUeb
           ? (joined.endsWith('⠐') && !joined.endsWith('⠐⠐') && nxt)
           : (joined.endsWith('⠤') && nxt.startsWith('⠼'));
         if (!cont) break;
-        joined = ueb ? joined.slice(0, -1) + nxt : joined.slice(0, -1) + nxt.slice(1);
+        joined = asUeb ? joined.slice(0, -1) + nxt : joined.slice(0, -1) + nxt.slice(1);
         skipIdx.add(j);
         j++;
       }
@@ -1292,7 +1572,24 @@ function render() {
 
     // --- right pane ---
     if (skipIdx.has(i)) return;                  // absorbed into a matrix above
-    const full = groups.get(i) || ln.raw.trim();
+    // A HALF-FORMED CHORD IS NOT A CELL YET (feedback 10 Oct, item 10: "the
+    // displayed maths moves left, and print characters can flash onscreen on
+    // downstrokes on the right and disappear on release").
+    //
+    // The braille pane SHOULD show the cell forming - that is how a writer
+    // sees which dots they are holding. But the same string feeds this pane,
+    // so every key on the way down was also translated: hold dot 2 and print
+    // reads one thing, add dot 5 and it reads another, let go and it reads the
+    // cell actually meant. On a maths line the expression is re-read and
+    // re-laid-out at each of those, which is the drift to the left.
+    //
+    // Print therefore reads the committed cells only. The preview cell is by
+    // construction the last character of the last line, and only while a chord
+    // is held, so this removes exactly it and nothing else.
+    const settled = (expr, atEnd) => (chordCell && atEnd && expr.endsWith(chordCell)
+      ? expr.slice(0, -chordCell.length).trimEnd() : expr);
+    const onLastLine = i === lines.length - 1;
+    const full = settled(groups.get(i) || ln.raw.trim(), onLastLine);
     const lm = modeOf(i);
 
     // A LINE THAT CHANGES MODE PART-WAY renders piece by piece: the words
@@ -1304,7 +1601,7 @@ function render() {
       tLine.className = 'line';
       ln.segs.forEach((sg, si) => {
         const m = resolveMode(sg.mode, i);
-        const expr = sg.text.trim();
+        const expr = settled(sg.text.trim(), onLastLine && si === ln.segs.length - 1);
         if (!expr) return;
         if (m === 'nem' || m === 'ueb') {
           const conv = m === 'nem'
@@ -1535,12 +1832,18 @@ const MIN_BRAILLE_PX = 20;      // below this the six dots stop being separable
 // Above the cap the line simply stops growing: still exactly 40 cells, just
 // with margin to spare on the right.
 const MAX_BRAILLE_PX = 30;
-// A little reserved width (PB, same decision: "leave a bit of space ... to
-// stop any overflow") so the 40th cell is never flush against the pane's
-// edge, at the cap or below it. Folded into the FIT below rather than added
-// as real padding, so the number that sizes the font is the same number the
-// line wraps against — the two cannot disagree.
-const BRAILLE_RIGHT_INSET_PX = 10;
+// NOW REAL PADDING, NOT JUST A NARROWER FONT-SIZE FIT (2026-09-12): #braille
+// and #brlInput both carry padding:5px in CSS, on all four sides, for visual
+// consistency with each other. This constant is the horizontal SHARE of that
+// (left 5 + right 5 = 10) fed into the size fit below, so the chosen
+// brailleSize still leaves exactly enough room for 40 cells INSIDE the
+// padded box rather than the glyphs overflowing it — sizeFor is asked for a
+// slightly narrower width than usable(), and lineWidth (the box's own outer,
+// border-box width) then adds the same 10px back on top of the glyph width
+// it fits, so the box is sized to "glyphs plus their own padding", not just
+// the glyphs. Both numbers must move together or the two disagree about
+// where the line wraps.
+const BRAILLE_HPAD_PX = 10;
 // THE PRINT PANE FOLLOWS THE BRAILLE SIZE (PB, 2026-08-18): #out was a fixed
 // 17px while the braille pane ranged 20-40+px, so print read much smaller
 // than braille at almost every width. PRINT_RATIO is chosen to land on
@@ -1548,9 +1851,38 @@ const BRAILLE_RIGHT_INSET_PX = 10;
 // app used to be fixed at, and MATH_RATIO carries #out math the same way
 // #out math already related to #out (22/17, today's own fixed pair) so the
 // two print sizes keep scaling together rather than one drifting loose.
-const PRINT_RATIO = 0.6;
+// RAISED FROM 0.6 (PB, 10 Oct): "we want the print a bit bigger for sighted
+// people as it is a bit small for many people". 0.7 puts the cap at 21px
+// instead of 18. The teacher reading over a child's shoulder is the second
+// reader of this pane and was the one squinting.
+const PRINT_RATIO = 0.7;
 const MATH_RATIO = 22 / 17;
-const PRINT_MIN_PX = 15;        // never let print get harder to read than this
+// The size print is read at, whatever the braille pane is doing (PB, 10 Oct:
+// "a bit bigger for sighted people as it is a bit small for many people").
+// 21 is what the old braille ratio gave at the braille cap, so the widest
+// windows are unchanged and every narrower one comes UP to meet them.
+const PRINT_BASE_PX = 21;
+// The narrowest column of print worth keeping side by side. Below this the
+// print pane is a few words per line and stacking reads better - which is
+// what makes stacking a real answer to a narrow window rather than a
+// threshold that fires on an ordinary laptop.
+const PRINT_MIN_WIDTH = 340;
+// What print gets when the window can afford it. The braille takes only what
+// forty cells need, so on a window that is wide but not enormous the spare
+// width is better spent on the print column than on braille cells larger
+// than they need to be: at 1280px the braille at its cap left print three
+// words to a line while half the braille pane stood empty.
+const PRINT_COMFORT_WIDTH = 480;
+// AND A SIZE A VISUALLY IMPAIRED READER CAN CHOOSE (PB, same ruling: "it would
+// also be good to have the option for a larger font (but not too large)").
+// A MULTIPLIER, not a font size, so the choice rides on top of everything the
+// fitter already works out — the braille-derived size, the floor, the maths
+// ratio and focus mode all follow it without a second set of numbers to keep
+// in step. "Not too large" is the top step: beyond about 1.5 the print pane is
+// too narrow a column to read a sentence in, and focus mode is the answer to
+// wanting more than that.
+const PRINT_SCALES = { normal: 1, large: 1.25, largest: 1.5 };
+const printScale = () => PRINT_SCALES[settings.printSize] || 1;
 let cellRatio = 0.75;           // replaced by measurement once fonts are ready
 
 function measureCellRatio() {
@@ -1574,24 +1906,74 @@ function fitBrailleLine() {
   };
   const sizeFor = (w) => w / (CELLS_PER_LINE * cellRatio);
 
-  // Try side by side first — it is the better layout when it can be afforded.
-  // This decision is unchanged by MAX_BRAILLE_PX/BRAILLE_RIGHT_INSET_PX below:
-  // it still measures the pane's full usable width, exactly as it did before
-  // either existed, so the stacking floor keeps triggering at the same width.
+  // SIDE BY SIDE IS WORTH KEEPING ON A NORMAL WINDOW (PB, 10 Oct: "it is OK to
+  // stack if the window is narrow, but normal windows should be side by side
+  // as much as possible").
+  //
+  // The panes used to divide the window in half and the braille either fitted
+  // in its half or the app stacked. But only ONE of the two has a width it
+  // cannot negotiate: forty cells at a legible size. Print reflows to whatever
+  // it is given. Splitting evenly therefore asked the window for twice what
+  // the braille needed, and stacked at 1302px measured — a 1280x800 window,
+  // which is about as normal as windows get.
+  //
+  // So the braille pane is given exactly what forty cells need, up to the cap,
+  // and the print pane takes the rest. Stacking is now the answer to a genuine
+  // shortage: when the braille's minimum and a readable column of print cannot
+  // both fit, which measures at about 1046px.
+  const brlPane = pane.closest('.pane');
   panes.classList.remove('stacked');
+  if (brlPane) brlPane.style.flex = '';          // measure the natural layout first
+  // Everything between the pane's outer edge and the width the glyphs get:
+  // its border, and the pane body's padding.
+  const chrome = brlPane ? brlPane.getBoundingClientRect().width - usable() : 0;
+  const panesCs = getComputedStyle(panes);
+  // clientWidth already includes the padding, and the gap sits between the two
+  // panes, so both come off before anything is shared out. `normal` is a legal
+  // computed value for a gap and parses to NaN, hence the guard on each.
+  const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+  const avail = panes.clientWidth - num(panesCs.paddingLeft) - num(panesCs.paddingRight)
+              - num(panesCs.columnGap);
+  const widthFor = (cellPx) => CELLS_PER_LINE * cellRatio * cellPx + BRAILLE_HPAD_PX + chrome;
+  // EQUAL HALVES ARE THE RULE (PB, 12 Oct: "why isn't the pane kept at the
+  // same width as the text pane. I didn't ask for that to change.")
+  //
+  // Quite right: the ask was for side by side on a normal window, not for the
+  // panes to stop matching. Two equal panes are what this app looks like, and
+  // sizing the braille to its need made the braille pane visibly the larger
+  // of the two - at 1440px it took the cells from 21px to 29px and left print
+  // in a narrower column than the braille beside it.
+  //
+  // So halves first, and the uneven split ONLY where halves cannot hold forty
+  // legible cells and the choice is between uneven and stacked. That keeps
+  // both things asked for: the panes match wherever they can, and a window
+  // that used to stack at 1302px stays side by side down to about 1000.
+  const halvesFit = widthFor(MIN_BRAILLE_PX) <= avail / 2;
+  if (brlPane && !halvesFit && widthFor(MIN_BRAILLE_PX) + PRINT_MIN_WIDTH <= avail) {
+    // Enough for both: hand the braille what it needs (never more than the cap
+    // asks for) and leave the remainder to print, which is the pane that can
+    // use it.
+    // Leave print a comfortable column where that is possible, never shrink
+    // the braille below what forty legible cells need, and never take more
+    // than the cap could use.
+    const give = Math.min(widthFor(MAX_BRAILLE_PX),
+                          Math.max(widthFor(MIN_BRAILLE_PX), avail - PRINT_COMFORT_WIDTH));
+    brlPane.style.flex = `0 0 ${Math.floor(give)}px`;
+  }
   let px = sizeFor(usable());
   if (px < MIN_BRAILLE_PX) {
     // Reading clientWidth after the class change forces the reflow, so the
     // second measurement is of the stacked layout and not the old one.
+    if (brlPane) brlPane.style.flex = '';        // stacked panes size themselves
     panes.classList.add('stacked');
     px = sizeFor(usable());
   }
-  // Re-fit against a slightly narrower width for the inset, THEN cap. Both
+  // Re-fit against a slightly narrower width for the padding, THEN cap. Both
   // only ever pull the size DOWN from what "fits exactly" (sizeFor is
-  // monotonic in width, and usable() - BRAILLE_RIGHT_INSET_PX < usable()),
+  // monotonic in width, and usable() - BRAILLE_HPAD_PX < usable()),
   // so neither can undo the stacking decision above or push the size below
   // MIN_BRAILLE_PX.
-  const insetPx = sizeFor(usable() - BRAILLE_RIGHT_INSET_PX);
+  const insetPx = sizeFor(usable() - BRAILLE_HPAD_PX);
   const brailleSize = Math.min(MAX_BRAILLE_PX, Math.max(MIN_BRAILLE_PX, Math.floor(insetPx)));
   const size = brailleSize + 'px';
   // Below the cap, 40 cells at brailleSize already come close to filling
@@ -1608,7 +1990,31 @@ function fitBrailleLine() {
   // to this change), and pinning to a width the pane doesn't have would
   // overflow it instead of the graceful "fewer than 40 cells wrap" the
   // unpinned box always did there — caught the same way, measured at 480px.
-  const lineWidth = Math.min(usable(), Math.ceil(CELLS_PER_LINE * cellRatio * brailleSize)) + 'px';
+  // +BRAILLE_HPAD_PX (2026-09-12): the box now carries that much padding
+  // itself, so its OUTER (border-box) width must be the glyph width PLUS
+  // the padding, or the padding would eat into room the glyphs need.
+  // THE HEADER FOLLOWS THE PANE (PB, 12 Oct): the Maths and Load group is as
+  // wide as the braille pane so it centres over it. Written here because this
+  // is the one place that knows what the pane ended up as.
+  const stackedNow = panes.classList.contains('stacked');
+  document.body.classList.toggle('panes-stacked', stackedNow);
+  if (brlPane && !stackedNow) {
+    const pr = brlPane.getBoundingClientRect();
+    const row = document.querySelector('.head-row');
+    // MEASURED, NOT ASSUMED. The group is positioned inside .head-row, which
+    // has padding of its own, so "left: 14px" is not the pane's left edge -
+    // it was 18px out. The offset is the gap between the two boxes, which
+    // only the live layout knows.
+    const rowLeft = row ? row.getBoundingClientRect().left : 0;
+    document.documentElement.style.setProperty('--brl-pane-w', Math.round(pr.width) + 'px');
+    document.documentElement.style.setProperty('--brl-pane-x', Math.round(pr.left - rowLeft) + 'px');
+  } else {
+    document.documentElement.style.setProperty('--brl-pane-w', 'auto');
+    document.documentElement.style.setProperty('--brl-pane-x', '0px');
+  }
+
+  const lineWidth = Math.min(usable(),
+    Math.ceil(CELLS_PER_LINE * cellRatio * brailleSize) + BRAILLE_HPAD_PX) + 'px';
   pane.style.fontSize = size;
   pane.style.width = lineWidth;
   // The overlay pair must be the same size to the pixel, or the native caret
@@ -1621,10 +2027,26 @@ function fitBrailleLine() {
   // directly (it is one element, always present); #out math goes through a
   // custom property because the translator creates fresh math nodes on every
   // render, and a plain inline style set here would miss all of those.
-  const printSize = Math.max(PRINT_MIN_PX, Math.round(brailleSize * PRINT_RATIO));
+  // The reader's own choice multiplies the fitted size, and is applied AFTER
+  // the floor: someone who asked for large print at a narrow window asked for
+  // it there too, so the floor must not quietly cancel it.
+  // PRINT NO LONGER SHRINKS WITH THE BRAILLE PANE (10 Oct). The ratio was
+  // written when the two panes were equal halves, so braille size was a fair
+  // proxy for how much room print had. Now the braille pane is sized to what
+  // forty cells need and print takes the rest, so the proxy inverted: a window
+  // where print was GIVEN MORE WIDTH produced SMALLER print, 16px at 1280 -
+  // smaller than the 18px being complained about. The ratio is kept as an
+  // upward pull, and PRINT_BASE_PX is the size a sighted reader gets whatever
+  // the braille is doing.
+  const fitted = Math.max(PRINT_BASE_PX, Math.round(brailleSize * PRINT_RATIO));
+  const printSize = Math.round(fitted * printScale());
   const outEl = $('out');
   if (outEl) outEl.style.fontSize = printSize + 'px';
   document.documentElement.style.setProperty('--print-math-size', Math.round(printSize * MATH_RATIO) + 'px');
+  // Focus mode sizes itself in CSS, from its own larger base; it reads this so
+  // the choice carries over rather than being forgotten at the one place a
+  // reader who wants big print is most likely to be.
+  document.documentElement.style.setProperty('--print-scale', String(printScale()));
 }
 
 // THE TEXTAREA IS A PROJECTION OF buf (PB, 2026-08-09).
@@ -1789,7 +2211,10 @@ function captureNativeEdit(code, ta) {
   const hadSelection = en > s;
   if (code === 'Space' || code === 'Enter') {
     // Up to the caret: the separator is about to be inserted THERE.
-    pendingEdit = { kind: 'sep', finished: trailingToken(buf.slice(0, s)) };
+    // `at` is where the separator is about to go, kept because by the time the
+    // announcement is made the edit has happened and the caret has moved on
+    // (audit TR-08).
+    pendingEdit = { kind: 'sep', at: s, finished: trailingToken(buf.slice(0, s)) };
     return true;
   }
   if (code === 'Backspace') {
@@ -1855,7 +2280,7 @@ function afterNativeEdit(p) {
                                                    : describeUebMaths(finished));
   if (speechOk && (settings.speakWord || settings.speakSentence)
       && fMode && !finishedIsWord) {
-    const textToSpeak = settings.speakSentence ? buf.split('\n').pop() : finished;
+    const textToSpeak = settings.speakSentence ? lineHolding(p.at ?? caret) : finished;
     const asNem = fMode === 'nem' || hasNemethSwitch(textToSpeak);
     const asUeb = !asNem && fMode === 'ueb';
     const speechText = speakMathsFor(textToSpeak, asUeb,
@@ -3311,6 +3736,9 @@ function explainWord(brl, key = '', opts = {}) {
   }
   const segs = alignWord(brl, text);
   const missed = contractionFor(brl);
+  // The contractions that spelling WOULD have used, named by liblouis's own
+  // alignment - the same source that names the ones a child did use.
+  const missedNames = (missedInfo(brl) || {}).names || [];
   // "Contracted" must be proved, not assumed. For English UEB the boot-loaded
   // grade-1 table gives the comparison figure. For every OTHER code that same
   // table was still being used, and it fabricated: a Thai or Arabic word came
@@ -3350,7 +3778,15 @@ function explainWord(brl, key = '', opts = {}) {
     : contracted === false
       ? `${text}: spelt out in ${plural(cells)}`
       : `${text}: ${plural(cells)} for ${chars}`)
-    + (missed ? `. It could also be written in ${plural([...missed].length)}` : '');
+    + (missed ? `. It could also be written in ${plural([...missed].length)}` : '')
+    // NAMED ALOUD, NOT JUST COUNTED (PB, 10 Oct). "It could also be written in
+    // 2 cells" told a blind reader that something was missed and never what,
+    // while the sighted reader beside them could see the dots. Braille glyphs
+    // read badly aloud, so speech names the LETTERS the contraction stands for.
+    + (missedNames.length
+         ? `, using the contraction${missedNames.length > 1 ? 's' : ''} for `
+           + missedNames.map((n) => `\u201c${n.meaning}\u201d`).join(' and ')
+         : '');
 
   sb.innerHTML =
     `<span class="sb-brl" aria-hidden="true">${brlHtml}</span>` +
@@ -3369,6 +3805,10 @@ function explainWord(brl, key = '', opts = {}) {
       ? `<span class="sb-note sb-missed" aria-hidden="true">could also be written ` +
         `<span class="sb-brl">${esc(missed)}</span>, ${plural([...missed].length)}</span>`
       : '') +
+    // The missed contraction gets the SAME chip as one that was used, because
+    // it is the same fact: these cells mean those letters.
+    missedNames.map((n) => `<span class="sb-rule sb-missed" aria-hidden="true">`
+      + `<span class="sb-brl">${esc(n.cells)}</span> = &ldquo;${esc(n.meaning)}&rdquo;</span>`).join('') +
     rules.map((r) => `<span class="sb-rule" aria-hidden="true"><span class="sb-brl">${esc(r.cell)}</span> = &ldquo;${esc(r.meaning)}&rdquo;</span>`).join('') +
     // "cell mapping unavailable" means the typed cells are not liblouis's own
     // spelling, so it cannot line cells up with letters. When a contraction was
@@ -3705,8 +4145,31 @@ document.addEventListener('keydown', (e) => {
   // which is where six-key chords are now typed. Without this exception the
   // guard would silently disable braille entry the moment the field had focus,
   // which is always.
+  //
+  // BUT BRAILLING IS NOT A KEY A BUTTON NEEDS (feedback 10 Oct, item 9:
+  // "window event listener fails when backspacing ... can make users who
+  // forget to click on the text field think something is broken"). This guard
+  // was written for Space and Enter, which activate a button, and then
+  // returned for EVERY key — so with focus anywhere in the toolbar the six dot
+  // keys, Backspace and Delete all did nothing, and said nothing. Clicking the
+  // focus-mode button leaves focus ON that button, which is why focus mode
+  // looked broken rather than merely quiet: it opened and then ignored
+  // everything typed into it.
+  //
+  // A button has no use for a dot key or a delete, and pressing one says
+  // plainly where the writer believes they are. Those keys therefore take them
+  // back to the field and are handled there. Everything the control genuinely
+  // uses — Space, Enter, Tab, the arrows, Home, End — still belongs to it.
+  const writingKey = e.code === 'Backspace' || e.code === 'Delete'
+    || (settings.sixKey && !!SK_DOT[e.code]);
   if (e.target && e.target.id !== 'brlInput'
-      && /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(e.target.tagName)) return;
+      && /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(e.target.tagName)) {
+    // Only a BUTTON hands the keys back. A real text input or a select is
+    // somewhere the writer is deliberately typing something else, and taking
+    // their Backspace away mid-word would be a bug of its own.
+    if (!writingKey || e.target.tagName !== 'BUTTON') return;
+    $('brlInput').focus();
+  }
   // Six-key entry can be turned off (PB, 2026-08-09), which frees S D F J K L
   // for anything else. Checked before preventDefault, or the keys would still
   // be swallowed while doing nothing — the worst of both.
@@ -3763,6 +4226,7 @@ document.addEventListener('keydown', (e) => {
     const hadSwitch = hasNemethSwitch(rawFinished);
     const finished = hadSwitch ? stripNemethSwitches(rawFinished) : rawFinished;
     const sep = e.code === 'Space' ? ' ' : '\n';
+    const sepAt = caret;              // where the line being finished ends (TR-08)
     setBuf(buf.slice(0, caret) + sep + buf.slice(caret));
     caret += 1;
     render();
@@ -3773,9 +4237,9 @@ document.addEventListener('keydown', (e) => {
     if (speechOk && (settings.speakWord || settings.speakSentence)
         && fMode && finished.trim() && !finishedIsWord) {
       
-      // If speakSentence is enabled, parse and speak the whole current line.
-      // Otherwise, just parse and speak the finished word.
-      const textToSpeak = settings.speakSentence ? buf.split('\n').pop() : finished;
+      // The line that was just FINISHED, not the document's last - after Enter
+      // those are different and the last one is empty (audit TR-08).
+      const textToSpeak = settings.speakSentence ? lineHolding(sepAt) : finished;
       
       const asNem = fMode === 'nem' || hasNemethSwitch(textToSpeak);
       const asUeb = !asNem && fMode === 'ueb';
@@ -3920,15 +4384,38 @@ function sayCurrentLine(fromCaretMove = false) {
   // second reading is the SAME maths said more fully, which is what MathCAT's
   // Medium verbosity is for: "the square root of 9" where Terse said
   // "square root, 9", and every structure named where Terse leans on pauses.
-  const mode = lineModes[li] || currentMode();
-  const asNem = mode === 'nem' || hasNemethSwitch(raw);
-  const asUeb = !asNem && mode === 'ueb';
-  if (asNem || asUeb) {
-    const parts = asUeb ? describeUebMaths(raw) : describeNemeth(raw);
-    const said = speakMathsFor(raw, asUeb, parts, again ? 'Medium' : undefined);
-    if (said) { speak(said); return; }
-    // Maths that could not be read falls through: spelling it is then the most
-    // useful thing left, because the cells are all anyone can go on.
+  // EACH SEGMENT IN ITS OWN MODE (audit TR-07, 15 Oct). This asked lineModes
+  // and the global boxes and never looked at the line's SEGMENTS, so an inline
+  // UEB span - the shape Ctrl+M makes, on a line that is otherwise text - was
+  // read as literary braille: the quadratic formula came out as
+  // "of−b±shbin2−4acing2awith'" while the pane beside it drew it perfectly.
+  // The display had been taught to render a line piece by piece and the speech
+  // had not. Same segments, same maths decision, so the two agree.
+  const lineMode = lineModes[li] || currentMode();
+  const segs = (ln.segs || []).filter((sg) => sg.text && sg.text.trim());
+  const pieces = segs.length
+    ? segs.map((sg) => ({ mode: sg.mode === 'base' ? lineMode : sg.mode, text: sg.text.trim() }))
+    : [{ mode: lineMode, text: raw }];
+  const spoken = [];
+  let anyMaths = false;
+  for (const piece of pieces) {
+    const asNem = piece.mode === 'nem' || hasNemethSwitch(piece.text);
+    const asUeb = !asNem && piece.mode === 'ueb';
+    if (asNem || asUeb) {
+      const bare = hasNemethSwitch(piece.text) ? stripNemethSwitches(piece.text) : piece.text;
+      const parts = asUeb ? describeUebMaths(bare) : describeNemeth(bare);
+      const said = speakMathsFor(bare, asUeb, parts, again ? 'Medium' : undefined);
+      // Maths that cannot be read falls back to its words rather than being
+      // dropped: the reader hears SOMETHING for every part of the line.
+      spoken.push(said || bt(bare) || bare);
+      if (said) anyMaths = true;
+      continue;
+    }
+    spoken.push(piece.text.split(' ').map(bt).join(' ').trim());
+  }
+  if (anyMaths) {
+    const all = spoken.filter(Boolean).join(' ').trim();
+    if (all) { speak(all); return; }
   }
 
   if (again) {
@@ -4131,6 +4618,12 @@ function askConfirm(question, confirmLabel, onYes) {
 // Only the braille is saved: the text (or maths) pane is derived from it, so it
 // can always be recreated on load.
 function resetAll() {
+  // Clearing is the writer saying they are finished with this: the kept draft
+  // goes with it, or "Clear" would not be true. THIS TAB'S record only - another
+  // tab's open work is not ours to throw away.
+  forgetDraft(myDraftKey());
+  draftOffered = false;
+  hideDraftOffer();
   buf = ''; caret = 0; chord = 0; held.clear();
   mathSpans = []; prevBuf = '';
   lineModes.length = 0;
@@ -4274,7 +4767,14 @@ $('saveBtn').addEventListener('click', () => {
       // name into the next child's file anyway, so the saved file says so.
       creator: 'Unknown',
       producer: 'Sensory App House Ltd',
-      language: navigator.language || 'en',
+      // THE DOCUMENT'S LANGUAGE, NOT THE BROWSER'S (audit TR-03, 15 Oct). This
+      // was navigator.language, so a French document saved on an English-UK
+      // laptop declared itself en-Brai-GB - the language of the person's
+      // browser chrome, which has nothing to do with the braille in the file.
+      language: (codeById(settings.brailleCode) || {}).lang || navigator.language || 'en',
+      // And the exact table beside it, so reopening restores the code rather
+      // than reading the cells under whatever happens to be selected.
+      brailleCode: settings.brailleCode,
       sections: docSections(),
     });
     downloadBlob(new Blob([bytes], { type: 'application/epub+zip' }), `translate-${stamp}.ebrl`);
@@ -4321,9 +4821,15 @@ $('exportMenu').addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
   else if (e.key === 'Tab') closeExportMenu(false);
 });
+// CAPTURING, NOT BUBBLING — settingsBtn's own click handler calls
+// e.stopPropagation() (it has to: it excludes itself from settings' own
+// outside-click closer below), which stopped this bubble-phase listener from
+// ever seeing a click on the gear, so opening Settings left Export open
+// behind it. A capturing listener runs on the way DOWN to the target, before
+// that stopPropagation is called, so it always sees the click.
 document.addEventListener('click', (e) => {
   if (!$('exportMenu').hidden && !e.target.closest('.menu-wrap')) closeExportMenu(false);
-});
+}, true);
 
 $('exportBrfItem').addEventListener('click', () => {
   closeExportMenu(true);
@@ -4396,6 +4902,52 @@ $('exportDocxItem').addEventListener('click', async () => {
   }
 });
 
+// TOOLBAR ARROW NAVIGATION (brand audit, 2026-09-12; revised 2026-09-12 —
+// Tab between the buttons too). #head-right carries role="toolbar" so
+// Left/Right/Home/End move between Maths/Clear/Save/Load/Export/Help/
+// Settings as an EXTRA way to get around — Tab still reaches each of them
+// individually as its own stop (no roving tabindex: an earlier version
+// tried making the toolbar one Tab stop, ARIA-toolbar-style, but the ask
+// was for Tab to walk the buttons same as anything else on the page, with
+// the arrow keys as a convenience alongside it, not instead of it).
+//
+// A LIVE QUERY, NOT A CACHED LIST: .modes label can be [hidden] and the
+// toolbar's own children never change otherwise, so re-reading on every
+// keypress costs nothing and can never go stale — no listener has to remember
+// to rebuild it when something toggles.
+//
+// SCREEN READERS ARE UNTOUCHED BY DESIGN. A screen reader's browse-mode
+// virtual cursor owns the arrow keys before this listener ever sees them;
+// this only runs when the browser itself dispatches a real ArrowLeft/Right
+// keydown at one of these elements, which is exactly the case where a
+// sighted keyboard user (or a screen reader already in forms/focus mode) is
+// operating the toolbar as a toolbar.
+// TWO TOOLBARS SINCE 12 OCT, when Maths and Load moved over the braille pane
+// they act on. Each is its own toolbar and arrows move within it, which is
+// what a toolbar role promises; Tab still reaches every control in both.
+const toolbars = ['headOverBraille', 'headRight'].map($).filter(Boolean);
+function toolbarItems(within) {
+  return [...within.querySelectorAll(
+    '#mathsMode, #clearBtn, #saveBtn, #loadBtn, #exportBtn, #helpBtn, #settingsBtn',
+  )].filter((el) => el.offsetParent !== null);
+}
+const onToolbarKey = (toolbar) => (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Home' && e.key !== 'End') return;
+  const items = toolbarItems(toolbar);
+  const from = items.indexOf(document.activeElement);
+  if (from === -1) return;
+  e.preventDefault();
+  const to = e.key === 'Home' ? 0
+    : e.key === 'End' ? items.length - 1
+    : e.key === 'ArrowLeft' ? (from - 1 + items.length) % items.length
+    : (from + 1) % items.length;
+  // No skipNextFocusSpeech here, unlike the settings-panel opener above: this
+  // move IS the whole event, exactly like Tab landing on the next control —
+  // the announcer saying the new item's name is the point, not a duplicate.
+  items[to].focus();
+};
+for (const t of toolbars) t.addEventListener('keydown', onToolbarKey(t));
+
 // LOADING eBRAILLE. The whole reason the format was adopted: the file states
 // its own modes, so nothing is guessed. classifyDoc — the whole-file detector
 // the BRF path needs — is deliberately NOT run here; running it could only
@@ -4455,13 +5007,16 @@ async function loadEbrailleFile(file) {
   // The mode boxes follow the LAST section — where the caret lands (a loaded
   // file opens at its end) and where typing resumes. They used to follow the
   // FIRST, which read nicely at the top of the document but clobbered the
-  // bottom: syncLineModes stamps the line being typed with currentMode() on
-  // every render, so a document ENDING in maths had its last line's restored
-  // mode overwritten by the first section's on the very first render — a
-  // Nemeth ending absorbed into text (diagnosed 2026-08-12, DIAGNOSIS-120826).
-  // With the boxes agreeing with the last line, that stamp writes back the
-  // value the file restored, and typing onward continues the document's own
-  // ending mode — which is what resuming a document means.
+  // bottom: syncLineModes stamps the caret's line with currentMode() whenever
+  // the mode changes, so a document ENDING in maths had its last line's
+  // restored mode overwritten by the first section's on the very first render
+  // — a Nemeth ending absorbed into text (diagnosed 2026-08-12,
+  // DIAGNOSIS-120826). With the boxes agreeing with the section the caret
+  // lands in, that stamp writes back the value the file restored, and typing
+  // onward continues the document's own ending mode — which is what resuming a
+  // document means. (The stamp followed the LAST line until 10 Oct, when it
+  // moved to the caret's; after a load those are the same line, which is why
+  // this reasoning is unchanged.)
   const secs = doc.sections || [];
   const last = secs[secs.length - 1];
   if (last) {
@@ -4475,6 +5030,24 @@ async function loadEbrailleFile(file) {
       settings.mathsCode = last.mode;
       saveSettings();
       $(last.mode === 'ueb' ? 'mathsCodeUeb' : 'mathsCodeNemeth').checked = true;
+    }
+  }
+  // THE LITERARY CODE THE FILE WAS WRITTEN IN (audit TR-03). Maths modes were
+  // restored here and the literary code never was, so a French document opened
+  // under English showed the same cells saying something else, with nothing to
+  // say it had happened. Awaited, and through the one adoption path, for the
+  // same reason recovery is: rendering before the table is in the engine caches
+  // an empty answer for every word.
+  if (doc.brailleCode && doc.brailleCode !== settings.brailleCode) {
+    const adopted = await adoptBrailleCode(doc.brailleCode);
+    if (adopted.ok) loadBrailleCodes();
+    else {
+      // The document still loads - its cells are not in doubt - but it is read
+      // under the code that IS available, and that is said rather than hidden.
+      const msg = `This file was written in ${adopted.label}, which could not be loaded, `
+                + 'so it is being read in the code already chosen. The braille itself is unchanged.';
+      $('statusBar').innerHTML = `<span class="sb-hint">${escMsg(msg)}</span>`;
+      speak(msg);
     }
   }
   render();
@@ -4641,6 +5214,15 @@ function applyStatusScale(next) {
   statusScale = Math.max(SB_MIN_SCALE, Math.min(SB_MAX_SCALE, Number(next) || 1));
   document.documentElement.style.setProperty('--sb-scale', statusScale.toFixed(3));
   document.documentElement.style.setProperty('--sb-h', Math.round(48 * statusScale) + 'px');
+  // A FOCUSABLE role=separator MUST SAY WHERE IT IS (WCAG 4.1.2; axe's
+  // aria-required-attr): the bar's size as a percentage of normal.
+  const grab = $('sbGrab');
+  if (grab) {
+    grab.setAttribute('aria-valuemin', String(Math.round(SB_MIN_SCALE * 100)));
+    grab.setAttribute('aria-valuemax', String(Math.round(SB_MAX_SCALE * 100)));
+    grab.setAttribute('aria-valuenow', String(Math.round(statusScale * 100)));
+    grab.setAttribute('aria-valuetext', statusScale === 1 ? 'normal size' : `${Math.round(statusScale * 100)} per cent`);
+  }
   fitBrailleLine();
   return statusScale;
 }
@@ -4808,6 +5390,34 @@ $('mathsMode').addEventListener('change', () => {
 // translating the document until the new one is proven loadable, and a failure
 // says so plainly and puts the picker back where it was. The service worker
 // caches what was fetched, so a code that worked once works offline after.
+// ONE WAY TO ADOPT A LITERARY CODE (audit TR-02, 15 Oct). Settings did this
+// properly - wait for the table, refuse cleanly if it will not load, clear the
+// caches that hold text translated under the OLD code, then render. Recovery
+// did its own thing: it set the preference, started the table load without
+// waiting, and rendered. bt() then met a table that was not there yet, caught
+// the failure and cached '' for every word, so the print went blank and stayed
+// blank after the table arrived. Both call it now, so neither can drift.
+async function adoptBrailleCode(choice) {
+  const code = codeById(choice);
+  const label = codeLabel(code).replace(/\s*—\s*/g, ' ');
+  if (choice === settings.brailleCode) return { ok: true, changed: false, label, code };
+  if (ready && code) {
+    try { await louis.ensureTables(code.table); }
+    catch { return { ok: false, label, code }; }
+  }
+  settings.brailleCode = choice;
+  saveSettings();
+  applyPrintLang();
+  // The uncontracted sibling is fetched quietly and NOT waited for: it only
+  // pairs cells with letters, so its absence costs the underline, never the
+  // text, and it must not delay the code the user actually asked for.
+  const sib = uncontractedSibling(choice);
+  if (sib) louis.ensureTables(sib).catch(() => {});
+  // Every cached translation was made by the old code.
+  missedCache.clear(); btCache.clear(); cellNameCache.clear();
+  return { ok: true, changed: true, label, code };
+}
+
 $('brailleCodeSel').addEventListener('change', async (e) => {
   const choice = e.target.value;                 // read BEFORE loadBrailleCodes reassigns it
   if (choice === '__more__') {
@@ -4817,14 +5427,11 @@ $('brailleCodeSel').addEventListener('change', async (e) => {
     speak('All braille codes shown');
     return;
   }
-  const previous = settings.brailleCode;
-  if (choice === previous) return;
-  const label = codeLabel(codeById(choice)).replace(/\s*—\s*/g, ' ');
-  const code = codeById(choice);
-  if (ready && code) {
-    try {
-      await louis.ensureTables(code.table);
-    } catch {
+  if (choice === settings.brailleCode) return;
+  const adopted = await adoptBrailleCode(choice);
+  const { label, code } = adopted;
+  if (!adopted.ok) {
+    {
       loadBrailleCodes();                        // put the picker back on `previous`
       // WHY IT FAILED DEPENDS ON THE CODE. A code that travels in the app was
       // never waiting on the internet, so telling its user to get online sends
@@ -4839,17 +5446,6 @@ $('brailleCodeSel').addEventListener('change', async (e) => {
       return;
     }
   }
-  settings.brailleCode = choice;
-  saveSettings();
-  applyPrintLang();
-  // Fetch the uncontracted sibling too, quietly and without waiting: it is what
-  // pairs cells with letters for a word the child spelt out. Failure is fine -
-  // alignment simply stays off, exactly as it was before it existed - so this
-  // must never delay or block adopting the code the user actually asked for.
-  const sib = uncontractedSibling(choice);
-  if (sib) louis.ensureTables(sib).catch(() => {});
-  missedCache.clear(); btCache.clear();   // a different code has different contractions
-  cellNameCache.clear();
   // The whole document is re-read under the new code — every word the user can
   // see was translated by the old one, so leaving them would show a page in two
   // codes at once.
@@ -4860,6 +5456,15 @@ $('brailleCodeSel').addEventListener('change', async (e) => {
 $('speakLetter').addEventListener('change', (e) => {
   settings.speakLetter = e.target.checked; saveSettings();
   speak(e.target.checked ? 'Speaking each letter' : 'Letters off');
+});
+$('printSizeSel').addEventListener('change', (e) => {
+  settings.printSize = PRINT_SCALES[e.target.value] ? e.target.value : 'normal';
+  saveSettings();
+  // fitBrailleLine() owns every size in both panes, so re-running it is what
+  // applies the choice - setting #out's font-size here would be overwritten by
+  // the next render and the maths would not follow at all.
+  fitBrailleLine();
+  speak(`Print text size ${e.target.selectedOptions[0].textContent.toLowerCase()}`);
 });
 $('showAscii').addEventListener('change', (e) => {
   settings.showAscii = e.target.checked; saveSettings();
@@ -4872,7 +5477,10 @@ $('sixKeyInput').addEventListener('change', (e) => {
   // A half-formed chord must not survive the switch, or releasing those keys
   // afterwards would commit a cell the user never finished.
   if (!e.target.checked) { chord = 0; held.clear(); render(); }
-  speak(e.target.checked ? 'Six key entry on' : 'Six key entry off');
+  // THE CONFIRMATION SAYS THE LABEL'S OWN WORDS (10 Oct). The setting was
+  // renamed to "Six-key braille input" and this still said "Six key entry", so
+  // a blind user heard a name that appeared nowhere they could read.
+  speak(e.target.checked ? 'Six-key braille input on' : 'Six-key braille input off');
 });
 
 // Changing the code while maths is ON switches the live document to it —
@@ -4955,6 +5563,35 @@ document.addEventListener('keydown', (e) => {
   else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 });
 
+// TAB WRAPS AROUND THE WHOLE PAGE (brand audit, 2026-09-12). Tabbing past
+// the last control (the status bar's resize handle, ordinarily) used to run
+// out of page and hand focus to the browser's own chrome — reaching the top
+// nav buttons again meant either Shift+Tab-ing all the way back or clicking.
+// Shift+Tab from the very first control now loops to the very last, and Tab
+// from the last loops to the first, the same shape as the settings panel's
+// own trap just above.
+//
+// SKIPPED WHENEVER SOMETHING ELSE ALREADY OWNS TAB: a real <dialog> traps it
+// natively once open with showModal() (Help, Confirm) — the rest of the page
+// is inert then, not merely hidden, so this listener would otherwise "see"
+// background controls that are not actually reachable; and the settings
+// panel's own trap directly above already handles Tab for as long as focus
+// is inside it, so this only ever needs to run once focus is somewhere else
+// in the ordinary page.
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab' || e.defaultPrevented) return;
+  const settingsPanel = $('settingsPanel');
+  if ($('helpDialog').open || $('confirmDialog').open
+    || (!settingsPanel.hidden && settingsPanel.contains(document.activeElement))) return;
+  const items = [...document.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+  )].filter((el) => el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0], last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
 document.addEventListener('click', (e) => {
   const p = $('settingsPanel');
   // closeSettings(), not p.hidden = true (2026-09-02, the audit): hiding the
@@ -5024,6 +5661,13 @@ function setFocusMode(on) {
   overlay.hidden = !on;
   $('focusModeBtn').setAttribute('aria-pressed', String(on));
   $('focusModeBtnInner').setAttribute('aria-pressed', String(on));
+  // FOCUS MODE IS A VIEW YOU WRITE IN (feedback 10 Oct, item 9). Entering it
+  // by CLICKING the button left focus on the button, and the braille field is
+  // where typing goes - so the view opened large and legible and then appeared
+  // to ignore every key. The keydown guard above no longer drops those keys,
+  // and putting the writer in the field as the view opens means they never
+  // reach that recovery in the first place.
+  if (on) { skipNextFocusSpeech = true; $('brlInput').focus(); }
 }
 function toggleFocusMode() {
   const on = $('focusOverlay').hidden;
@@ -5069,6 +5713,7 @@ $('focusDark').addEventListener('change', (e) => {
   // Defaults to ON, so an absent stored value must read as ON — not as the
   // falsy default the others take.
   $('speakCursor').checked = settings.speakCursor !== false;
+  $('printSizeSel').value = settings.printSize || 'normal';
   // The radio must SHOW the saved choice, or a user who picked UEB Technical
   // last week opens Settings and sees Nemeth selected while getting UEB.
   $(settings.mathsCode === 'ueb' ? 'mathsCodeUeb' : 'mathsCodeNemeth').checked = true;
@@ -5212,4 +5857,110 @@ $('focusDark').addEventListener('change', (e) => {
   // the words are on screen before they are spoken, and after a tick, so the
   // voice list has had its chance to arrive.
   if (bootError) setTimeout(() => speak(bootError), 0);
+
+  // ---- the kept draft, offered ----
+  // After render and after any boot error, so an offer never lands on top of a
+  // more important message.
+  const kept = readDraft();
+  if (kept && !buf.trim()) {
+    draftOffered = true;
+    showDraftOffer(kept);
+  }
 })();
+
+// THE LAST MOMENT THE PAGE IS STILL ALIVE. pagehide fires where unload does
+// not - a backgrounded tab on iOS is discarded without one - and
+// visibilitychange covers the lid closing on a laptop. Both write
+// synchronously: there is no second chance after either.
+for (const ev of ['pagehide', 'beforeunload']) {
+  window.addEventListener(ev, () => { clearTimeout(draftTimer); writeDraft(); });
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { clearTimeout(draftTimer); writeDraft(); }
+});
+
+function hideDraftOffer() {
+  const bar = $('draftOffer');
+  if (bar) bar.remove();
+}
+
+function showDraftOffer(kept) {
+  hideDraftOffer();
+  const when = (() => {
+    const d = new Date(kept.at);
+    return Number.isFinite(d.getTime())
+      ? d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  })();
+  const cells = [...kept.buf].filter((c) => c >= '\u2800' && c <= '\u28ff').length;
+  const wrap = document.createElement('div');
+  wrap.id = 'draftOffer';
+  wrap.className = 'draft-offer';
+  // A real region with a real name: a screen-reader user meets this the same
+  // way a sighted one does, and the buttons are reachable by Tab.
+  wrap.setAttribute('role', 'region');
+  wrap.setAttribute('aria-label', 'Unfinished work');
+  const msg = document.createElement('span');
+  msg.textContent = `Your last work is still here \u2014 ${cells} cell${cells === 1 ? '' : 's'}`
+    + (when ? `, from ${when}` : '') + '.';
+  const bring = document.createElement('button');
+  bring.type = 'button'; bring.className = 'pill-btn'; bring.textContent = 'Bring it back';
+  const drop = document.createElement('button');
+  drop.type = 'button'; drop.className = 'pill-btn'; drop.textContent = 'Discard';
+  wrap.append(msg, bring, drop);
+  const head = document.querySelector('.panes');
+  if (head && head.parentNode) head.parentNode.insertBefore(wrap, head);
+
+  // Disabled while it works, so a second click cannot start a second restore
+  // over the first - the table fetch can take a moment on a new language.
+  bring.addEventListener('click', async () => {
+    bring.disabled = true;
+    try { await restoreDraft(kept); } finally { bring.disabled = false; }
+  });
+  drop.addEventListener('click', () => {
+    // The record being OFFERED, which after a crash is another tab's, not ours.
+    forgetDraft(kept.key); draftOffered = false; hideDraftOffer();
+    $('brlInput').focus();
+    speak('Discarded');
+  });
+  speak(`Your last work is still here, ${cells} cell${cells === 1 ? '' : 's'}. `
+      + 'Press Bring it back to open it, or Discard to throw it away.');
+}
+
+async function restoreDraft(kept) {
+  // THE CODE FIRST, AND WAITED FOR (audit TR-02). The work comes back read as
+  // whatever code is loaded, so adopting it is not a detail to start and leave
+  // running: until the table is in the engine, every word back-translates to
+  // nothing and the empty answer is CACHED, which is why the pane stayed blank
+  // even after the table arrived. adoptBrailleCode waits, and clears those
+  // caches, exactly as a Settings change does.
+  if (kept.brailleCode && kept.brailleCode !== settings.brailleCode) {
+    const adopted = await adoptBrailleCode(kept.brailleCode);
+    if (!adopted.ok) {
+      // NOTHING IS RESTORED AND NOTHING IS LOST. The offer stands, so the work
+      // is still there to take once the code can be loaded.
+      const msg = `Your last work is in ${adopted.label}, which could not be loaded, so it has `
+                + 'been left where it is. '
+                + (adopted.code && adopted.code.shipped
+                    ? 'It travels with the app, so try again in a moment.'
+                    : 'It needs the internet the first time it is used.');
+      $('statusBar').innerHTML = `<span class="sb-hint">${escMsg(msg)}</span>`;
+      speak(msg);
+      return;
+    }
+    loadBrailleCodes();            // the picker shows the code that was adopted
+  }
+  draftOffered = false;
+  hideDraftOffer();
+  if (kept.mathsCode) settings.mathsCode = kept.mathsCode;
+  $('uebMaths').checked = !!kept.ueb;
+  $('nemethMaths').checked = !!kept.nem;
+  mathSpans = Array.isArray(kept.mathSpans) ? kept.mathSpans.map((sp) => ({ ...sp })) : [];
+  lineModes.length = 0;
+  if (Array.isArray(kept.lineModes)) lineModes.push(...kept.lineModes);
+  modeAppliesToAll = false;
+  setBuf(kept.buf, kept.buf.length);
+  prevBuf = buf;                 // the restore is not an edit to be diffed
+  render();
+  $('brlInput').focus();
+  speak('Your last work is back.');
+}
