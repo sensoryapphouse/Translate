@@ -1223,7 +1223,9 @@
         <tr><th>Key</th><td>S</td><td>D</td><td>F</td><td class="gap"></td><td>J</td><td>K</td><td>L</td></tr>
       </table>
       <ul>
-        <li><strong>Space</strong> finishes a word - the print appears then.</li>
+        <li><strong>Space</strong> finishes a word. In a contracted code (grade 2) the print
+            appears then; in an uncontracted code (grade 1) the letters appear as they are
+            brailled, because there is no contraction to wait for.</li>
         <li><strong>Enter</strong> starts a new line. <strong>Backspace</strong> rubs out a
             cell and says which one went.</li>
         <li><strong>Arrow keys, Home and End</strong> move around the braille. The braille user can
@@ -1248,8 +1250,10 @@
       <p class="note">Ordinary editing works as you would expect. Selecting some braille and
          then brailling a new cell <strong>replaces</strong> what was selected, and
          <strong>Ctrl+Z</strong> (Mac: <strong>Cmd+Z</strong>) undoes.</p>
-      <p class="note">A word only appears in print once it is finished, so half-written
-         words don't flash up and change.</p>
+      <p class="note">In a contracted code a word only appears in print once it is finished,
+         so half-written words don't flash up and change - one cell can still turn out to be a
+         whole word. In an uncontracted code each cell is one letter, so the word shows as it
+         is typed.</p>
       <p class="note">The braille panel is a real text box, not a picture of one. That is
          what lets a <strong>braille display</strong> work with it properly - the cursor dots
          show where the braille user is, the display follows them along the line, and its routing
@@ -1267,7 +1271,8 @@
       <h3>Finding out how a word was written</h3>
       <p>Click any word in either panel. It is highlighted in both, and the bar along the
          bottom explains it - how many cells, whether a <strong>contraction</strong> was used,
-         and what each cell stands for. Matching colours link each braille cell to the letters
+         and what each cell stands for. The bar also fills in as the braille user types: each
+         time a space finishes a word, it explains that word. Matching colours link each braille cell to the letters
          it produced, e.g. <span class="eg">⠐⠺</span>&nbsp;=&nbsp;“work”.</p>
       <p>This works inside sums too. Clicking a single sign in either panel highlights just
          that sign in both, and reads the whole sum aloud so the braille user hears it in context.
@@ -1306,7 +1311,9 @@
          check it.</p>
       <p class="note">After <strong>Load</strong> (or Clear), choosing a mode applies to the
          whole document - so you can load a saved file and then pick how to read it.
-         Once you start typing, modes stick to lines again.</p>
+         Once you start typing, modes stick to lines again. Coming <em>out</em> of
+         whole-document maths keeps every line that was written as it was; only what you
+         write next is text.</p>
       <p class="note">When you load a file, Translate also looks at the whole document:
          if every line is clearly UEB maths (or clearly text) the boxes are set for you,
          with a spoken and written note saying so - one click undoes it. If the file is
@@ -1340,7 +1347,8 @@
             marker behind.</li>
         <li><strong>A file just opened, nothing written yet</strong> - the <em>whole</em>
             document is read as maths. That is what you want when the file is a page of
-            sums: open it, press once, and every line is read properly.</li>
+            sums: open it, press once, and every line is read properly. Pressing again does
+            not undo that: the sums stay maths, and what you write after them is text.</li>
         <li><strong>Otherwise</strong> - a sum starts where the cursor is, as above.</li>
       </ul>
       <p><strong>Without selecting anything</strong>, you can mark a range in two presses with
