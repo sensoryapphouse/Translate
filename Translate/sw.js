@@ -31,7 +31,7 @@
 // browser already holds are byte-identical, so a new cache would buy nothing
 // and would discard a warm one. A hash that moves ALONE is legitimate only
 // when the FINGERPRINT DEFINITION changed, never when an asset did.
-const CACHE = 'translate-v236';   // assets-sha256: 0d6bc0fe115c
+const CACHE = 'translate-v237';   // assets-sha256: 765b9e0e40ad
 
 const ASSETS = [
   // REPATHED 2026-08-09. Every entry here pointed at /connector/ — the V1 paths,

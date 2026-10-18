@@ -286,7 +286,21 @@ function syncSpans() {
   if (gone || born) {
     const at = lineOfIndex(prevBuf, p);
     const inherited = lineModes[at];
-    lineModes.splice(at, gone + 1, ...Array(born + 1).fill(inherited));
+    // ENTER AT THE END OF A LINE STARTS A LINE IN THE CURRENT MODE; Enter in
+    // the middle splits one (18 Oct). Inheriting everywhere was right for the
+    // split - both halves of a Nemeth line are still Nemeth - and wrong at the
+    // end once a line's mode and the setting differ: a teacher who has just
+    // come out of whole-document maths (leaveDocumentMaths) pressed Enter to
+    // write a line of text and got another Nemeth line, because the sum it
+    // followed handed its mode down. Nothing of the old line follows the
+    // insertion point, so nothing is being split; the new lines are new, and
+    // new lines take the setting - which is also what they get when they are
+    // typed into existence. When mode and setting agree this is the same
+    // result as before, so ordinary typing does not change.
+    const lineEnd = prevBuf.indexOf('\n', p);
+    const restOfLine = prevBuf.slice(p, lineEnd === -1 ? prevBuf.length : lineEnd);
+    const freshMode = (!gone && restOfLine === '') ? currentMode() : inherited;
+    lineModes.splice(at, gone + 1, inherited, ...Array(born).fill(freshMode));
   }
 
   prevBuf = buf;
@@ -4208,6 +4222,41 @@ function markSelectionAsMaths(a, b) {
 // So the button now reads the situation: a SELECTION is marked as maths, a
 // freshly LOADED document is read as maths whole, and otherwise a run opens at
 // the caret exactly as before.
+// LEAVING WHOLE-DOCUMENT MATHS KEEPS WHAT IS WRITTEN (user report, 18 Oct:
+// "if whole doc is maths doing ctrl m at end undoes all text and turns it into
+// text"). A file arrives, one Ctrl+M makes the whole of it maths, and the
+// teacher goes to the end to add a line of text - and the second Ctrl+M put
+// the whole document back to text, because both paths that turn the SETTING
+// off also emptied lineModes, and an empty lineModes means "every line follows
+// the setting". That is one press sweeping up work already done, which this
+// file says elsewhere must never happen.
+//
+// So the setting goes off but the lines keep the mode they had: every line
+// with braille on it is pinned to the maths it was being read as, and only an
+// EMPTY line is handed to text - which is also what keeps the 19 Aug trap
+// closed (whole-document Nemeth on an empty document could not be left). New
+// lines take the setting, so what is written next is text; the sums stand.
+// prevStampedMode is set first, or syncLineModes would see the change and
+// stamp the CARET'S line as text - the last sum, when the caret is at the end.
+function leaveDocumentMaths() {
+  const was = currentMode();
+  const lines = buf.split('\n');
+  while (lineModes.length < lines.length) lineModes.push(was);
+  lineModes.length = lines.length;
+  let kept = 0;
+  lines.forEach((l, i) => {
+    if (lineModes[i] === 'text') return;
+    if (!l.trim()) lineModes[i] = 'text'; else kept += 1;
+  });
+  $('uebMaths').checked = false;
+  $('nemethMaths').checked = false;
+  $('mathsMode').checked = false;
+  prevStampedMode = 'text';
+  modeAppliesToAll = false;
+  render();
+  speak(kept ? 'Out of maths. What is written stays maths; a new line will be text.' : 'out of maths');
+}
+
 function toggleMathsAtCaret() {
   const ta = $('brlInput');
   const selA = ta ? Math.min(ta.selectionStart, ta.selectionEnd) : caret;
@@ -4217,6 +4266,7 @@ function toggleMathsAtCaret() {
   if (modeAppliesToAll && buf.trim() && !spanAt(caret) && !hasNemethSwitch(buf)) {
     const code = settings.mathsCode === 'ueb' ? 'ueb' : 'nem';
     const turningOn = !(uebMathsOn() || nemethOn());
+    if (!turningOn) { leaveDocumentMaths(); return; }   // never back to text wholesale
     $('uebMaths').checked = turningOn && code === 'ueb';
     $('nemethMaths').checked = turningOn && code === 'nem';
     $('mathsMode').checked = turningOn;
@@ -4259,14 +4309,10 @@ function toggleMathsAtCaret() {
       speak('out of maths');
       return;
     }
-    // The maths comes from the SETTING, so that is what to turn off — and the
-    // per-line modes go with it, or the lines would keep a maths mode the
-    // document no longer claims.
-    $('uebMaths').checked = false;
-    $('nemethMaths').checked = false;
-    lineModes.length = 0;
-    render();
-    speak('out of maths');
+    // The maths comes from the SETTING, so that is what to turn off. The lines
+    // already written keep the mode they were read in (leaveDocumentMaths);
+    // clearing lineModes here was the other half of the 18 Oct report.
+    leaveDocumentMaths();
     return;
   }
 

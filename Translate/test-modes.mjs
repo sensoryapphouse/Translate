@@ -219,6 +219,43 @@ const writeTemp = (doc, name) => {
   ok('Space announces the finished sum', /plus/i.test(bySpace), bySpace);
   ok('and Enter announces it too', /plus/i.test(byEnter), { bySpace, byEnter });
 
+  // ---- A SECOND Ctrl+M ON A WHOLE-DOCUMENT-MATHS FILE MUST NOT UNDO IT -----
+  // User report, 18 Oct: "if whole doc is maths doing ctrl m at end undoes all
+  // text and turns it into text". A plain braille file (no modes of its own):
+  // one Ctrl+M makes all of it maths, then the teacher goes to the end to add
+  // a line and presses Ctrl+M to come out of maths - and lost every sum.
+  {
+    const txt = path.join(os.tmpdir(), 'whole-doc-maths.txt');
+    fs.writeFileSync(txt, `${NUM + ONE}\n${NUM + TWO}`);        // two lines, no trailing newline
+    const rows = () => page.evaluate(() => document.querySelectorAll('#out .mathrow').length);
+    // The SETTING, not the visible Maths box: that box mirrors the caret, and
+    // the caret is standing on a maths line, so it is honestly ticked.
+    const box = () => page.evaluate(() => document.getElementById('uebMaths').checked
+                                        || document.getElementById('nemethMaths').checked);
+    const none = await load(txt);
+    ok('a plain braille file opens as text', none.length === 0, none);
+    await page.focus('#brlInput');
+    await page.keyboard.press('Control+m'); await page.waitForTimeout(700);
+    ok('one Ctrl+M on a file nothing has been typed into makes the whole document maths',
+       (await rows()) === 2, await rows());
+    await page.keyboard.press('End');
+    await page.keyboard.press('Control+m'); await page.waitForTimeout(700);
+    ok('a second Ctrl+M at the end does NOT turn the document back into text',
+       (await rows()) === 2, await rows());
+    ok('...but the maths setting is off, so what comes next is text', (await box()) === false, await box());
+    await page.keyboard.press('Enter');
+    await page.keyboard.down('KeyF'); await page.keyboard.up('KeyF');     // dot 1
+    await page.keyboard.press('Space');
+    await page.waitForTimeout(700);
+    const after = await page.evaluate(() => ({
+      rows: document.querySelectorAll('#out .mathrow').length,
+      words: document.querySelectorAll('#out .word').length,
+    }));
+    ok('a new line typed after it is text, and both sums are still maths',
+       after.rows === 2 && after.words >= 1, after);
+    try { fs.unlinkSync(txt); } catch { /* */ }
+  }
+
   for (const f of [uebFirst, nemFirst]) { try { fs.unlinkSync(f); } catch { /* */ } }
   await browser.close();
   server.close();
