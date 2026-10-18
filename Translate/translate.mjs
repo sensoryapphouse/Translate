@@ -4549,8 +4549,16 @@ document.addEventListener('keydown', (e) => {
     // letter of its own (a contraction, a prefix, a sign).
     if (caret === 0) { render(); return; }        // nothing to the left
     const gone = buf[caret - 1];
+    // ONE STEP BACK, NOT TWO (user report, 18 Oct: "if the edit field does not
+    // have the focus then multiple backspaces sometimes gets confused about
+    // what to delete and deletes the wrong thing"). setBuf's second argument
+    // IS the new caret, and this line used to subtract one more after it, so
+    // the first press deleted the right cell and left the caret a cell too far
+    // left - every press after it took the wrong one. Measured on "cat sat dog ":
+    // three presses left "cat sat" + "dg", the space, the "o" and a space gone,
+    // instead of "cat sat d". Only this path has the fault: with focus in the
+    // field the browser makes the edit, which is why it was "sometimes".
     setBuf(buf.slice(0, caret - 1) + buf.slice(caret), caret - 1);
-    caret -= 1;
     render();
     if (gone) speak('delete ' + describeCell(gone));
   }

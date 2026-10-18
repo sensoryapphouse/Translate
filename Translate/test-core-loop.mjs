@@ -513,6 +513,34 @@ const ok = (name, cond, got = '') => {
     ok('an edit cancels a half-made range too', (await maths()).length === 0, await maths());
   }
 
+  // ---- BACKSPACE WITHOUT FOCUS DELETES THE RIGHT CELLS, EVERY TIME ---------
+  // User report, 18 Oct: "if the edit field does not have the focus then
+  // multiple backspaces sometimes gets confused about what to delete and
+  // deletes the wrong thing." With focus elsewhere there is no native edit, so
+  // the app splices the buffer itself; that path has to agree with the native
+  // one about where the caret ends up, or the second press works from the
+  // wrong place.
+  {
+    await page.evaluate(async ({ c3, s3, d3 }) => {
+      const c = window.__c;
+      await c.clear();
+      await c.type(`${c3} ${s3} ${d3} `);
+      document.activeElement.blur();                 // focus to the body: no native edit now
+    }, { c3: CAT, s3: SAT, d3: DOG });
+    const before = await page.evaluate(() => ({ field: document.getElementById('brlInput').value,
+                                                 focused: document.activeElement === document.getElementById('brlInput') }));
+    ok('the field does not have focus', before.focused === false, before);
+    await page.keyboard.press('Backspace'); await page.waitForTimeout(250);
+    await page.keyboard.press('Backspace'); await page.waitForTimeout(250);
+    await page.keyboard.press('Backspace'); await page.waitForTimeout(350);
+    const after = await page.evaluate(() => document.getElementById('brlInput').value);
+    // Three presses from the end take the space, "g" and "o": what is left is
+    // "cat sat d" - the LAST three cells, not a cell further in.
+    ok('three unfocused backspaces remove exactly the last three cells',
+       after === `${CAT} ${SAT} ${DOG.slice(0, 1)}`,
+       { before: before.field, after, expected: `${CAT} ${SAT} ${DOG.slice(0, 1)}` });
+  }
+
   // ---- the work survives the page going away -----------------------------
   // PB, 10 Oct: autosave, as the answer to the audit's objection that a worker
   // which takes over mid-session tells the writer to "save and reload" in an
